@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  viz/08-particles/index.html
+  WHAT: Visualization 8: particles.
+  DOC:  docs/modules/particles.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Particles visualized</title>
+  <meta name="description" content="Tune a particle emitter live: count, speed, spread, gravity, life and size.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/particles.md">Doc: particles</a>
+    </nav>
+    <h1>8. Particles</h1>
+    <p class="lead">Particles are tiny dots that live for a moment. Click or tap the picture to move the emitter. Try the presets, then tune them.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A particle emitter producing sparks, smoke or fire, with sliders for its settings."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent)"></span>Emitter</li>
+      <li><span style="background: var(--muted)"></span>Particles alive (see readout)</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Every particle comes from a fixed pool. When the pool is full, new ones are skipped instead of slowing the game.</li>
+      <li>Gravity pulls particles down; a negative value makes fire and smoke rise.</li>
+      <li>Most of the look comes from size over life and fading out. Try size end bigger than size start for smoke.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createParticles, presets } from &quot;kindling/2d/particles.js&quot;;
+
+const particles = createParticles(500);
+particles.emit({ ...presets.explosion, x: enemy.x, y: enemy.y });
+
+particles.update(stepSeconds);   // update
+particles.render(context);       // draw</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/particles.js">engine/2d/particles.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

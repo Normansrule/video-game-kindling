@@ -1,0 +1,110 @@
+<!doctype html>
+<!--
+  lessons/design-3-playtest-ship.html
+  WHAT: Lesson: Playtest and ship. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playtest and ship | Kindling lessons</title>
+  <meta name="description" content="Watch someone play without helping, write down what happens, fix the biggest problem, and ship to itch.io.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Playtest and ship</h1>
+    <p class="lesson-meta">Game design track · lesson 3 of 3 · about 25 minutes</p>
+    <p class="lead">You cannot see your own game fresh. Someone else can, in five minutes.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A <strong>playtest</strong> is watching another person play while you stay quiet. You will want to explain; don't. Every time you would have explained something, write it down: that is a problem the game must solve on its own, because the real players will be alone.</p>
+    <p>Watch for: where they hesitate, what they try that does not work, when they smile, and when they stop. Then fix the <strong>biggest</strong> problem only, and test again. Two short playtests beat one long one.</p>
+    <p><strong>Shipping</strong> is part of the game. A game that is not uploaded does not exist for the jam. Upload a working build early, then replace it.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Practice on this: ask someone to play Pong for two minutes on your computer, with no instructions. Watch and write.</p>
+    <iframe class="viz-frame short" src="../samples/2d/01-pong/" title="Pong sample" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../samples/2d/01-pong/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li><strong>Set up:</strong> open the game, hand over the keyboard, and say only: "Play as if I'm not here. Think out loud if you like."</li>
+      <li><strong>Watch, write, do not help.</strong> Use a timeline: <code>0:10 pressed Space, nothing happened</code>, <code>0:40 laughed at the bounce</code>, <code>1:30 didn't notice the score</code>.</li>
+      <li><strong>Ask three questions after:</strong> What was the goal? What was confusing? What was the best moment?</li>
+      <li><strong>Fix one thing:</strong> the biggest confusion, usually controls or goal. Then test with someone new.</li>
+      <li><strong>Ship:</strong> zip the game folder's <em>contents</em> (with <code>index.html</code> at the top level), upload as an HTML game on itch.io, set the viewport size, test the uploaded page, and check the jam's rules, including whether it asks you to disclose AI help. Every step is in <a href="../jam/SUBMIT-TO-ITCH.md">SUBMIT-TO-ITCH.md</a>.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Playtest one Kindling sample (or your own game) with one person for five minutes. Fill in the template below, then name the one change you would make.</p><pre><code>Game:            Tester:            Date:
+Timeline (time: what happened):
+What was the goal? (their words)
+What was confusing?
+Best moment?
+The ONE change I will make:</code></pre>
+    <details><summary>Hint 1</summary><p>If they are stuck for more than 30 seconds, you may say one sentence. Write down that you had to.</p></details>
+    <details><summary>Hint 2</summary><p>"Make it more fun" is not a change. "Show the controls on the title screen" is.</p></details>
+    <details><summary>Solution</summary>
+      <p>An example of a filled-in sheet:</p>
+<pre><code>Game: Pong sample        Tester: my brother        Date: Saturday
+Timeline:
+  0:00  looked for a start button, clicked the screen (that works: mouse:0 starts)
+  0:15  used arrow keys straight away
+  0:50  &quot;oh, the edges send it sideways!&quot;   &lt;- best moment
+  1:40  lost 3-7, asked &quot;can I play against you?&quot;
+What was the goal?   &quot;get 7 points first&quot;
+What was confusing?  &quot;nothing really, the computer is too good at the start&quot;
+Best moment?         hitting with the paddle edge
+The ONE change:      COMPUTER_SPEED starts at 80 and rises with each point</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="design-3-playtest-ship">
+      <li><label><input type="checkbox" data-key="0"><span>Why you stay quiet during a playtest.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>What to write down: hesitations, failed attempts, smiles, quitting.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>The three questions to ask after.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why to fix only the biggest problem before the next test.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>How to zip and upload a browser game to itch.io, and to check each jam's rules (including AI disclosure).</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./design-2-game-feel.html">← Game feel</a>
+      <a href="./">All lessons →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

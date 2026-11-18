@@ -1,0 +1,12 @@
+# docs/bridges/rust/Cargo.toml
+# WHAT: Kindling's core ideas in Rust, standard library only. Run the checks with:
+#       cd ~/projects/kindling/docs/bridges/rust && cargo test
+# DOC:  docs/bridges/rust.md
+[package]
+name = "kindling_ideas"
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[dependencies]

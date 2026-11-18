@@ -1,0 +1,149 @@
+<!doctype html>
+<!--
+  lessons/design-1-scope.html
+  WHAT: Lesson: Scope: a game you can finish. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scope: a game you can finish | Kindling lessons</title>
+  <meta name="description" content="Pick a jam idea you can finish: one verb, a must/should/could list, and a budget that assumes everything takes twice as long.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Scope: a game you can finish</h1>
+    <p class="lesson-meta">Game design track · lesson 1 of 3 · about 20 minutes</p>
+    <p class="lead">Most jam games that fail are not bad ideas. They are good ideas that were three times too big.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A jam game needs <strong>one verb</strong> (jump, shoot, push, match, dodge) done well, one way to win, one way to lose, and sound. Everything else is a bonus. Write your idea as a sentence: <em>"You <strong>verb</strong> to <strong>goal</strong>, but <strong>problem</strong>."</em> For example: "You <strong>jump</strong> between rooftops to <strong>deliver mail</strong>, but <strong>the city is sinking</strong>."</p>
+    <p>Then sort features into <strong>must</strong> (the game does not exist without it), <strong>should</strong> and <strong>could</strong>. Build every must before any should. Aim for a playable, ugly version (an MVP, minimum viable product) by the end of the first quarter of the jam.</p>
+    <p>Budget honestly: you will work about 40% of the jam's hours, and everything takes about twice as long as you think.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Tick features and pick a jam length. The bar turns red when the plan cannot fit.</p>
+    <div class="viz-stage" style="padding: 1rem;">
+      <form id="scope" class="viz-controls" style="display: block;">
+        <label>Jam length
+          <select id="jam-hours"><option value="48">48 hours</option><option value="72" selected>72 hours</option><option value="168">7 days</option></select>
+        </label>
+        <p style="margin: 0.6rem 0 0.3rem;"><strong>Features</strong> (your honest guess in hours):</p>
+        <ul class="checklist" id="features" style="margin: 0;"></ul>
+      </form>
+      <p class="viz-readout" id="scope-readout" aria-live="polite"></p>
+      <div style="height: 22px; background: var(--background); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+        <div id="scope-bar" style="height: 100%; width: 0; background: var(--pass);"></div>
+      </div>
+      <p style="color: var(--muted); font-size: 0.9rem;">Real working time = jam length × 0.4 (sleep, food, life, setup, submitting). Real cost = your guess × 2, because everything takes twice as long in a jam.</p>
+    </div>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li><strong>Hour 0 to 1:</strong> read the theme, write five one-sentence pitches, pick the one whose verb you can build tonight. Write it at the top of your notes.</li>
+      <li><strong>Hour 1:</strong> make the game folder with <code>./jam/new-game.sh my-game</code> (see <a href="../jam/README.md">jam/</a>). It already runs, so you start from a working game, not a blank page.</li>
+      <li><strong>First 25% of the jam:</strong> the verb, one level, win and lose. Gray boxes are fine. If it is not fun with boxes, art will not save it; change the idea now, while it is cheap.</li>
+      <li><strong>Middle 50%:</strong> shoulds, then juice (sound, particles, shake). Playtest at least twice (next lessons).</li>
+      <li><strong>Last 25%:</strong> no new features. Fix, polish, write the page, and submit <em>two hours early</em>. Uploads fail and pages need screenshots. The <a href="../jam/JAM-CHECKLIST.md">jam checklist</a> and <a href="../jam/SCOPE-CUTTER.md">scope cutter</a> walk through each hour.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>The theme is <strong>"Only one"</strong>. Write a one-sentence pitch in the verb/goal/problem form, then a must/should/could list with an hour guess for each item. Use the budget above with a 48-hour jam until the bar is green.</p>
+    <details><summary>Hint 1</summary><p>"Only one" can be one button, one life, one bullet, one room, one minute, one move per turn...</p></details>
+    <details><summary>Hint 2</summary><p>If your musts alone turn the bar orange, the idea is too big. Remove a whole system (inventory, dialogue, multiplayer), not just a level.</p></details>
+    <details><summary>Solution</summary>
+      <p>An example answer:</p>
+<pre><code>Pitch: You fire your ONLY bullet and steer it through a room to hit every target,
+       but if it stops moving, you lose.
+
+Must (13 h guessed, 26 h real):
+  - bullet steers toward the mouse, constant speed          3 h
+  - walls bounce it, targets break on hit                     3 h
+  - 5 small rooms as tilemaps                                 4 h
+  - win and lose screens, restart with R                      1 h
+  - sounds: fire, bounce, hit, win, lose                      1 h
+  - itch.io page and upload                                   1 h
+Should: particles and shake on hits (1 h), a timer and best time (1 h)
+Could:  moving targets, a level select, music</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="design-1-scope">
+      <li><label><input type="checkbox" data-key="0"><span>How to write a pitch as verb, goal and problem.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>The difference between must, should and could, and the rule of building all musts first.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>Why the first playable should exist by the end of the first quarter.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why to budget about 40% of the jam's hours and double every guess.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>Why to submit two hours early.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./">← All lessons</a>
+      <a href="./design-2-game-feel.html">Game feel →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+  <script>
+    // Scope budget: a tiny interactive for this lesson (no engine needed).
+    (function () {
+      var FEATURES = [
+        ["Player moves and jumps", 3, true], ["One level that can be finished", 4, true], ["Win and lose screens", 1, true],
+        ["Sound effects", 1, true], ["Particles and screen shake", 1, false], ["A second enemy type", 3, false],
+        ["Three more levels", 6, false], ["Title screen with options", 2, false], ["Boss fight", 6, false],
+        ["Online leaderboard", 8, false], ["Story cutscenes", 6, false], ["Hand-drawn art for everything", 10, false]
+      ];
+      var list = document.getElementById("features");
+      FEATURES.forEach(function (feature, index) {
+        var item = document.createElement("li");
+        item.innerHTML = '<label><input type="checkbox" data-hours="' + feature[1] + '"' + (feature[2] ? " checked" : "") + '><span>' + feature[0] + " (" + feature[1] + " h)</span></label>";
+        list.appendChild(item);
+      });
+      function update() {
+        var available = Number(document.getElementById("jam-hours").value) * 0.4;
+        var planned = 0;
+        list.querySelectorAll("input:checked").forEach(function (box) { planned += Number(box.dataset.hours) * 2; });
+        var ratio = planned / available;
+        var bar = document.getElementById("scope-bar");
+        bar.style.width = Math.min(ratio, 1) * 100 + "%";
+        bar.style.background = ratio > 1 ? "var(--fail)" : ratio > 0.75 ? "var(--accent)" : "var(--pass)";
+        document.getElementById("scope-readout").textContent = "Real cost " + planned + " h of " + Math.round(available) + " h available: " +
+          (ratio > 1 ? "over budget. Cut something." : ratio > 0.75 ? "tight. No room for surprises." : "good. Leftover time becomes polish.");
+      }
+      document.getElementById("scope").addEventListener("change", update);
+      update();
+    })();
+  </script>
+</body>
+</html>

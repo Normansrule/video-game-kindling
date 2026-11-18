@@ -1,0 +1,133 @@
+<!doctype html>
+<!--
+  lessons/2d-2-drawing-input.html
+  WHAT: Lesson: Drawing and input. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drawing and input | Kindling lessons</title>
+  <meta name="description" content="Draw with Canvas 2D, and read keyboard, mouse, touch and gamepad through named actions.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Drawing and input</h1>
+    <p class="lesson-meta">2D track · lesson 2 of 6 · about 25 minutes</p>
+    <p class="lead">Draw rectangles and text on a canvas, then make them respond to any input device through one table of actions.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A 2D game draws on a <code>&lt;canvas&gt;</code> with the browser's <strong>Canvas 2D</strong> API: rectangles, circles, images and text. Kindling games choose a small game size such as 320×180 and let the engine scale it up to fit the window. You always think in game pixels.</p>
+    <p>Input has three questions per step: is it <strong>held</strong>, was it <strong>pressed</strong> since the last step, was it <strong>released</strong> since the last step. Use held for running, pressed for jumping. And instead of asking about keys, games ask about <strong>actions</strong>: you name a control <code>jump</code> and list everything that triggers it (Space, W, gamepad A, a touch button). The rest of the code never mentions a key again.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Hold and tap Space. Slow the steps down and tap fast: the tap still shows up as "pressed" even when it never shows as "held".</p>
+    <iframe class="viz-frame" src="../viz/12-input/" title="Input visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/12-input/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Pong declares its actions once, in <code>samples/2d/01-pong/main.js</code>:
+<pre><code>const game = createGame({
+  width: 320, height: 180,
+  actions: {
+    up: [&quot;ArrowUp&quot;, &quot;KeyW&quot;, &quot;pad:Up&quot;, &quot;pad:LeftY-&quot;, &quot;touch:up&quot;],
+    down: [&quot;ArrowDown&quot;, &quot;KeyS&quot;, &quot;pad:Down&quot;, &quot;pad:LeftY+&quot;, &quot;touch:down&quot;],
+    start: [&quot;Space&quot;, &quot;Enter&quot;, &quot;pad:A&quot;, &quot;pad:Start&quot;, &quot;mouse:0&quot;],
+  },
+});
+game.input.touch.addButton(&quot;up&quot;, 0, 0, 60, 90, &quot;▲&quot;);     // the left side of the screen
+game.input.touch.addButton(&quot;down&quot;, 0, 90, 60, 90, &quot;▼&quot;);</code></pre></li>
+      <li>Moving the paddle uses <code>axis</code>, which turns two actions into -1, 0 or +1, and <code>clamp</code> keeps it on screen:
+<pre><code>player.y += game.actions.axis(&quot;up&quot;, &quot;down&quot;) * PADDLE_SPEED * stepSeconds;
+player.y = clamp(player.y, 0, HEIGHT - PADDLE_HEIGHT);</code></pre></li>
+      <li>Drawing helpers live in <code>kindling/2d/draw.js</code>. The order you draw in is the order things stack: background first, HUD (heads-up display) last.
+<pre><code>fillRect(context, player.x, player.y, player.width, player.height, &quot;#4fa3ff&quot;);
+text(context, String(player.score), 140, 8, { size: 16, align: &quot;center&quot;, color: &quot;#4fa3ff&quot; });</code></pre></li>
+      <li>After every step the engine calls <code>endStep()</code> on each device, clearing pressed and released. That is the whole trick behind "pressed since the last step".</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Make a 12×12 square that moves in all four directions with arrow keys, WASD or a gamepad stick at 100 pixels per second. While the <code>boost</code> action (Shift or gamepad B) is <em>held</em>, it moves twice as fast. Each time <code>paint</code> (Space or gamepad A) is <em>pressed</em>, it changes to a random color.</p>
+    <details><summary>Hint 1</summary><p>Two axes: <code>axis("left", "right")</code> and <code>axis("up", "down")</code>. Shift is <code>"ShiftLeft"</code>.</p></details>
+    <details><summary>Hint 2</summary><p><code>random.pick([...colors])</code> from <code>kindling/math/random.js</code> picks a color.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { createGame } from &quot;kindling/game.js&quot;;
+import { fillRect } from &quot;kindling/2d/draw.js&quot;;
+import { random } from &quot;kindling/math/random.js&quot;;
+
+const game = createGame({
+  width: 320, height: 180,
+  actions: {
+    left: [&quot;ArrowLeft&quot;, &quot;KeyA&quot;, &quot;pad:LeftX-&quot;], right: [&quot;ArrowRight&quot;, &quot;KeyD&quot;, &quot;pad:LeftX+&quot;],
+    up: [&quot;ArrowUp&quot;, &quot;KeyW&quot;, &quot;pad:LeftY-&quot;], down: [&quot;ArrowDown&quot;, &quot;KeyS&quot;, &quot;pad:LeftY+&quot;],
+    boost: [&quot;ShiftLeft&quot;, &quot;pad:B&quot;], paint: [&quot;Space&quot;, &quot;pad:A&quot;],
+  },
+});
+const square = { x: 154, y: 84, color: &quot;#ffb347&quot; };
+
+game.scenes.add(&quot;play&quot;, {
+  update(game, stepSeconds) {
+    const speed = game.actions.isDown(&quot;boost&quot;) ? 200 : 100;
+    square.x += game.actions.axis(&quot;left&quot;, &quot;right&quot;) * speed * stepSeconds;
+    square.y += game.actions.axis(&quot;up&quot;, &quot;down&quot;) * speed * stepSeconds;
+    if (game.actions.wasPressed(&quot;paint&quot;)) square.color = random.pick([&quot;#ffb347&quot;, &quot;#4fa3ff&quot;, &quot;#3fbf6a&quot;, &quot;#e05a7a&quot;]);
+  },
+  render(game, context) {
+    fillRect(context, square.x, square.y, 12, 12, square.color);
+  },
+});
+game.start(&quot;play&quot;);</code></pre>
+      <p>Moving diagonally is faster than moving straight (about 1.41 times). Fixing that is a nice extra: put the two axes in a vector and use <code>vec2.normalize</code> when its length is over 1.</p>
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-2-drawing-input">
+      <li><label><input type="checkbox" data-key="0"><span>The difference between held, pressed and released, and which to use for running and for jumping.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why a quick tap between two steps is not lost.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>How an actions table keeps keys out of game code.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>That drawing order is stacking order.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>How to add a touch button for phones.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./2d-1-game-loop.html">← The game loop</a>
+      <a href="./2d-3-collision.html">Collision →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

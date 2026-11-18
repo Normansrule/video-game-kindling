@@ -1,0 +1,119 @@
+<!doctype html>
+<!--
+  samples/index.html
+  WHAT: Samples: one card per page, with a screenshot.
+  DOC:  README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Samples | Kindling</title>
+  <meta name="description" content="Small complete games built with the Kindling engine, 2D and 3D.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="site-nav" aria-label="Breadcrumb"><a href="../">Kindling</a><a href="../viz/">Visualizations</a><a href="../lessons/">Lessons</a></nav>
+    <h1>Samples</h1>
+    <p class="lead">Small, complete games. Each one is a single <code>main.js</code> you can read top to bottom.</p>
+    <h2>2D (Canvas 2D)</h2>
+    <ul class="gallery">
+      <li>
+        <img src="../assets/thumbs/2d-01-pong.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/01-pong/">Pong</a>
+          <p>Two paddles, one ball. The game loop, input and AABB (box) collision.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/01-pong">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/2d-02-snake.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/02-snake/">Snake</a>
+          <p>A grid game: a fixed tick, a queue of turns, and growing.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/02-snake">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/2d-03-breakout.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/03-breakout/">Breakout</a>
+          <p>Ball versus bricks: which side did it hit? Particles and screen shake.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/03-breakout">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/2d-04-platformer.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/04-platformer/">Platformer</a>
+          <p>Run, jump, coins, one-way platforms, a camera, sprite animation, two levels.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/04-platformer">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/2d-05-top-down-shooter.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/05-top-down-shooter/">Top-down shooter</a>
+          <p>Twin-stick aiming, waves of enemies, bullets, knockback.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/05-top-down-shooter">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/2d-06-tilemap-room.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./2d/06-tilemap-room/">Tilemap rooms</a>
+          <p>A small Zelda-like world: rooms, signs, a key and a locked door.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/06-tilemap-room">Source</a></p>
+        </div>
+      </li>
+    </ul>
+    <h2>3D (WebGL 2, and one raycaster)</h2>
+    <ul class="gallery">
+      <li>
+        <img src="../assets/thumbs/3d-01-spinning-cube.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./3d/01-spinning-cube/">Spinning cube</a>
+          <p>Hello world of WebGL 2: one lit, textured cube.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/01-spinning-cube">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/3d-02-lit-scene.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./3d/02-lit-scene/">Lit scene</a>
+          <p>Trees from an .obj file, Phong lighting, fog and an orbit camera.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/02-lit-scene">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/3d-03-raycaster-maze.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./3d/03-raycaster-maze/">Raycaster maze</a>
+          <p>Wolfenstein-style 3D with no WebGL. A new maze every run.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/03-raycaster-maze">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/3d-04-coin-collector.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./3d/04-coin-collector/">Coin collector</a>
+          <p>A third-person 3D platformer: AABB collision in 3D and a follow camera.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/04-coin-collector">Source</a></p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/3d-05-first-person-walk.jpg" alt="" loading="lazy" width="480" height="300">
+        <div class="body">
+          <a href="./3d/05-first-person-walk/">First-person walk</a>
+          <p>Mouse look, a level written as text, canvas textures, fog.</p>
+          <p class="links"><a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/05-first-person-walk">Source</a></p>
+        </div>
+      </li>
+    </ul>
+    <h2>Start here</h2>
+    <p><a href="./00-hello/">Sample 00: hello</a> only checks that the engine loads. Every sample's README lists its controls, what it teaches, and three things to try changing.</p>
+  </main>
+</body>
+</html>

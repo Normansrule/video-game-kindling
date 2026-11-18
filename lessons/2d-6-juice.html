@@ -1,0 +1,119 @@
+<!doctype html>
+<!--
+  lessons/2d-6-juice.html
+  WHAT: Lesson: Juice: particles, shake, tweens and sound. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juice: particles, shake, tweens and sound | Kindling lessons</title>
+  <meta name="description" content="Make actions feel good with particles, screen shake, tweens, hit-stop and sound effects.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Juice: particles, shake, tweens and sound</h1>
+    <p class="lesson-meta">2D track · lesson 6 of 6 · about 30 minutes</p>
+    <p class="lead">The same game can feel dead or alive. The difference is a dozen tiny reactions to every action.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>"Juice" is feedback: when something happens, the game reacts in several ways at once. A brick breaking in Breakout plays a sound, shakes the screen a little, bursts into particles and adds to the score. None of that changes the rules, and all of it changes how the game feels.</p>
+    <p>Kindling has a tool for each: <strong>particles</strong> (tiny short-lived dots), <strong>camera shake</strong>, <strong>tweens</strong> (animate any number with an easing curve), <strong>timers</strong>, and <strong>sound effects</strong> generated from code. A classic extra is <strong>hit-stop</strong>: freeze the game for a few hundredths of a second on a big hit, so it lands with weight.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Try every preset and change its settings. Each one is a few numbers you can copy into a game.</p>
+    <iframe class="viz-frame" src="../viz/08-particles/" title="Particles visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/08-particles/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Breakout's brick hit, from <code>samples/2d/03-breakout/main.js</code>: four reactions in five lines.
+<pre><code>brick.hits -= 1;
+score += 10;
+camera.shake(2, 0.1);
+if (brick.hits &lt;= 0) {
+  particles.emit({ ...presets.explosion, count: 12, x: brick.x + brick.width / 2, y: brick.y + brick.height / 2 });
+  playSfx(audio, &quot;hit&quot;);
+}</code></pre></li>
+      <li>Bricks do not just appear; each one grows in, one after another, with a tween and a timer:
+<pre><code>game.timers.after((row * 11 + column) * 0.01, () =&gt; game.tweens.to(brick, { scale: 1 }, 0.4, easeOutBack));</code></pre></li>
+      <li>Sound effects are made from code: a wave whose pitch slides. Rising sounds happy, falling sounds like losing. Design your own in the <a href="../viz/13-sound/">sound visualization</a>, which prints the line of code.
+<pre><code>playSfx(audio, &quot;coin&quot;);
+playTone(audio, { type: &quot;square&quot;, frequency: 220, frequencyEnd: 660, duration: 0.15, volume: 0.2 });</code></pre></li>
+      <li>Particles, shake and tweens update in the game step, so pausing the game pauses them. That is why they are owned by <code>game</code> (<code>game.tweens</code>, <code>game.timers</code>) or updated in your scene's <code>update</code>.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Add <strong>hit-stop</strong> to Breakout: when a brick is destroyed, freeze the game (ball, paddle, particles) for 0.06 seconds. Then add a <strong>score pop</strong>: the score text briefly grows to 1.5 times its size and settles back.</p>
+    <details><summary>Hint 1</summary><p>Keep <code>let freezeSeconds = 0</code>. At the top of <code>update</code>: if it is above zero, subtract <code>stepSeconds</code> and <code>return</code> before anything moves.</p></details>
+    <details><summary>Hint 2</summary><p>For the pop: <code>const scoreLook = { size: 8 }</code>; on a hit, set <code>scoreLook.size = 12</code> and tween it back with <code>game.tweens.to(scoreLook, { size: 8 }, 0.25, easeOutCubic)</code>. Draw the score with <code>size: scoreLook.size</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>let freezeSeconds = 0;
+const scoreLook = { size: 8 };
+
+// First lines of update(game, stepSeconds):
+if (freezeSeconds &gt; 0) {
+  freezeSeconds -= stepSeconds;
+  return;                       // nothing moves while frozen
+}
+
+// Where a brick is destroyed (brick.hits &lt;= 0):
+freezeSeconds = 0.06;
+scoreLook.size = 12;
+game.tweens.to(scoreLook, { size: 8 }, 0.25, easeOutCubic);
+
+// In render, where the score is drawn:
+text(context, &quot;SCORE &quot; + score, 6, 6, { color: &quot;#cccccc&quot;, size: Math.round(scoreLook.size) });</code></pre>
+      <p>Import <code>easeOutCubic</code> from <code>kindling/math/easing.js</code>. Keep the freeze short: past about 0.1 seconds it starts to feel like lag instead of impact.</p>
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-6-juice">
+      <li><label><input type="checkbox" data-key="0"><span>What juice is, and that it changes feel, not rules.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>How to emit a particle burst from a preset and tune it.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>How to animate any number with <code>tweens.to</code> and an easing curve.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>How to make sound effects from code.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>What hit-stop is and how to build it with one timer.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./2d-5-tilemaps-camera.html">← Tilemaps and the camera</a>
+      <a href="./">All lessons →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* viz/viz.css
+   WHAT: Layout for the interactive visualizations (loaded after assets/site.css).
+   WHY:  Every viz looks the same: title, stage, controls, "what to notice".
+         Calm colors, big labels, works at 390 px. */
+
+.viz { max-width: 60rem; }
+.viz h1 { font-size: 1.7rem; }
+
+.viz-stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  margin: 1rem 0;
+}
+.viz-stage canvas { width: 100%; height: auto; border-radius: 6px; }
+
+.viz-controls {
+  display: grid;
+  gap: 0.75rem 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  align-items: end;
+  margin: 1rem 0;
+}
+.viz-controls label { display: grid; gap: 0.25rem; font-size: 0.92rem; color: var(--muted); }
+.viz-controls output { color: var(--text); font-variant-numeric: tabular-nums; }
+.viz-controls input[type="range"] { width: 100%; accent-color: var(--accent); min-height: 24px; }
+.viz-controls select { font: inherit; padding: 0.35rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.viz-controls .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.viz-controls .check { display: flex; gap: 0.5rem; align-items: center; color: var(--text); }
+
+.viz button.control {
+  font: inherit;
+  min-height: 44px;            /* comfortable touch target */
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.viz button.control.primary { background: var(--accent); color: var(--background); border-color: var(--accent); }
+.viz button.control:focus-visible, .viz select:focus-visible, .viz input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.viz-readout { font-family: ui-monospace, Consolas, monospace; font-size: 0.9rem; color: var(--muted); min-height: 1.5em; }
+.viz-notice { border-left: 3px solid var(--accent); padding: 0.25rem 0 0.25rem 0.9rem; }
+.viz-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font-size: 0.9rem; color: var(--muted); list-style: none; padding: 0; }
+.viz-legend span { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; margin-right: 0.35rem; vertical-align: -1px; }

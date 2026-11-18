@@ -1,0 +1,149 @@
+/* assets/site.css
+   WHAT: Shared look for the landing page, docs pages, tests and samples' frames.
+   WHY:  One calm style, dark and light, readable at 390 px wide.
+         Colors are named tokens so every page changes together. */
+
+:root {
+  color-scheme: light dark;
+  --background: #fafaf7;
+  --surface: #ffffff;
+  --text: #1c1d21;
+  --muted: #5b5e66;
+  --accent: #b4500a;      /* ember orange, 4.9:1 on --background (WCAG AA) */
+  --accent-2: #1f5fa8;
+  --border: #e3e2dc;
+  --pass: #1f7a3a;
+  --fail: #b3261e;
+}
+
+/* Dark theme: follows the system unless the reader picked a theme with the toggle
+   (assets/theme.js sets data-theme="light" or "dark" on <html>). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #121317;
+    --surface: #1b1d23;
+    --text: #ececea;
+    --muted: #a4a7ae;
+    --accent: #ffb347;    /* 10:1 on --background */
+    --accent-2: #6cb6ff;
+    --border: #2c2f37;
+    --pass: #6fd08c;
+    --fail: #ff8a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+    --background: #121317;
+  --surface: #1b1d23;
+  --text: #ececea;
+  --muted: #a4a7ae;
+  --accent: #ffb347;    /* 10:1 on --background */
+  --accent-2: #6cb6ff;
+  --border: #2c2f37;
+  --pass: #6fd08c;
+  --fail: #ff8a80;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;   /* 16 px side gutter for phones */
+}
+
+h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.25rem; margin: 2.25rem 0 0.5rem; }
+p, li { color: var(--text); }
+.lead { font-size: 1.15rem; color: var(--muted); }
+
+a { color: var(--accent); text-underline-offset: 0.15em; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+code, pre {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.92em;
+}
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;           /* long commands scroll inside the box, not the page */
+}
+
+.notice {
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+}
+
+.cards { list-style: none; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.cards li { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+.cards span { display: block; color: var(--muted); font-size: 0.92rem; }
+
+canvas { max-width: 100%; height: auto; border-radius: 8px; display: block; }
+
+.pass { color: var(--pass); }
+.fail { color: var(--fail); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Theme toggle button (assets/theme.js) */
+.theme-toggle {
+  position: fixed; top: 12px; right: 12px;
+  font: inherit; font-size: 0.85rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 0.35rem 0.8rem; cursor: pointer;
+}
+.theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.95rem; margin-bottom: 1.5rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+
+/* Gallery of samples and visualizations (samples/index.html, viz/index.html, landing page). */
+.gallery { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+.gallery li { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+.gallery img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; display: block; background: #15161b; }
+.gallery .body { padding: 0.7rem 0.9rem 0.9rem; }
+.gallery a { font-weight: 600; }
+.gallery p { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.92rem; }
+.gallery .links { font-size: 0.88rem; margin-top: 0.4rem; }
+.gallery .links a { font-weight: 400; margin-right: 0.8rem; }
+
+/* Lessons (lessons/*.html). */
+.lesson-meta { color: var(--muted); font-size: 0.95rem; margin-top: -0.25rem; }
+.lesson h2 { display: flex; align-items: baseline; gap: 0.6rem; }
+.lesson h2 .step { font-size: 0.8rem; font-weight: 600; color: var(--background); background: var(--accent); border-radius: 999px; padding: 0.1rem 0.55rem; }
+.viz-frame { width: 100%; height: 640px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.viz-frame.short { height: 460px; }
+details { border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.8rem; margin: 0.5rem 0; background: var(--surface); }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 0.4rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li { margin: 0.35rem 0; }
+.checklist label { display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer; }
+.checklist input { width: 1.1rem; height: 1.1rem; margin-top: 0.2rem; accent-color: var(--accent); flex: none; }
+.lesson-pager { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.track-list { list-style: none; padding: 0; counter-reset: lesson; }
+.track-list li { counter-increment: lesson; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem; margin: 0.6rem 0; }
+.track-list li::before { content: counter(lesson) ". "; font-weight: 700; color: var(--accent); }
+.track-list span { display: block; color: var(--muted); font-size: 0.92rem; }
+@media (max-width: 600px) { .viz-frame { height: 720px; } }
+/* A page shown inside a lesson's iframe: the lesson already has navigation and a theme toggle. */
+.embedded .site-nav, .embedded .theme-toggle { display: none; }
+.embedded body { padding-top: 0; }

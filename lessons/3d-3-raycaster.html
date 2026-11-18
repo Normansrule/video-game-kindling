@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+  lessons/3d-3-raycaster.html
+  WHAT: Lesson: The raycaster: 3D without WebGL. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The raycaster: 3D without WebGL | Kindling lessons</title>
+  <meta name="description" content="Cast one ray per screen column across a grid map and draw walls whose height is one over the distance.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>The raycaster: 3D without WebGL</h1>
+    <p class="lesson-meta">3D track · lesson 3 of 4 · about 30 minutes</p>
+    <p class="lead">In 1992 Wolfenstein 3D ran on computers with no 3D hardware. The trick fits in a hundred lines.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>The world is a flat grid of walls, like a tilemap. The player has a position and an angle. For every column of the screen, cast a <strong>ray</strong> from the player across the grid until it hits a wall. Draw a vertical stripe in that column: tall if the wall is near, short if it is far. Height = 1 / distance.</p>
+    <p>Rays step from grid line to grid line (the DDA, digital differential analyzer, method), so even long corridors take only a few steps per ray. One fix is needed: rays at the edge of the view travel further to reach a flat wall than rays in the middle, which makes walls bulge (the <strong>fisheye</strong> effect). Measuring distance at right angles to the camera instead of along the ray removes it.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Left: the map from above with every ray. Right: the view those rays make. Turn the fisheye fix off, and lower the ray count.</p>
+    <iframe class="viz-frame" src="../viz/11-raycaster/" title="Raycaster visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/11-raycaster/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>The whole view in two calls, from the maze sample:
+<pre><code>const hits = castRays(grid, player, FIELD_OF_VIEW, WIDTH / 2);   // one ray per 2 pixels
+drawRaycastView(context, hits, WIDTH, HEIGHT, { wallColors: WALL_COLORS, shadeDistance: 9 });</code></pre></li>
+      <li>The fisheye fix inside <code>castRays</code>: multiply by the cosine of the angle between this ray and the center of the view.
+<pre><code>const hit = castRay(grid, player.x, player.y, rayAngle);
+if (hit &amp;&amp; fixFisheye) hit.distance = hit.distance * Math.cos(rayAngle - player.angle);</code></pre></li>
+      <li>Walking: forward is along the view angle, sideways is 90 degrees to it, and <code>moveInGrid</code> slides along walls one axis at a time (the same idea as 2D physics):
+<pre><code>moveInGrid(grid, player, cos * forward - sin * sideways, sin * forward + cos * sideways);</code></pre></li>
+      <li>The maze itself is generated with a recursive backtracker (<code>generateMaze</code>): walk randomly, knock down walls, and back up at dead ends. Every run is a new maze with exactly one path between any two places.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Give the raycaster maze a <strong>best time</strong> that survives closing the browser. Show it on the "YOU ESCAPED!" screen, and say "New best!" when you beat it.</p>
+    <details><summary>Hint 1</summary><p><code>createStorage("raycaster-maze")</code> from <code>kindling/core/storage.js</code> gives <code>save(key, value)</code> and <code>load(key, fallback)</code>.</p></details>
+    <details><summary>Hint 2</summary><p>Check and save where the sample detects the exit (where <code>mazesSolved += 1</code> happens), and remember whether it was a new best in a variable for the escaped screen.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { createStorage } from &quot;kindling/core/storage.js&quot;;
+const storage = createStorage(&quot;raycaster-maze&quot;);
+let bestSeconds = storage.load(&quot;bestSeconds&quot;, null);
+let newBest = false;
+
+// Where the exit is reached, next to mazesSolved += 1:
+newBest = bestSeconds === null || seconds &lt; bestSeconds;
+if (newBest) {
+  bestSeconds = seconds;
+  storage.save(&quot;bestSeconds&quot;, bestSeconds);
+}
+
+// In the &quot;escaped&quot; scene&#x27;s render, under the time line:
+text(context, newBest ? &quot;New best!&quot; : &quot;Best &quot; + bestSeconds.toFixed(1) + &quot; s&quot;, WIDTH / 2, 140, { align: &quot;center&quot;, color: &quot;#ffd23f&quot; });</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="3d-3-raycaster">
+      <li><label><input type="checkbox" data-key="0"><span>How one ray per screen column becomes a 3D-looking view.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why wall height is one over the distance.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>What causes the fisheye effect and how the cosine fixes it.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why stepping grid line to grid line is fast.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>How to save a value between visits with <code>createStorage</code>.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./3d-2-meshes-lighting.html">← Meshes and lighting</a>
+      <a href="./3d-4-first-person.html">A first-person walk →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  samples/00-hello/index.html
+  WHAT: The smallest Kindling page. It proves the import map works.
+  WHY:  Every sample copies this pattern: one import map, one module script.
+  DOC:  docs/RUNNING.md
+  RUN:  from the repo root, python3 -m http.server 8000
+        then open http://localhost:8000/samples/00-hello/
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kindling sample 00: hello</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <!-- The import map must come BEFORE any module script.
+       "kindling/" is a nickname for the engine folder, written relative to THIS page,
+       so it works on localhost, on GitHub Pages (/kindling/...) and inside an itch.io zip. -->
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <h1>Sample 00: hello</h1>
+    <p id="status" role="status">Loading the engine…</p>
+    <canvas id="game" width="320" height="180" aria-label="A dark rectangle with the engine version written in it"></canvas>
+    <p><a href="../../">Back to Kindling</a></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

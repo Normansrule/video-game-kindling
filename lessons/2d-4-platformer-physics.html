@@ -1,0 +1,122 @@
+<!doctype html>
+<!--
+  lessons/2d-4-platformer-physics.html
+  WHAT: Lesson: Platformer physics. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Platformer physics | Kindling lessons</title>
+  <meta name="description" content="Gravity, velocity, moving one axis at a time, and the tricks that make jumping feel good.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Platformer physics</h1>
+    <p class="lesson-meta">2D track · lesson 4 of 6 · about 35 minutes</p>
+    <p class="lead">Gravity changes velocity, velocity changes position, and walls stop you. Then a few small cheats make it feel great.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>Arcade physics is simple on purpose: a body has a position, a velocity (pixels per second) and maybe gravity (pixels per second, per second). Each step, gravity is added to the vertical velocity, then velocity moves the body.</p>
+    <p>The key trick is to <strong>move one axis at a time</strong>. Move along x, and if you are now inside a wall, push back out along x. Then do the same for y. Because each move is along one axis, you always know which way to push (back the way you came), and you slide along walls instead of snagging on corners. Landing is just "pushed up while moving down", which sets <code>onGround</code>.</p>
+    <p>Good platformers then cheat in the player's favor: <strong>coyote time</strong> (you can still jump a moment after running off a ledge), <strong>jump buffering</strong> (a jump pressed just before landing still counts) and <strong>variable jump height</strong> (let go early for a small hop).</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Run and jump with the buttons or arrow keys, drop bouncing balls, and change gravity and jump speed. The arrows show velocity.</p>
+    <iframe class="viz-frame" src="../viz/06-physics/" title="Physics visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/06-physics/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>The body and the world, from the platformer sample. A tilemap is a world, because it can list the solid tiles near any rectangle:
+<pre><code>const map = createTilemap({ rows: LEVEL, tileSize: 16, solid: &quot;#B&quot;, oneWay: &quot;=&quot; });
+const player = createBody({ x: start.x + 3, y: start.y + 2, width: 10, height: 14, gravity: GRAVITY });</code></pre></li>
+      <li>Each step, input sets the horizontal velocity with acceleration and friction (<code>approach</code> moves toward a target without overshooting), then the timers decide whether to jump:
+<pre><code>player.velocityX = approach(player.velocityX, direction * RUN_SPEED, ACCELERATION * stepSeconds);
+
+coyoteTimer = player.onGround ? COYOTE_SECONDS : coyoteTimer - stepSeconds;
+jumpBufferTimer = game.actions.wasPressed(&quot;jump&quot;) ? JUMP_BUFFER_SECONDS : jumpBufferTimer - stepSeconds;
+if (jumpBufferTimer &gt; 0 &amp;&amp; coyoteTimer &gt; 0) {
+  player.velocityY = -JUMP_SPEED;   // up is negative in 2D
+  jumpBufferTimer = 0;
+  coyoteTimer = 0;
+}</code></pre></li>
+      <li>Variable jump height: while rising, if jump is not held, shrink the upward speed quickly. The <code>Math.pow(..., stepSeconds * 60)</code> keeps it the same at any step size.
+<pre><code>if (!game.actions.isDown(&quot;jump&quot;) &amp;&amp; player.velocityY &lt; 0) {
+  player.velocityY = player.velocityY * Math.pow(JUMP_CUT, stepSeconds * 60);
+}</code></pre></li>
+      <li>Then one call does gravity, the x move, the y move and sets <code>onGround</code> and <code>touching</code>:
+<pre><code>moveAndCollide(player, stepSeconds, map);</code></pre></li>
+      <li>Press <kbd>`</kbd> in the <a href="../samples/2d/04-platformer/">platformer</a> to open the debug overlay and watch <code>velocityY</code> and the coyote timer change as you play.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Add a <strong>double jump</strong> to the platformer: one extra jump in the air, which comes back when you land. Make the second jump a little weaker (80% of <code>JUMP_SPEED</code>).</p>
+    <details><summary>Hint 1</summary><p>Keep a counter <code>airJumpsLeft</code>. Reset it to 1 whenever <code>player.onGround</code> is true.</p></details>
+    <details><summary>Hint 2</summary><p>The normal jump needs coyote time; the air jump should happen on <code>wasPressed("jump")</code> when coyote time has run out and <code>airJumpsLeft &gt; 0</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>// Near the other timers:
+let airJumpsLeft = 1;
+
+// In updatePlayer(), right after the normal jump block:
+if (player.onGround) airJumpsLeft = 1;
+if (game.actions.wasPressed(&quot;jump&quot;) &amp;&amp; coyoteTimer &lt;= 0 &amp;&amp; airJumpsLeft &gt; 0) {
+  player.velocityY = -JUMP_SPEED * 0.8;
+  airJumpsLeft -= 1;
+  jumpBufferTimer = 0;          // so the buffer does not fire a third jump on landing
+  playSfx(audio, &quot;jump&quot;);
+  particles.emit({ ...presets.sparkle, x: player.x + 5, y: player.y + 14 });
+}</code></pre>
+      <p>Why <code>coyoteTimer &lt;= 0</code>? Without it, pressing jump once on the ground would use both jumps in the same step.</p>
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-4-platformer-physics">
+      <li><label><input type="checkbox" data-key="0"><span>The order: gravity changes velocity, velocity changes position.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why moving one axis at a time makes collision easy and stops corner snagging.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>How <code>onGround</code> gets set.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Coyote time, jump buffering and variable jump height, and why each feels better.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>Why multiplying by <code>Math.pow(cut, stepSeconds * 60)</code> keeps behavior the same at any step size.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./2d-3-collision.html">← Collision</a>
+      <a href="./2d-5-tilemaps-camera.html">Tilemaps and the camera →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

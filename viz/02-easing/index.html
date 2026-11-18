@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  viz/02-easing/index.html
+  WHAT: Visualization 2: easing functions (engine/math/easing.js, engine/core/tween.js).
+  DOC:  docs/modules/math.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Easing visualized</title>
+  <meta name="description" content="Interactive easing curves: see how each easing function shapes motion over time.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/math.md">Doc: math</a>
+    </nav>
+    <h1>2. Easing: shaping motion over time</h1>
+    <p class="lead">An easing function takes progress <code>t</code> from 0 to 1 and bends it. Same start, same end, very different feel.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" role="img" aria-label="Graph of the chosen easing curve with a moving dot, and a box moving with that easing next to a box moving linearly."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent)"></span>Chosen easing</li>
+      <li><span style="background: var(--muted)"></span>Linear, for comparison</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li><strong>Out</strong> easings start fast and settle: use them for things arriving (menus, pickups popping up).</li>
+      <li><strong>In</strong> easings start slow and speed up: use them for things leaving.</li>
+      <li><strong>Back</strong> and <strong>elastic</strong> go past 1 for a moment. That overshoot is what makes UI feel springy.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { easeOutBack } from "kindling/math/easing.js";
+import { lerp } from "kindling/math/scalar.js";
+
+const t = elapsed / duration;            // 0..1
+x = lerp(startX, endX, easeOutBack(t));
+
+// or let the engine do it:
+game.tweens.to(menu, { y: 40 }, 0.6, easeOutBack);</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/math/easing.js">engine/math/easing.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

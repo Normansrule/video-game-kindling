@@ -1,0 +1,60 @@
+<!doctype html>
+<!--
+  viz/06-physics/index.html
+  WHAT: Visualization 6: arcade physics.
+  DOC:  docs/modules/physics.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arcade physics visualized</title>
+  <meta name="description" content="Play with gravity, jumping, one-way platforms and bouncing balls.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/physics.md">Doc: physics</a>
+    </nav>
+    <h1>6. Arcade physics</h1>
+    <p class="lead">Gravity changes velocity, velocity changes position, and solids stop you. Move with the arrow keys or A and D, jump with Space or W, or use the buttons.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A small box you control, platforms including a one-way platform, and bouncing balls with velocity arrows."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Player body</li>
+      <li><span style="background: var(--accent)"></span>Velocity arrow</li>
+      <li><span style="background: var(--muted)"></span>Solid</li>
+      <li><span style="background: var(--pass)"></span>One-way platform</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Movement is done one axis at a time: first x, then y. That is why you slide along walls instead of sticking.</li>
+      <li>Jump up through the green platform from below, then land on it. One-way platforms only collide when you are falling onto them.</li>
+      <li>Turn bounce to 1 and the balls never lose energy. Turn it to 0 and they stop dead.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createBody, moveAndCollide } from &quot;kindling/2d/physics.js&quot;;
+
+const player = createBody({ x: 40, y: 0, width: 12, height: 14, gravity: 900 });
+
+// each update step
+player.velocityX = actions.axis(&quot;left&quot;, &quot;right&quot;) * 120;
+if (actions.wasPressed(&quot;jump&quot;) &amp;&amp; player.onGround) player.velocityY = -320;
+moveAndCollide(player, stepSeconds, level);   // level = tilemap or createSolids([...])</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/physics.js">engine/2d/physics.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  tests/index.html
+  WHAT: Runs every check in tests/checks/ in the browser and lists pass or fail.
+  WHY:  You can test the engine with nothing installed except a browser.
+  DOC:  docs/RUNNING.md (section "Running the tests")
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kindling tests</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <main class="page">
+    <h1>Kindling tests</h1>
+    <p id="summary" role="status">Running…</p>
+    <ol id="results"></ol>
+    <p><a href="../">Back to Kindling</a></p>
+  </main>
+  <script type="module">
+    import { checkGroups } from "./checks/all.js";
+
+    // Flatten the groups into one list, keeping the group name in front.
+    const allChecks = [];
+    for (const group of checkGroups) {
+      for (const check of group.checks) {
+        allChecks.push({ name: group.name + ": " + check.name, run: check.run });
+      }
+    }
+    const list = document.getElementById("results");
+    let failures = 0;
+
+    for (const check of allChecks) {
+      const item = document.createElement("li");
+      try {
+        check.run();
+        item.textContent = "PASS  " + check.name;
+        item.className = "pass";
+      } catch (error) {
+        failures = failures + 1;
+        item.textContent = "FAIL  " + check.name + ": " + error.message;
+        item.className = "fail";
+        console.error(error);
+      }
+      list.appendChild(item);
+    }
+
+    const passed = allChecks.length - failures;
+    document.getElementById("summary").textContent =
+      passed + " of " + allChecks.length + " checks passed.";
+  </script>
+</body>
+</html>

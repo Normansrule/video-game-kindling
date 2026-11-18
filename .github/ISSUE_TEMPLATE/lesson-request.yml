@@ -1,0 +1,22 @@
+name: Lesson request
+description: Ask for a lesson or visualization about an idea you want to understand.
+labels: ["lesson request"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: Topic
+      placeholder: "Pathfinding with A*"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What is confusing about it now, or what would you build with it?
+    validations:
+      required: true
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      options: ["2D", "3D", "Game design", "Language bridges (Python, React, Rust)"]

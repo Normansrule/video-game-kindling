@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+  lessons/design-2-game-feel.html
+  WHAT: Lesson: Game feel. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game feel | Kindling lessons</title>
+  <meta name="description" content="Why the same game can feel stiff or great: response, easing, anticipation, and squash and stretch.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Game feel</h1>
+    <p class="lesson-meta">Game design track · lesson 2 of 3 · about 25 minutes</p>
+    <p class="lead">Game feel is how an action feels in your hands. It comes from timing and reaction, not from features.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>Players judge a game in seconds, by how it responds. Four ingredients:</p>
+    <ul>
+      <li><strong>Response:</strong> input acts on the very next step. Buffers and coyote time forgive near-misses, because players press early and late all the time.</li>
+      <li><strong>Easing:</strong> things accelerate and settle instead of starting and stopping instantly. <code>approach()</code> for speeds, <code>damp()</code> for cameras, easing curves for UI (user interface) motion.</li>
+      <li><strong>Reaction:</strong> every action gets a sound, a particle, a shake or a flash. (See <a href="./2d-6-juice.html">Juice</a>.)</li>
+      <li><strong>Squash and stretch:</strong> objects deform a little when they jump and land. Animators have used it for a century because it reads as weight.</li>
+    </ul>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Compare the curves. easeOutCubic feels responsive (fast start, soft stop); easeOutBack overshoots, which is great for things that pop in.</p>
+    <iframe class="viz-frame" src="../viz/02-easing/" title="Easing visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/02-easing/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Acceleration and friction in the platformer: the player reaches full speed quickly but not instantly, and slides a tiny bit when you let go.
+<pre><code>player.velocityX = approach(player.velocityX, direction * RUN_SPEED, ACCELERATION * stepSeconds);
+// no input:
+player.velocityX = approach(player.velocityX, 0, FRICTION * stepSeconds);</code></pre></li>
+      <li>A camera that eases with <code>damp</code> (the same at any frame rate) and a dead zone, so small moves do not shake the view:
+<pre><code>createCamera({ width: 320, height: 180, smoothing: 10, deadZone: { width: 24, height: 40 } });</code></pre></li>
+      <li>Pop-in with overshoot, from Breakout:
+<pre><code>game.tweens.to(brick, { scale: 1 }, 0.4, easeOutBack);</code></pre></li>
+      <li>Sound with a little random pitch so a repeated action never sounds identical: <code>playSfx(audio, "coin")</code> varies pitch by ±5% on its own.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Add <strong>squash and stretch</strong> to the platformer hero: stretch tall and thin when jumping, squash wide and short when landing, and ease back to normal.</p>
+    <details><summary>Hint 1</summary><p>Keep <code>const squash = { x: 1, y: 1 }</code>. On jump set <code>{ x: 0.75, y: 1.25 }</code>, on landing <code>{ x: 1.3, y: 0.7 }</code>, and tween back to 1 with <code>easeOutBack</code>.</p></details>
+    <details><summary>Hint 2</summary><p>Sprites scale evenly, so wrap the draw in <code>context.save()</code>, <code>translate</code> to the hero's feet, <code>context.scale(squash.x, squash.y)</code>, draw at (0, 0), then <code>context.restore()</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { easeOutBack } from &quot;kindling/math/easing.js&quot;;
+const squash = { x: 1, y: 1 };
+function setSquash(x, y) {
+  squash.x = x;
+  squash.y = y;
+  game.tweens.to(squash, { x: 1, y: 1 }, 0.2, easeOutBack);
+}
+
+// In updatePlayer(): in the jump block      setSquash(0.75, 1.25);
+//                    where landing dust is emitted (player.onGround &amp;&amp; !wasOnGround)   setSquash(1.3, 0.7);
+
+// In render(), instead of the single heroSheet.draw line:
+context.save();
+context.translate(Math.round(player.x + 5), Math.round(player.y + 14));   // the hero&#x27;s feet
+context.scale(squash.x, squash.y);
+heroSheet.draw(context, animator.frame(), 0, 0, { originX: 0.5, originY: 14 / 16, flipX: facingLeft });
+context.restore();</code></pre>
+      <p>Scaling around the feet (not the center) keeps the hero planted on the ground while it squashes.</p>
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="design-2-game-feel">
+      <li><label><input type="checkbox" data-key="0"><span>The four ingredients of game feel: response, easing, reaction, squash and stretch.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why input buffering and coyote time feel fair.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>Which easing to use for speeds (<code>approach</code>), cameras (<code>damp</code>) and UI (curves).</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>How to scale a sprite around a point other than its corner.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>That feel changes how a game plays without changing its rules.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./design-1-scope.html">← Scope: a game you can finish</a>
+      <a href="./design-3-playtest-ship.html">Playtest and ship →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

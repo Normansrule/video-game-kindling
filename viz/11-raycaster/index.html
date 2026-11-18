@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  viz/11-raycaster/index.html
+  WHAT: Visualization 11: the raycaster.
+  DOC:  docs/modules/3d.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The raycaster visualized</title>
+  <meta name="description" content="Watch rays cast across a grid map turn into a first-person 3D view.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/3d.md">Doc: 3d</a>
+    </nav>
+    <h1>11. The raycaster</h1>
+    <p class="lead">One ray per screen column. Where it hits a wall, draw a stripe whose height is 1 / distance. Left: the map from above. Right: what the player sees.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="Top-down grid map with rays fanning out from the player, next to the 3D view those rays produce."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Player</li>
+      <li><span style="background: var(--accent)"></span>Rays</li>
+      <li><span style="background: var(--muted)"></span>Walls</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Turn off the fisheye fix: straight walls bulge, because rays at the edge travel farther than rays in the middle.</li>
+      <li>Use fewer rays: the 3D view turns into wide blocky stripes. Each stripe is one ray.</li>
+      <li>Walls facing one way are drawn darker. That one rule makes corners readable.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { castRays, drawRaycastView } from &quot;kindling/3d/raycaster.js&quot;;
+
+const hits = castRays(MAP, player, fieldOfView, screenWidth);
+drawRaycastView(context, hits, screenWidth, screenHeight);</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/raycaster.js">engine/3d/raycaster.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

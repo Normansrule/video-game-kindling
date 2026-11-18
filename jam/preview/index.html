@@ -1,0 +1,31 @@
+<!doctype html>
+<!--
+  jam/preview/index.html
+  WHAT: Plays the jam starter game straight from the repo (and on GitHub Pages).
+  WHY:  jam/starter/index.html expects its own engine/ copy, which only exists after
+        jam/new-game.sh makes a game folder. This page borrows the repo's engine instead.
+  DOC:  jam/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jam starter preview | Kindling</title>
+  <meta name="description" content="The Kindling jam starter: a complete tiny game with title, pause, game over, best score, sound and touch controls.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <nav class="site-nav" aria-label="Breadcrumb"><a href="../../">Kindling</a><a href="https://github.com/Normansrule/kindling/tree/main/jam">Jam kit</a></nav>
+    <h1>Jam starter preview</h1>
+    <p class="lead">This is the game <code>jam/new-game.sh</code> gives you at hour 0: title, play, pause, game over, best score, sound, particles, keyboard, gamepad and touch. Replace the parts marked CHANGE ME.</p>
+    <div style="aspect-ratio: 16 / 9; width: 100%;"><canvas id="game" aria-label="Dodge: move left and right to avoid falling blocks."></canvas></div>
+    <pre><code>cd ~/projects/kindling &amp;&amp; ./jam/new-game.sh my-jam-game</code></pre>
+  </main>
+  <script type="module" src="../starter/main.js"></script>
+</body>
+</html>

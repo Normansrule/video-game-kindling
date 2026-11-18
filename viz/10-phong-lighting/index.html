@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  viz/10-phong-lighting/index.html
+  WHAT: Visualization 10: Phong lighting.
+  DOC:  docs/modules/3d.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phong lighting visualized</title>
+  <meta name="description" content="Turn ambient, diffuse and specular light on and off, and change shininess, on lit 3D shapes.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/3d.md">Doc: 3d</a>
+    </nav>
+    <h1>10. Phong lighting</h1>
+    <p class="lead">Phong lighting adds three kinds of light: ambient (everywhere), diffuse (facing the light) and specular (the shiny highlight). Turn each one on and off.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A sphere, a cube and a floor lit by a moving point light, drawn with Phong lighting."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent)"></span>The light (small sphere)</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Diffuse only: the side facing the light is bright, the far side is black. That's dot(normal, toLight).</li>
+      <li>Specular moves when the camera moves; diffuse doesn't. The highlight depends on where your eye is.</li>
+      <li>Shininess changes the highlight's size, not its brightness. Low = plastic, high = polished metal.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>// Fragment shader (engine/3d/lighting.js), simplified:
+float diffuse  = max(dot(normal, toLight), 0.0);
+float specular = pow(max(dot(reflect(-toLight, normal), toCamera), 0.0), shininess);
+color = base * light * (ambient + diffuse) + light * specular * specularStrength;</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/lighting.js">engine/3d/lighting.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/renderer.js">engine/3d/renderer.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

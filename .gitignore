@@ -1,0 +1,16 @@
+# Editor and OS clutter. The engine has no build step; only references/react has a dist/.
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+# Zips you make for itch.io uploads live outside the repo, but just in case:
+*.zip
+# Dev-only tools (Playwright smoke check, if approved) install here, never in engine/.
+node_modules/
+__pycache__/
+*.pyc
+target/
+.venv/
+# The React reference builds here (GitHub Actions builds it again for Pages).
+references/react/dist/

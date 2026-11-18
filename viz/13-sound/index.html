@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  viz/13-sound/index.html
+  WHAT: Visualization 13: sound effects.
+  DOC:  docs/modules/audio.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sound effects visualized</title>
+  <meta name="description" content="Design retro sound effects with sliders and watch the pitch, volume envelope and wave.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/audio.md">Doc: audio</a>
+    </nav>
+    <h1>13. Sound effects from code</h1>
+    <p class="lead">No sound files: a wave whose pitch slides, shaped by a volume envelope. Move the sliders, press Play, and copy the line of code when you like it.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="Two graphs, pitch over time and volume over time, and an oscilloscope showing the sound wave while it plays."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent)"></span>Pitch</li>
+      <li><span style="background: var(--accent-2)"></span>Volume</li>
+      <li><span style="background: var(--pass)"></span>The wave</li>
+    </ul>
+
+    <h2>Your sound as code</h2>
+    <pre><code id="sound-code"></code></pre>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Rising pitch sounds happy or upward (jump, power-up). Falling pitch sounds like damage or losing.</li>
+      <li>Square waves sound buzzy and retro, sine waves soft, sawtooth harsh, noise like hiss or explosions. Watch the wave's shape change.</li>
+      <li>A tiny attack (1 to 5 ms) makes a click at the start: good for hits. A long attack makes a sound swell in softly.</li>
+      <li>Pitch slides on an exponential curve because our ears hear ratios: 220 to 440 Hz sounds as big a jump as 440 to 880 Hz.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createAudio } from &quot;kindling/audio/audio.js&quot;;
+import { playTone, playSfx } from &quot;kindling/audio/sfx.js&quot;;
+
+const audio = createAudio();     // unlocks itself on the first click or key
+playSfx(audio, &quot;coin&quot;);          // a preset
+playTone(audio, { type: &quot;square&quot;, frequency: 220, frequencyEnd: 660, duration: 0.15 });</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/audio/sfx.js">engine/audio/sfx.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/audio/audio.js">engine/audio/audio.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

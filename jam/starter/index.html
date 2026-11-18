@@ -1,0 +1,28 @@
+<!doctype html>
+<!--
+  index.html of a Kindling jam game (made from jam/starter by jam/new-game.sh).
+  WHAT: The page itch.io loads. The game fills the window, so it fits any itch embed size.
+  WHY:  The import map points at ./engine/, the engine copy that lives INSIDE this folder,
+        so the zip you upload is complete on its own.
+  RUN:  python3 -m http.server 8000 in this folder, then open http://localhost:8000/
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Kindling Game</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0e0f13; overflow: hidden; }
+    body { display: flex; align-items: center; justify-content: center; }
+    #frame { width: 100vw; height: 100vh; }
+    canvas { display: block; outline: none; }
+  </style>
+  <script type="importmap">
+    { "imports": { "kindling/": "./engine/" } }
+  </script>
+</head>
+<body>
+  <div id="frame"><canvas id="game" aria-label="The game"></canvas></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

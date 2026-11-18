@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  viz/03-sprites/index.html
+  WHAT: Visualization 3: sprites and animation.
+  DOC:  docs/modules/2d.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sprites and animation visualized</title>
+  <meta name="description" content="Interactive sprite sheet and frame animation: see which frame plays when.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/2d.md">Doc: 2d</a>
+    </nav>
+    <h1>3. Sprites and animation</h1>
+    <p class="lead">A sprite sheet is many small pictures in one image. An animation is a list of frame numbers played at a fixed speed.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A sprite sheet with the current frame highlighted, and the same character animated large."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent)"></span>Frame being shown</li>
+      <li><span style="background: var(--muted)"></span>Frame grid</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Frames are numbered left to right. <code>run</code> is just <code>[2, 3, 4, 5]</code>.</li>
+      <li>Animation speed is in frames per second and independent of the game's update rate.</li>
+      <li>Flipping is a negative scale: one set of art faces both ways.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>const sheet = createSpriteSheet(image, 16, 16);
+const run = createAnimation([2, 3, 4, 5], 10);   // frames, frames per second
+
+// each update step
+run.update(stepSeconds);
+
+// each draw
+sheet.draw(context, run.frame(), x, y, { flipX: facingLeft });</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/sprite.js">engine/2d/sprite.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/animation.js">engine/2d/animation.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

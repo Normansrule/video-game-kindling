@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  viz/09-transforms/index.html
+  WHAT: Visualization 9: 3D transforms.
+  DOC:  docs/modules/3d.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D transforms visualized</title>
+  <meta name="description" content="Move, rotate and scale a cube and watch its 4x4 model matrix change.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/3d.md">Doc: 3d</a>
+    </nav>
+    <h1>9. 3D transforms: model, view, projection</h1>
+    <p class="lead">Every corner of every object is multiplied by three matrices: model (place the object), view (move the world in front of the camera) and projection (flatten 3D onto the screen). Drag the picture to orbit.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A textured cube above a floor with red, green and blue axis lines, seen through an orbiting camera."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: #e5484d"></span>x axis (right)</li>
+      <li><span style="background: #30a46c"></span>y axis (up)</li>
+      <li><span style="background: #3e63dd"></span>z axis (toward you)</li>
+    </ul>
+    <h2>The model matrix right now</h2>
+    <div id="matrix" class="viz-readout" aria-live="off"></div>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Rotate, then move: order matters. The model matrix here is translate x rotate x scale, read right to left: scale first, then rotate, then move.</li>
+      <li>Narrow the field of view and the cube looks flatter, like a zoom lens. Widen it and the edges stretch.</li>
+      <li>The bottom row of the model matrix is always 0, 0, 0, 1. The right column is where the object is.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import * as mat4 from &quot;kindling/math/mat4.js&quot;;
+
+let model = mat4.translation(x, y, z);
+model = mat4.rotateY(model, angleY);
+model = mat4.scale(model, { x: s, y: s, z: s });
+
+renderer.begin(camera, light);          // sets view + projection
+renderer.drawMesh(cubeMesh, model, { texture });</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/math/mat4.js">engine/math/mat4.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/camera3d.js">engine/3d/camera3d.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/renderer.js">engine/3d/renderer.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

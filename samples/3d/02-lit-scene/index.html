@@ -1,0 +1,35 @@
+<!doctype html>
+<!--
+  samples/3d/02-lit-scene/index.html
+  WHAT: Kindling 3D sample: Lit scene. Everything is in main.js; it imports only from the engine.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/samples/3d/02-lit-scene/
+  DOC:  samples/3d/02-lit-scene/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lit scene | Kindling 3D sample</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0e0f13; color: #d6d6d6; font: 14px/1.4 system-ui, sans-serif; }
+    main { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px; }
+    p { margin: 0; text-align: center; }
+    a { color: #ffb347; }
+    canvas { outline: none; border-radius: 4px; }
+    .hud { font: 15px ui-monospace, Consolas, monospace; color: #ffe0a8; min-height: 1.4em; }
+  </style>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../../">Kindling</a> · <strong>Lit scene</strong> · <a href="https://github.com/Normansrule/kindling/tree/main/samples/3d/02-lit-scene">source</a></p>
+    <p>Drag to orbit · scroll to zoom</p>
+    <p id="hud" class="hud" aria-live="off"></p>
+    <canvas id="game" aria-label="A low-poly forest clearing with trees, rocks, crates and a pond, lit by a moving sun."></canvas>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

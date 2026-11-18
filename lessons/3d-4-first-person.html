@@ -1,0 +1,115 @@
+<!doctype html>
+<!--
+  lessons/3d-4-first-person.html
+  WHAT: Lesson: A first-person walk. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A first-person walk | Kindling lessons</title>
+  <meta name="description" content="Mouse look with pointer lock, walking relative to where you look, collision with 3D boxes, and fog.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>A first-person walk</h1>
+    <p class="lesson-meta">3D track · lesson 4 of 4 · about 35 minutes</p>
+    <p class="lead">Put the camera in the player's head, let the mouse turn it, and walk relative to where you look.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A first-person camera has a position and two angles: <strong>yaw</strong> (turning left and right) and <strong>pitch</strong> (looking up and down). The mouse changes them. <strong>Pointer lock</strong> hides the cursor and reports how far the mouse moved, so you can turn forever without hitting the edge of the screen.</p>
+    <p>Walking uses only yaw: <code>flatForward()</code> points where you look but along the ground, so looking up never makes you fly. The player is a 3D box that moves one axis at a time against wall boxes, exactly like 2D platformer physics with a z axis. The level is still written as text.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Click the game to capture the mouse (Escape gives it back), then walk with WASD and find the five crystals.</p>
+    <iframe class="viz-frame" src="../samples/3d/05-first-person-walk/" title="First-person walk sample" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../samples/3d/05-first-person-walk/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>The text map becomes boxes for both drawing and collision:
+<pre><code>if (letter === &quot;#&quot;) walls.push(boxFromCenter(x, WALL_HEIGHT / 2, z, CELL, WALL_HEIGHT, CELL));</code></pre></li>
+      <li>Mouse look. Lock on a click; then each step turn by however far the mouse moved:
+<pre><code>if (mouse.wasPressed(0) &amp;&amp; !mouse.isLocked()) mouse.lock();
+if (mouse.isLocked()) {
+  const moved = mouse.movement();
+  camera.look(moved.x, moved.y);
+}</code></pre></li>
+      <li>Walk relative to the camera, then collide:
+<pre><code>const forward = camera.flatForward();
+const right = camera.right();
+player.velocityX = (forward.x * forwardInput + right.x * sideInput) * WALK_SPEED;
+player.velocityZ = (forward.z * forwardInput + right.z * sideInput) * WALK_SPEED;
+moveAndCollide3D(player, stepSeconds, solids);</code></pre></li>
+      <li>Put the eye in the body, and fade far walls into the sky with fog:
+<pre><code>camera.position.y = player.y + EYE_HEIGHT;
+renderer.setFog(22);</code></pre></li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Add a <strong>sprint</strong>: while Shift (or gamepad B) is held, walk 1.7 times faster and widen the field of view a little, easing in and out so it feels like speed.</p>
+    <details><summary>Hint 1</summary><p>Add <code>sprint: ["ShiftLeft", "pad:B"]</code> to the actions. The camera's lens is <code>camera.fieldOfView</code> in radians; the default is <code>Math.PI / 3</code>.</p></details>
+    <details><summary>Hint 2</summary><p><code>damp(current, target, sharpness, stepSeconds)</code> from <code>kindling/math/scalar.js</code> eases a value toward a target smoothly.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>// actions: add   sprint: [&quot;ShiftLeft&quot;, &quot;pad:B&quot;],
+import { clamp, damp } from &quot;kindling/math/scalar.js&quot;;
+
+// In update, before setting the velocity:
+const sprinting = game.actions.isDown(&quot;sprint&quot;);
+const speed = sprinting ? WALK_SPEED * 1.7 : WALK_SPEED;
+camera.fieldOfView = damp(camera.fieldOfView, sprinting ? 1.25 : Math.PI / 3, 8, stepSeconds);
+player.velocityX = moveX * speed;
+player.velocityZ = moveZ * speed;</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="3d-4-first-person">
+      <li><label><input type="checkbox" data-key="0"><span>What yaw and pitch are.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>What pointer lock does and why it needs a click.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>Why walking uses <code>flatForward()</code> and not <code>forward()</code>.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>How the 2D "one axis at a time" idea becomes 3D box collision.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>What fog hides and why it is cheap.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./3d-3-raycaster.html">← The raycaster: 3D without WebGL</a>
+      <a href="./">All lessons →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<!--
+  lessons/3d-2-meshes-lighting.html
+  WHAT: Lesson: Meshes and lighting. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meshes and lighting | Kindling lessons</title>
+  <meta name="description" content="Triangles, normals and Phong lighting: ambient, diffuse and specular.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Meshes and lighting</h1>
+    <p class="lesson-meta">3D track · lesson 2 of 4 · about 35 minutes</p>
+    <p class="lead">A mesh is triangles plus a little extra data per corner. Lighting is three simple terms added together.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A <strong>mesh</strong> stores, for each corner: a position, a <strong>normal</strong> (an arrow pointing straight out of the surface) and a texture coordinate (UV: which part of the image goes here). Then a list of indices says which three corners make each triangle. Kindling uploads this to the GPU once, then draws it as often as you like.</p>
+    <p><strong>Phong lighting</strong> adds three terms per pixel:</p>
+    <ul>
+      <li><strong>Ambient:</strong> a little light everywhere, so shadows are not pure black.</li>
+      <li><strong>Diffuse:</strong> how directly the surface faces the light: the dot product of the normal and the direction to the light. Facing it: bright. Edge on: dark.</li>
+      <li><strong>Specular:</strong> the shiny highlight, where light bounces straight toward your eye. Higher <code>shininess</code> means a smaller, sharper spot.</li>
+    </ul>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Switch each term on and off, and move the shininess slider. Notice that diffuse alone already reads as "3D".</p>
+    <iframe class="viz-frame" src="../viz/10-phong-lighting/" title="Phong lighting visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/10-phong-lighting/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Primitives return plain data; <code>createMesh</code> uploads it. A low segment count gives a low-poly look:
+<pre><code>const rockMesh = createMesh(gl, sphere(0.5, 10, 6));
+const treeMesh = createMesh(gl, parseOBJ(await loadText(&quot;./tree.obj&quot;)));   // or load a model file</code></pre></li>
+      <li>The diffuse term in the fragment shader (<code>engine/3d/lighting.js</code>) is one line:
+<pre><code>float diffuse = max(dot(normal, toLight), 0.0);</code></pre></li>
+      <li>Specular uses the light's reflection and the direction to the eye:
+<pre><code>vec3 bounced = reflect(-toLight, normal);
+float specular = 0.0;
+if (diffuse &gt; 0.0) specular = pow(max(dot(bounced, toCamera), 0.0), u_shininess);</code></pre></li>
+      <li>In game code you never touch the shader. You set a light once per frame and give each mesh a material:
+<pre><code>renderer.begin(camera, { position: [5, 8, 5], color: [1, 1, 1], ambient: 0.3 });
+renderer.drawMesh(rockMesh, model, { color: [0.55, 0.55, 0.58], specularStrength: 0.08, shininess: 8 });</code></pre></li>
+      <li>One mesh, many objects: the lit-scene sample draws 40 trees with one tree mesh and 40 different model matrices.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Make a new 3D page that shows a row of 8 red spheres with <code>shininess</code> 2, 4, 8, … 256 (and <code>specularStrength: 1</code>), lit by a light that slowly circles above them. It is the best way to learn what shininess looks like.</p>
+    <details><summary>Hint 1</summary><p>Start from the quick example in <a href="../docs/modules/3d.md">docs/modules/3d.md</a>. A scene can have only a <code>render</code> method.</p></details>
+    <details><summary>Hint 2</summary><p><code>Math.pow(2, i + 1)</code> for <code>i</code> from 0 to 7 gives 2 to 256. Put sphere <code>i</code> at x = <code>-3.5 + i</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { createGame } from &quot;kindling/game.js&quot;;
+import { createRenderer } from &quot;kindling/3d/renderer.js&quot;;
+import { createMesh } from &quot;kindling/3d/mesh.js&quot;;
+import { sphere } from &quot;kindling/3d/primitives.js&quot;;
+import { createOrbitCamera } from &quot;kindling/3d/camera3d.js&quot;;
+import * as mat4 from &quot;kindling/math/mat4.js&quot;;
+
+const game = createGame({ webgl: true, width: 640, height: 360 });
+const renderer = createRenderer(game.screen);
+const ball = createMesh(game.gl, sphere(0.4, 32, 16));
+const camera = createOrbitCamera({ distance: 7, pitch: 0.3 });
+
+game.scenes.add(&quot;view&quot;, {
+  render(game) {
+    const t = game.time.elapsed * 0.6;
+    renderer.begin(camera, { position: [Math.cos(t) * 5, 4, Math.sin(t) * 5], color: [1, 1, 1], ambient: 0.2 });
+    for (let i = 0; i &lt; 8; i++) {
+      const shininess = Math.pow(2, i + 1);
+      renderer.drawMesh(ball, mat4.translation(-3.5 + i, 0, 0), { color: [0.9, 0.3, 0.2], specularStrength: 1, shininess });
+    }
+  },
+});
+game.start(&quot;view&quot;);</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="3d-2-meshes-lighting">
+      <li><label><input type="checkbox" data-key="0"><span>What a mesh stores per corner, and what indices are for.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>What a normal is and why lighting needs it.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>The three Phong terms and what each looks like.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why diffuse is a dot product.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>How one mesh can be drawn many times with different model matrices.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./3d-1-transforms.html">← 3D transforms: model, view, projection</a>
+      <a href="./3d-3-raycaster.html">The raycaster: 3D without WebGL →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

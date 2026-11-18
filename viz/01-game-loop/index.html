@@ -1,0 +1,56 @@
+<!doctype html>
+<!--
+  viz/01-game-loop/index.html
+  WHAT: Visualization 1: the fixed-timestep game loop (engine/core/loop.js and time.js).
+  DOC:  docs/modules/core.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game loop visualized</title>
+  <meta name="description" content="Interactive view of a fixed-timestep game loop: frames, update steps, the accumulator and interpolation.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/core.md">Doc: core</a>
+    </nav>
+    <h1>1. The fixed-timestep game loop</h1>
+    <p class="lead">The screen redraws whenever it likes. The game updates in equal, fixed steps. An accumulator connects the two.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" role="img" aria-label="Timeline of drawn frames and fixed update steps, an accumulator bar, and two moving balls, one drawn with interpolation."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Frame drawn (screen refresh)</li>
+      <li><span style="background: var(--accent)"></span>Update step (fixed size)</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Set the update rate lower than the frame rate: some frames run <strong>zero</strong> updates. The top ball stutters; the blended ball stays smooth.</li>
+      <li>Add jitter: frames arrive unevenly, but update steps stay perfectly even. That is why physics behaves the same on every computer.</li>
+      <li>The accumulator fills with real time and empties one step at a time. What's left over, divided by the step, is <code>alpha</code>.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>accumulator += frameSeconds;
+while (accumulator &gt;= step) {
+  update(step);            // always the same size
+  accumulator -= step;
+}
+render(accumulator / step); // alpha: 0..1 between two steps</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/core/loop.js">engine/core/loop.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

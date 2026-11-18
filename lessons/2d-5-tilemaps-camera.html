@@ -1,0 +1,122 @@
+<!doctype html>
+<!--
+  lessons/2d-5-tilemaps-camera.html
+  WHAT: Lesson: Tilemaps and the camera. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tilemaps and the camera | Kindling lessons</title>
+  <meta name="description" content="Build levels from text grids and scroll them with a smooth camera that stays inside the level.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Tilemaps and the camera</h1>
+    <p class="lesson-meta">2D track · lesson 5 of 6 · about 30 minutes</p>
+    <p class="lead">Write levels as text, then let a camera follow the player through a world bigger than the screen.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A <strong>tilemap</strong> is a grid where each character is a tile: <code>#</code> wall, <code>.</code> air, <code>C</code> coin, <code>P</code> the player start. You can see the whole level in your editor and change it in seconds, which is perfect for a jam. Collision against a grid is fast, because a body only needs to check the handful of tiles around it.</p>
+    <p>A <strong>camera</strong> is the part of the world on screen. We never move the world; we move the camera and draw everything shifted by its position. A good camera eases toward the player (smoothing), ignores small movements (a dead zone), never shows outside the level (bounds), and can shake.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>The orange box is what the camera sees. Only the tiles inside it get drawn. Change the smoothing and the dead zone.</p>
+    <iframe class="viz-frame" src="../viz/07-tilemap-camera/" title="Tilemap and camera visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/07-tilemap-camera/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Spawn markers become objects, and their tiles become air, with <code>replace</code>:
+<pre><code>const map = createTilemap({ rows: LEVEL, tileSize: 16, solid: &quot;#B&quot;, oneWay: &quot;=&quot; });
+const start = map.replace(&quot;P&quot;, &quot;.&quot;)[0];
+coins = map.replace(&quot;C&quot;, &quot;.&quot;).map((tile) =&gt; ({ x: tile.x + 4, y: tile.y + 4, width: 8, height: 8 }));</code></pre></li>
+      <li>The camera is told the screen size and the level size, then follows the player every step:
+<pre><code>const camera = createCamera({
+  width: 320, height: 180,
+  bounds: { x: 0, y: 0, width: map.width, height: map.height },
+  smoothing: 10,
+  deadZone: { width: 24, height: 40 },
+});
+// update():
+camera.follow(player, stepSeconds);
+camera.update(stepSeconds);</code></pre></li>
+      <li>Drawing: everything between <code>begin</code> and <code>end</code> is in world space. The tilemap only draws tiles inside <code>camera.view()</code>. The HUD is drawn after <code>end</code>, so it stays on screen.
+<pre><code>camera.begin(context);
+map.draw(context, drawTile, camera.view());
+drawCoins(context);
+drawPlayer(context);
+camera.end(context);
+text(context, &quot;COINS &quot; + coinCount, 4, 4);   // HUD</code></pre></li>
+      <li>The <a href="../samples/2d/06-tilemap-room/">tilemap rooms sample</a> uses the same pieces with a different camera: it snaps one room at a time, like classic adventure games.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Add breakable blocks to the platformer. A <code>B</code> tile is solid (it already is). When the player hits one from below with their head, it turns into air, plays a sound and bursts into particles.</p>
+    <details><summary>Hint 1</summary><p>After <code>moveAndCollide</code>, <code>player.touching.top</code> is true if the head hit something.</p></details>
+    <details><summary>Hint 2</summary><p>The tile above the head is at column <code>map.columnAt(player.x + player.width / 2)</code> and row <code>map.rowAt(player.y - 1)</code>. Use <code>map.get</code> and <code>map.set</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>// In updatePlayer(), right after moveAndCollide(player, stepSeconds, map):
+if (player.touching.top) {
+  const column = map.columnAt(player.x + player.width / 2);
+  const row = map.rowAt(player.y - 1);
+  if (map.get(column, row) === &quot;B&quot;) {
+    map.set(column, row, &quot;.&quot;);
+    playSfx(audio, &quot;hit&quot;);
+    camera.shake(2, 0.15);
+    particles.emit({ ...presets.explosion, count: 10, x: column * 16 + 8, y: row * 16 + 8 });
+  }
+}</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-5-tilemaps-camera">
+      <li><label><input type="checkbox" data-key="0"><span>How a level written as text becomes tiles, and how <code>replace</code> turns markers into objects.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why grid collision only needs the tiles near the body.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>What the camera's bounds, smoothing and dead zone each do.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why the HUD is drawn after <code>camera.end()</code>.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>How to change the level while the game runs with <code>map.set</code>.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./2d-4-platformer-physics.html">← Platformer physics</a>
+      <a href="./2d-6-juice.html">Juice: particles, shake, tweens and sound →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

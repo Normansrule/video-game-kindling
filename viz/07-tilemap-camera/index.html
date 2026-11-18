@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  viz/07-tilemap-camera/index.html
+  WHAT: Visualization 7: tilemaps and the camera.
+  DOC:  docs/modules/camera.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tilemaps and the camera visualized</title>
+  <meta name="description" content="See a tilemap level through a following camera with a dead zone, smoothing, zoom and shake.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/camera.md">Doc: camera</a>
+    </nav>
+    <h1>7. Tilemaps and the camera</h1>
+    <p class="lead">The level is a grid of characters. The camera decides which part of it you see, follows the player smoothly and never shows outside the level.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="On the left, the game view through the camera. On the right, a minimap of the whole level with the camera rectangle and dead zone."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Player</li>
+      <li><span style="background: var(--accent)"></span>Camera view</li>
+      <li><span style="background: var(--pass)"></span>Dead zone</li>
+      <li><span style="background: var(--fail)"></span>Tiles checked for collision</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Inside the dead zone the camera doesn't move. That stops the screen from jittering on every small step.</li>
+      <li>Smoothing 0 snaps the camera to the target. Higher values ease it toward the target (it never overshoots).</li>
+      <li>Collision only checks the few red tiles under the player, never the whole map. That is why grids are fast.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>const level = createTilemap({ tileSize: 16, rows: LEVEL_ROWS, solid: &quot;#&quot; });
+const camera = createCamera({ width: 320, height: 180, smoothing: 8,
+  deadZone: { width: 40, height: 30 },
+  bounds: { x: 0, y: 0, width: level.width, height: level.height } });
+
+camera.follow(player, stepSeconds);    // update
+camera.begin(context);                 // draw world here
+level.draw(context, drawTile, camera.view());
+camera.end(context);</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/tilemap.js">engine/2d/tilemap.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/camera.js">engine/2d/camera.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

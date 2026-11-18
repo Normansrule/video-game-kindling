@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  index.html (landing page, served at https://normansrule.github.io/kindling/)
+  WHAT: Front door of the repo: what Kindling is, how to run it, where everything is.
+  WHY:  It also checks two things a beginner trips on: opening files directly
+        (file://, which blocks modules) and a broken import map.
+  DOC:  docs/RUNNING.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kindling: build games from scratch</title>
+  <meta name="description" content="Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.">
+  <meta property="og:title" content="Kindling: build games from scratch">
+  <meta property="og:description" content="A zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.">
+  <meta property="og:image" content="https://normansrule.github.io/kindling/assets/social-preview.png">
+  <link rel="stylesheet" href="./assets/site.css">
+  <script src="./assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "./engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page">
+    <h1>Kindling</h1>
+    <p class="lead">Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.</p>
+
+    <p id="file-warning" class="notice" hidden>
+      You opened this page straight from disk (file://). Browsers block JavaScript modules there,
+      so nothing will run. Start a local server instead (see below).
+    </p>
+    <p id="engine-status" role="status">Engine: checking…</p>
+
+    <h2>Start here</h2>
+    <ul class="gallery">
+      <li>
+        <img src="./assets/thumbs/viz-01-game-loop.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./lessons/">Lessons</a>
+          <p>13 lessons in three tracks: 2D, 3D and game design. Each has a live demo, an exercise and a checklist.</p>
+        </div>
+      </li>
+      <li>
+        <img src="./assets/thumbs/2d-04-platformer.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./samples/">Samples</a>
+          <p>11 small complete games, 6 in 2D and 5 in 3D. Each is one <code>main.js</code> you can read top to bottom.</p>
+        </div>
+      </li>
+      <li>
+        <img src="./assets/thumbs/viz-11-raycaster.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./viz/">Visualizations</a>
+          <p>13 interactive pages that show how each engine idea works, with sliders and play/pause.</p>
+        </div>
+      </li>
+      <li>
+        <img src="./references/shots/react-islands.jpg" alt="" width="480" height="270">
+        <div class="body">
+          <a href="./references/react/dist/">React demos</a>
+          <p>A 2D canvas shooter and a 3D platformer in React and react-three-fiber. Python and Rust versions are <a href="https://github.com/Normansrule/kindling/tree/main/references">on GitHub</a>.</p>
+        </div>
+      </li>
+      <li>
+        <img src="./assets/thumbs/3d-04-coin-collector.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./jam/preview/">Jam starter</a>
+          <p>The game every new jam project starts from. Make your own with <code>jam/new-game.sh</code>.</p>
+        </div>
+      </li>
+    </ul>
+
+    <h2>Run it locally</h2>
+    <pre><code>mkdir -p ~/projects &amp;&amp; cd ~/projects &amp;&amp; git clone https://github.com/Normansrule/kindling.git &amp;&amp; cd kindling &amp;&amp; python3 -m http.server 8000</code></pre>
+    <p>Then open <a href="http://localhost:8000/">http://localhost:8000/</a>. This site is the same files on GitHub Pages.</p>
+
+    <h2>More</h2>
+    <ul class="cards">
+      <li><a href="https://github.com/Normansrule/kindling/tree/main/docs">Docs</a><span>Architecture, one page per module, cheatsheet, glossary</span></li>
+      <li><a href="https://github.com/Normansrule/kindling/tree/main/references">Python, Rust, React games</a><span>Complete reference games with pygame-ce, macroquad and react-three-fiber</span></li>
+      <li><a href="https://github.com/Normansrule/kindling/tree/main/docs/bridges">Bridges</a><span>The core ideas in plain Python, React and Rust</span></li>
+      <li><a href="https://github.com/Normansrule/kindling/tree/main/jam">Jam kit</a><span>Checklists, scope cutter, itch.io upload guide</span></li>
+      <li><a href="./tests/">Tests</a><span>Math and collision checks, in your browser</span></li>
+      <li><a href="./samples/00-hello/">Hello sample</a><span>The smallest page that loads the engine</span></li>
+      <li><a href="https://github.com/Normansrule/kindling">Source on GitHub</a><span>MIT license. Issues and ideas welcome</span></li>
+    </ul>
+
+    <h2>Status</h2>
+    <p>Version 1.0.0: all stages (S0 to S8) are done. See the <a href="https://github.com/Normansrule/kindling#roadmap">roadmap</a> for what comes after 1.0.</p>
+  </main>
+
+  <script>
+    // Classic (non-module) script, so it still runs on file:// and can warn you.
+    if (location.protocol === "file:") {
+      document.getElementById("file-warning").hidden = false;
+      document.getElementById("engine-status").textContent = "Engine: not loaded (file:// blocks modules).";
+    }
+  </script>
+  <script type="module">
+    import { describeEngine } from "kindling/core/version.js";
+    document.getElementById("engine-status").textContent = "Engine: " + describeEngine() + " loaded.";
+  </script>
+</body>
+</html>

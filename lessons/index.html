@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  lessons/index.html
+  WHAT: The list of lessons, by track. Every lesson: explanation, visualization, walkthrough, exercise, "you now know" checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lessons | Kindling</title>
+  <meta name="description" content="Short lessons on making games from scratch: 2D, 3D and game design, each with a visualization and an exercise.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="site-nav" aria-label="Breadcrumb"><a href="../">Kindling</a><a href="../samples/">Samples</a><a href="../viz/">Visualizations</a></nav>
+    <h1>Lessons</h1>
+    <p class="lead">Each lesson has the same five parts: the idea, a visualization to play with, a walkthrough of real Kindling code, an exercise with hints and a hidden solution, and a "you now know" checklist.</p>
+    <p>New to games? Do the 2D track in order, then the design track before your first jam. The 3D track assumes you have done 2D lessons 1 to 4.</p>
+    <h2 id="2d">2D track</h2>
+    <p>Canvas 2D games from the loop up: input, collision, physics, levels and juice.</p>
+    <ol class="track-list">
+      <li><a href="./2d-1-game-loop.html">The game loop</a> <span>Why games update in fixed steps, and how the accumulator makes a game run the same on every screen. About 20 minutes.</span></li>
+      <li><a href="./2d-2-drawing-input.html">Drawing and input</a> <span>Draw with Canvas 2D, and read keyboard, mouse, touch and gamepad through named actions. About 25 minutes.</span></li>
+      <li><a href="./2d-3-collision.html">Collision</a> <span>Detect when boxes and circles touch, and push them apart with the smallest move. About 30 minutes.</span></li>
+      <li><a href="./2d-4-platformer-physics.html">Platformer physics</a> <span>Gravity, velocity, moving one axis at a time, and the tricks that make jumping feel good. About 35 minutes.</span></li>
+      <li><a href="./2d-5-tilemaps-camera.html">Tilemaps and the camera</a> <span>Build levels from text grids and scroll them with a smooth camera that stays inside the level. About 30 minutes.</span></li>
+      <li><a href="./2d-6-juice.html">Juice: particles, shake, tweens and sound</a> <span>Make actions feel good with particles, screen shake, tweens, hit-stop and sound effects. About 30 minutes.</span></li>
+    </ol>
+    <h2 id="3d">3D track</h2>
+    <p>Matrices, meshes and light with WebGL 2, a raycaster with no WebGL at all, and a first-person walk.</p>
+    <ol class="track-list">
+      <li><a href="./3d-1-transforms.html">3D transforms: model, view, projection</a> <span>How three matrices move a 3D object to the right place on a 2D screen. About 35 minutes.</span></li>
+      <li><a href="./3d-2-meshes-lighting.html">Meshes and lighting</a> <span>Triangles, normals and Phong lighting: ambient, diffuse and specular. About 35 minutes.</span></li>
+      <li><a href="./3d-3-raycaster.html">The raycaster: 3D without WebGL</a> <span>Cast one ray per screen column across a grid map and draw walls whose height is one over the distance. About 30 minutes.</span></li>
+      <li><a href="./3d-4-first-person.html">A first-person walk</a> <span>Mouse look with pointer lock, walking relative to where you look, collision with 3D boxes, and fog. About 35 minutes.</span></li>
+    </ol>
+    <h2 id="design">Game design track</h2>
+    <p>Scope a jam game you can finish, make it feel good, playtest it and ship it.</p>
+    <ol class="track-list">
+      <li><a href="./design-1-scope.html">Scope: a game you can finish</a> <span>Pick a jam idea you can finish: one verb, a must/should/could list, and a budget that assumes everything takes twice as long. About 20 minutes.</span></li>
+      <li><a href="./design-2-game-feel.html">Game feel</a> <span>Why the same game can feel stiff or great: response, easing, anticipation, and squash and stretch. About 25 minutes.</span></li>
+      <li><a href="./design-3-playtest-ship.html">Playtest and ship</a> <span>Watch someone play without helping, write down what happens, fix the biggest problem, and ship to itch.io. About 25 minutes.</span></li>
+    </ol>
+  </main>
+</body>
+</html>

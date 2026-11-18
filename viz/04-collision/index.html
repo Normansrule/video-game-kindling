@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  viz/04-collision/index.html
+  WHAT: Visualization 4: AABB and circle collision.
+  DOC:  docs/modules/collision.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AABB and circle collision visualized</title>
+  <meta name="description" content="Drag boxes and circles to see overlap tests and push-out vectors.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/collision.md">Doc: collision</a>
+    </nav>
+    <h1>4. Collision: boxes and circles</h1>
+    <p class="lead">Drag the shapes (or focus the picture and use the arrow keys). When they overlap, the arrow shows the smallest push that separates them.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="Two shapes you can drag. They change color when they overlap, and an arrow shows the push-out vector."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Shape A (you move it)</li>
+      <li><span style="background: var(--muted)"></span>Shape B</li>
+      <li><span style="background: var(--fail)"></span>Overlapping</li>
+      <li><span style="background: var(--accent)"></span>Push-out vector and resolved position</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Box vs box: the push is always straight left, right, up or down, along whichever side overlaps least.</li>
+      <li>Circle vs circle: the push points from one center to the other.</li>
+      <li>Circle vs box: find the closest point on the box to the circle's center (the small dot). If it's inside the circle, they touch.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { rectPushOut } from &quot;kindling/2d/collision.js&quot;;
+
+const push = rectPushOut(player, wall);   // null if not touching
+if (push) {
+  player.x += push.x;
+  player.y += push.y;
+}</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/collision.js">engine/2d/collision.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  viz/05-sat/index.html
+  WHAT: Visualization 5: the Separating Axis Theorem.
+  DOC:  docs/modules/collision.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The separating axis theorem visualized</title>
+  <meta name="description" content="Rotate and drag two polygons to see the Separating Axis Theorem test each axis.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/collision.md">Doc: collision</a>
+    </nav>
+    <h1>5. SAT: the Separating Axis Theorem</h1>
+    <p class="lead">Two convex shapes are apart if you can find one direction where their shadows don't overlap. You only need to test the directions at right angles to each edge.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="Two rotated polygons, a chosen axis drawn across the picture, and each polygon&#x27;s shadow on that axis."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Polygon A and its shadow</li>
+      <li><span style="background: var(--accent)"></span>Polygon B and its shadow</li>
+      <li><span style="background: var(--pass)"></span>Gap found: separated</li>
+      <li><span style="background: var(--fail)"></span>Shadows overlap</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Step through the axes. If ANY axis shows a gap, the shapes are apart, no matter what the others say.</li>
+      <li>If every axis overlaps, they touch. The axis with the smallest overlap gives the push-out direction.</li>
+      <li>A box has only 2 unique axes; a triangle has 3. More edges means more axes to test.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createBoxPolygon, polygonsCollide } from &quot;kindling/2d/sat.js&quot;;
+
+const ship = createBoxPolygon(20, 10, x, y, angle);
+const rock = createBoxPolygon(30, 30, rockX, rockY, rockAngle);
+const hit = polygonsCollide(ship, rock);  // null, or { depth, normal }
+if (hit) {
+  ship.x += hit.normal.x * hit.depth;
+  ship.y += hit.normal.y * hit.depth;
+}</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/sat.js">engine/2d/sat.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

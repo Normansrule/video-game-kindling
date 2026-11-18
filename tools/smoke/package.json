@@ -1,0 +1,12 @@
+{
+  "name": "kindling-smoke",
+  "private": true,
+  "description": "DEV-ONLY smoke check. Not part of the engine, never imported by games. Needs: npm install (downloads Playwright) and npx playwright install chromium.",
+  "type": "module",
+  "scripts": {
+    "smoke": "node smoke.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

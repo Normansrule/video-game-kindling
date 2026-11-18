@@ -1,0 +1,24 @@
+# references/rust/Cargo.toml
+# WHAT: Kindling's engine ideas in Rust. The library (src/) is plain std Rust with tests;
+#       the examples (examples/) are complete games drawn with macroquad.
+# RUN:  cd ~/projects/kindling/references/rust && cargo run --release --example neon_platformer
+[package]
+name = "kindling-reference"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.82"
+license = "MIT"
+description = "Kindling game engine ideas in Rust, with macroquad example games"
+publish = false
+
+[lib]
+name = "kindling_ref"
+path = "src/lib.rs"
+
+[dependencies]
+macroquad = "0.4"
+
+[profile.dev]
+# Games are slow in debug builds; optimise dependencies even in `cargo run` without --release.
+[profile.dev.package."*"]
+opt-level = 2

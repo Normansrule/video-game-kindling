@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  viz/12-input/index.html
+  WHAT: Visualization 12: input.
+  DOC:  docs/modules/input.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Input visualized</title>
+  <meta name="description" content="See why games check whether a button was pressed since the last step, not just whether it is down.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/input.md">Doc: input</a>
+    </nav>
+    <h1>12. Input: held, pressed, released</h1>
+    <p class="lead">Hold or tap Space (or click the timeline). Each column is one game step. Slow the steps down and tap fast: <code>isDown()</code> can miss a tap entirely, <code>wasPressed()</code> never does.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A timeline of the last 48 game steps with three rows: whether the jump action is held, was pressed, or was released in each step."></canvas>
+    </div>
+    <p class="viz-readout" id="readout"></p>
+    <div class="viz-controls" id="controls"></div>
+    <ul class="viz-legend">
+      <li><span style="background: var(--accent-2)"></span>Held during the step</li>
+      <li><span style="background: var(--pass)"></span>Pressed since last step</li>
+      <li><span style="background: var(--accent)"></span>Released since last step</li>
+    </ul>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>A normal press lights up <em>pressed</em> for exactly one step, then <em>held</em> until you let go. That one step is when a jump should start.</li>
+      <li>At 2 to 5 steps per second, tap quickly. The tap lands between two steps: <em>held</em> stays empty but <em>pressed</em> still lights up. Games that only check isDown() eat button presses.</li>
+      <li>Everything is cleared in <code>endStep()</code>, which the game calls after each step. That is why "pressed" means "since the last step", not "since the last frame".</li>
+      <li>Keyboard, mouse and gamepad all feed one action, <code>jump</code>. Your game code never asks which device was used.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createActions } from &quot;kindling/input/actions.js&quot;;
+
+const actions = createActions({ jump: [&quot;Space&quot;, &quot;mouse:0&quot;, &quot;pad:A&quot;] }, { keyboard, mouse, gamepad });
+// in update():
+if (actions.wasPressed(&quot;jump&quot;) &amp;&amp; player.onGround) player.velocityY = -JUMP_SPEED;
+// after update():
+actions.endStep();</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/input/keyboard.js">engine/input/keyboard.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/input/actions.js">engine/input/actions.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

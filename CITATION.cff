@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Kindling in teaching or research, please cite it like this."
+title: "Kindling: a zero-dependency 2D and 3D JavaScript game engine with visual lessons"
+type: software
+authors:
+  - alias: Normansrule
+version: 1.0.0
+date-released: 2026-11-14
+license: MIT
+repository-code: "https://github.com/Normansrule/kindling"
+url: "https://normansrule.github.io/kindling/"
+keywords:
+  - game engine
+  - javascript
+  - webgl2
+  - game jam
+  - education
+  - python
+  - rust
+  - react

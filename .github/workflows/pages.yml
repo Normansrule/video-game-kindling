@@ -1,0 +1,52 @@
+# .github/workflows/pages.yml
+# WHAT: On every push to main, run the tests, then publish the whole repo to GitHub Pages.
+# WHY:  No build step: the files you edit are the files that get served.
+#       Site URL: https://normansrule.github.io/kindling/
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; a newer push waits instead of cancelling a live deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v5
+
+      - name: Run the unit checks (Node is preinstalled on the runner)
+        run: node --test tests/node.test.js
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v5
+
+      # The React reference (references/react) is the one part of the repo with a build step.
+      # If this step fails, the rest of the site still deploys.
+      - name: Build the React reference demo
+        continue-on-error: true
+        working-directory: references/react
+        run: npm ci --no-audit --no-fund && npm run build && rm -rf node_modules
+
+      - name: Package the repo as the site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Publish
+        id: deployment
+        uses: actions/deploy-pages@v4

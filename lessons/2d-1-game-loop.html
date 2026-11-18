@@ -1,0 +1,127 @@
+<!doctype html>
+<!--
+  lessons/2d-1-game-loop.html
+  WHAT: Lesson: The game loop. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The game loop | Kindling lessons</title>
+  <meta name="description" content="Why games update in fixed steps, and how the accumulator makes a game run the same on every screen.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>The game loop</h1>
+    <p class="lesson-meta">2D track · lesson 1 of 6 · about 20 minutes</p>
+    <p class="lead">Every game is the same three lines repeated forever: read input, update the world, draw it. The hard part is time.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>Screens refresh 60, 120 or 144 times a second, and frames never arrive perfectly evenly. If your game moved the player "a little each frame", it would run twice as fast on a 120 Hz (hertz) screen, and physics would behave differently on every computer.</p>
+    <p>Kindling updates the world in <strong>fixed steps</strong> of 1/60 of a second. Each frame, the real time that passed goes into an <strong>accumulator</strong>. While the accumulator holds at least one step, we run a step and take it out. Whatever is left is less than one step; divided by the step size it gives <strong>alpha</strong>, a number from 0 to 1 that says how far we are toward the next step, which you can use to draw smoothly.</p>
+    <p>One more rule: if the tab freezes for two seconds, we do not try to run 120 steps at once (that can freeze the game again, the "spiral of death"). Frame time is clamped to a quarter of a second.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Frames (top) arrive unevenly; steps (dots) are perfectly even. Raise the frame jitter and watch the accumulator bar fill and empty while the steps stay even.</p>
+    <iframe class="viz-frame" src="../viz/01-game-loop/" title="Game loop visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/01-game-loop/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>The loop is <code>engine/core/loop.js</code>. Its heart is <code>advance(frameSeconds)</code>:
+<pre><code>function advance(frameSeconds) {
+  accumulator += Math.min(frameSeconds, maxFrameSeconds);   // clamp long freezes
+  while (accumulator &gt;= stepSeconds) {
+    update(stepSeconds);                                    // always the same size
+    accumulator -= stepSeconds;
+  }
+  render(accumulator / stepSeconds);                        // alpha: 0..1
+}</code></pre></li>
+      <li>Because <code>advance</code> takes the time as an argument instead of reading the clock, the tests can feed it exact numbers. Look at <code>tests/checks/core.checks.js</code>: feeding 3.5 steps of time runs exactly 3 updates and leaves alpha at 0.5.</li>
+      <li>In a real game you rarely call the loop yourself. <code>createGame()</code> makes one and calls your scene's <code>update(game, stepSeconds)</code> and <code>render(game, context, alpha)</code>:
+<pre><code>game.scenes.add(&quot;play&quot;, {
+  update(game, stepSeconds) {
+    ball.x += ball.speed * stepSeconds;   // pixels per second x seconds = pixels
+  },
+  render(game, context) {
+    fillCircle(context, ball.x, ball.y, 4, &quot;white&quot;);
+  },
+});</code></pre></li>
+      <li>Speeds are always <em>per second</em> and multiplied by <code>stepSeconds</code>. Then changing the step size (try <code>stepSeconds: 1 / 30</code> in <code>createGame</code>) changes smoothness, not how fast the game plays.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Make a new folder <code>samples/my-first-loop/</code> with an <code>index.html</code> (copy one from <code>samples/00-hello/</code> and keep its import map) and a <code>main.js</code>. Draw a 16×16 square that moves right at 80 pixels per second and wraps around to the left edge when it leaves the 320-pixel-wide screen. Show the frames per second in the corner.</p>
+    <details><summary>Hint 1</summary><p><code>wrap(value, min, max)</code> from <code>kindling/math/scalar.js</code> does the wrapping.</p></details>
+    <details><summary>Hint 2</summary><p><code>game.time.fps</code> holds the frames per second. Draw it with <code>text()</code> from <code>kindling/2d/draw.js</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { createGame } from &quot;kindling/game.js&quot;;
+import { fillRect, text } from &quot;kindling/2d/draw.js&quot;;
+import { wrap } from &quot;kindling/math/scalar.js&quot;;
+
+const game = createGame({ width: 320, height: 180 });
+const square = { x: 0, y: 82 };
+
+game.scenes.add(&quot;play&quot;, {
+  update(game, stepSeconds) {
+    square.x = wrap(square.x + 80 * stepSeconds, -16, 320);
+  },
+  render(game, context) {
+    fillRect(context, square.x, square.y, 16, 16, &quot;#ffb347&quot;);
+    text(context, &quot;fps &quot; + game.time.fps, 4, 4, { color: &quot;#8a8f9c&quot; });
+  },
+});
+game.start(&quot;play&quot;);</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-1-game-loop">
+      <li><label><input type="checkbox" data-key="0"><span>Why moving "a bit each frame" makes a game run at different speeds on different screens.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>What the accumulator holds, and when a step runs.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>What alpha is and what it is for.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>Why frame time is clamped to 0.25 seconds.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>Why speeds are written per second and multiplied by <code>stepSeconds</code>.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./">← All lessons</a>
+      <a href="./2d-2-drawing-input.html">Drawing and input →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

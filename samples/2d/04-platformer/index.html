@@ -1,0 +1,34 @@
+<!doctype html>
+<!--
+  samples/2d/04-platformer/index.html
+  WHAT: Kindling sample: Platformer. Everything is in main.js; it imports only from the engine.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/samples/2d/04-platformer/
+  DOC:  samples/2d/04-platformer/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Platformer | Kindling sample</title>
+  <!-- Styles are inline so this folder still works when you copy it somewhere else. -->
+  <style>
+    html, body { margin: 0; height: 100%; background: #0e0f13; color: #d6d6d6; font: 14px/1.4 system-ui, sans-serif; }
+    main { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px; }
+    p { margin: 0; text-align: center; }
+    a { color: #ffb347; }
+    canvas { outline: none; }
+  </style>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../../">Kindling</a> · <strong>Platformer</strong> · <a href="https://github.com/Normansrule/kindling/tree/main/samples/2d/04-platformer">source</a></p>
+    <p>Arrows / WASD to run · Space or W to jump (hold for higher)</p>
+    <canvas id="game" aria-label="Platformer: a small orange hero on grassy platforms with coins, spikes and enemies."></canvas>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

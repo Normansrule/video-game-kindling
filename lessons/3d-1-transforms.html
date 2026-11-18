@@ -1,0 +1,115 @@
+<!doctype html>
+<!--
+  lessons/3d-1-transforms.html
+  WHAT: Lesson: 3D transforms: model, view, projection. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D transforms: model, view, projection | Kindling lessons</title>
+  <meta name="description" content="How three matrices move a 3D object to the right place on a 2D screen.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>3D transforms: model, view, projection</h1>
+    <p class="lesson-meta">3D track · lesson 1 of 4 · about 35 minutes</p>
+    <p class="lead">Every corner of every 3D object goes through three matrices on its way to your screen. Understand those three and 3D stops being magic.</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>A 3D model is a list of corners (vertices) around its own center. To draw it, each corner is multiplied by three 4×4 <strong>matrices</strong>:</p>
+    <ol>
+      <li><strong>Model:</strong> where this object is in the world, how it is turned, how big it is.</li>
+      <li><strong>View:</strong> the world moved so the camera sits at the center, looking down -z. (The camera never moves; the world moves the opposite way.)</li>
+      <li><strong>Projection:</strong> the lens. Far things get smaller, and everything is squashed into the screen. The FOV (field of view) is how wide the lens sees.</li>
+    </ol>
+    <p>Matrices combine by multiplying, and <strong>order matters</strong>: "turn, then move" spins an object in place somewhere else; "move, then turn" swings it around the center like a moon. In Kindling's code you read the steps from the last call back to the first.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Move, rotate and scale the crate, and change the field of view. The axes show the world: red x, green y (up), blue z.</p>
+    <iframe class="viz-frame" src="../viz/09-transforms/" title="Transforms visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/09-transforms/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>The spinning cube sample builds a model matrix each frame. <code>rotationY</code> makes a fresh matrix; <code>rotateX</code> adds a step to it:
+<pre><code>let model = mat4.rotationY(angle);
+model = mat4.rotateX(model, angle * 0.6);
+renderer.drawMesh(cubeMesh, model, { texture: crateTexture, color: [1, 1, 1] });</code></pre></li>
+      <li>Placing, turning and sizing an object, as the lit-scene sample does for every tree. Read it bottom to top: scale the tree, turn it, then move it to its spot.
+<pre><code>let model = mat4.translation(tree.x, 0, tree.z);
+model = mat4.rotateY(model, tree.turn);
+model = mat4.scale(model, { x: tree.scale, y: tree.scale, z: tree.scale });</code></pre></li>
+      <li>The camera gives the other two matrices. <code>lookAt</code> builds the view from where the eye is and what it looks at; <code>perspective</code> builds the lens:
+<pre><code>camera.view = () =&gt; mat4.lookAt(camera.position(), camera.target, { x: 0, y: 1, z: 0 });
+camera.projection = (aspect) =&gt; mat4.perspective(camera.fieldOfView, aspect, camera.near, camera.far);</code></pre></li>
+      <li>On the GPU (graphics processing unit), the vertex shader in <code>engine/3d/lighting.js</code> does the multiplication for every corner, right to left:
+<pre><code>vec4 world = u_model * vec4(a_position, 1.0);   // model: corner -&gt; world
+gl_Position = u_projection * u_view * world;     // then view, then projection</code></pre></li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>In <code>samples/3d/01-spinning-cube/main.js</code>, add a small moon (a sphere of radius 0.25) that orbits the cube at a distance of 2, twice as fast as the cube spins.</p>
+    <details><summary>Hint 1</summary><p>Make the mesh once with <code>createMesh(screen.gl, sphere(0.25, 12, 8))</code>; import <code>sphere</code> from <code>kindling/3d/primitives.js</code>.</p></details>
+    <details><summary>Hint 2</summary><p>For an orbit you want "move out, then turn around the center". Written in code that is <code>rotationY</code> first, then <code>translate</code>.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { cube, sphere } from &quot;kindling/3d/primitives.js&quot;;
+const moonMesh = createMesh(screen.gl, sphere(0.25, 12, 8));
+
+// In render(), after drawing the cube:
+let moon = mat4.rotationY(angle * 2);              // second: swing around the center
+moon = mat4.translate(moon, { x: 2, y: 0, z: 0 }); // first: move 2 out along x
+renderer.drawMesh(moonMesh, moon, { color: [0.8, 0.85, 1], shininess: 8 });</code></pre>
+      <p>Swap the two lines (translation first, then <code>rotateY</code>) and the moon spins in place at x = 2 instead of orbiting. That is the order rule in action.</p>
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="3d-1-transforms">
+      <li><label><input type="checkbox" data-key="0"><span>What the model, view and projection matrices each do.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>Why the camera "never moves" and the world moves instead.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>Why the order of translate and rotate changes the result.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>How to read a chain of Kindling matrix calls (last call happens to the object first).</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>What field of view and the near and far planes are.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./">← All lessons</a>
+      <a href="./3d-2-meshes-lighting.html">Meshes and lighting →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

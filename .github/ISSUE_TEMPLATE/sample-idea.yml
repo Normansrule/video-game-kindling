@@ -1,0 +1,22 @@
+name: Sample idea
+description: Suggest a small complete game that would teach something new.
+labels: ["sample idea"]
+body:
+  - type: input
+    id: game
+    attributes:
+      label: The game, in one sentence
+      placeholder: "Asteroids: rotate, thrust and wrap around the screen."
+    validations:
+      required: true
+  - type: textarea
+    id: teaches
+    attributes:
+      label: What would it teach that the current samples do not?
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 2D or 3D
+      options: ["2D", "3D", "Either"]

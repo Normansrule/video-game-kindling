@@ -1,0 +1,145 @@
+<!doctype html>
+<!--
+  lessons/2d-3-collision.html
+  WHAT: Lesson: Collision. Shape: explanation, visualization, walkthrough, exercise, checklist.
+  DOC:  lessons/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Collision | Kindling lessons</title>
+  <meta name="description" content="Detect when boxes and circles touch, and push them apart with the smallest move.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page lesson">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../">Kindling</a><a href="./">All lessons</a>
+    </nav>
+    <h1>Collision</h1>
+    <p class="lesson-meta">2D track · lesson 3 of 6 · about 30 minutes</p>
+    <p class="lead">Two questions: are these touching, and if so, which way do I push them apart?</p>
+
+    <h2><span class="step">1</span> The idea</h2>
+    <p>Most 2D games are made of <strong>AABBs</strong> (axis-aligned bounding boxes: rectangles that never rotate) and circles. Two boxes overlap unless one is completely left of, right of, above or below the other. Two circles overlap when the distance between their centers is less than the sum of their radii.</p>
+    <p>Detection says <em>yes or no</em>. Games also need <strong>resolution</strong>: the smallest move that separates the shapes. For two boxes it is whichever of the four directions (left, right, up, down) needs the shortest push. The direction tells you more than you think: pushed up means you are standing on it.</p>
+    <p>Rotated shapes need the SAT (Separating Axis Theorem), covered in its own visualization. Start with boxes; they go a very long way.</p>
+
+    <h2><span class="step">2</span> See it</h2>
+    <p>Drag shape A around. The arrow is the push-out vector: the smallest move that gets A out of B.</p>
+    <iframe class="viz-frame" src="../viz/04-collision/" title="Collision visualization" loading="lazy" allow="fullscreen"></iframe>
+    <p><a href="../viz/04-collision/">Open it in its own tab</a> (easier on a phone).</p>
+
+    <h2><span class="step">3</span> Walkthrough</h2>
+    <ol>
+      <li>Box versus box, from <code>engine/2d/collision.js</code>. Read it as "not apart on x and not apart on y":
+<pre><code>export function rectsOverlap(a, b) {
+  return a.x &lt; b.x + b.width &amp;&amp; a.x + a.width &gt; b.x &amp;&amp;
+         a.y &lt; b.y + b.height &amp;&amp; a.y + a.height &gt; b.y;
+}</code></pre></li>
+      <li>Breakout uses the push to decide how the ball bounces: pushed sideways means it hit a side, so flip the horizontal speed.
+<pre><code>const push = circleRectPushOut(ball, brick);
+if (push) {
+  ball.x += push.x;
+  ball.y += push.y;
+  if (Math.abs(push.x) &gt; Math.abs(push.y)) ball.velocityX = -ball.velocityX;
+  else ball.velocityY = -ball.velocityY;
+}</code></pre></li>
+      <li>Pong makes the bounce angle depend on <em>where</em> the ball hit the paddle, which gives the player control. The middle sends it straight, the edges send it steeply:
+<pre><code>const hitPosition = clamp((ballCenter - paddleCenter) / (paddle.height / 2), -1, 1);   // -1 top .. +1 bottom
+const angle = hitPosition * MAX_BOUNCE_ANGLE;
+const speed = Math.hypot(ball.velocityX, ball.velocityY) * BALL_SPEED_UP;              // a bit faster each hit
+ball.velocityX = Math.cos(angle) * speed * direction;
+ball.velocityY = Math.sin(angle) * speed;</code></pre></li>
+      <li>Fast objects can jump over thin ones between two steps ("tunneling"). For bullets, use <code>rayRect(origin, direction, rect)</code> along the path instead of checking only where the bullet ends up.</li>
+    </ol>
+
+    <h2><span class="step">4</span> Exercise</h2>
+    <p>Take your moving square from the last lesson and scatter 8 coins (6×6 boxes) at random positions. When the square overlaps a coin, remove the coin and add 1 to a score shown in the corner. Add one 40×40 wall in the middle that the square cannot pass through.</p>
+    <details><summary>Hint 1</summary><p>Loop over the coins backwards and use <code>coins.splice(i, 1)</code> to remove one, or rebuild the list with <code>filter</code>.</p></details>
+    <details><summary>Hint 2</summary><p>For the wall: after moving, <code>const push = rectPushOut(square, wall); if (push) { square.x += push.x; square.y += push.y; }</code>. The square needs <code>width</code> and <code>height</code> properties for this.</p></details>
+    <details><summary>Solution</summary>
+      <p>One way to do it (yours can be different and still right):</p>
+<pre><code>import { createGame } from &quot;kindling/game.js&quot;;
+import { fillRect, text } from &quot;kindling/2d/draw.js&quot;;
+import { rectsOverlap, rectPushOut } from &quot;kindling/2d/collision.js&quot;;
+import { createRandom } from &quot;kindling/math/random.js&quot;;
+
+const game = createGame({
+  width: 320, height: 180,
+  actions: { left: [&quot;ArrowLeft&quot;, &quot;KeyA&quot;], right: [&quot;ArrowRight&quot;, &quot;KeyD&quot;], up: [&quot;ArrowUp&quot;, &quot;KeyW&quot;], down: [&quot;ArrowDown&quot;, &quot;KeyS&quot;] },
+});
+const random = createRandom(7);
+const square = { x: 20, y: 20, width: 12, height: 12 };
+const wall = { x: 140, y: 70, width: 40, height: 40 };
+let coins = [];
+for (let i = 0; i &lt; 8; i++) coins.push({ x: random.range(0, 314), y: random.range(0, 174), width: 6, height: 6 });
+coins = coins.filter((coin) =&gt; !rectsOverlap(coin, wall));   // no coins inside the wall
+let score = 0;
+
+game.scenes.add(&quot;play&quot;, {
+  update(game, stepSeconds) {
+    square.x += game.actions.axis(&quot;left&quot;, &quot;right&quot;) * 100 * stepSeconds;
+    square.y += game.actions.axis(&quot;up&quot;, &quot;down&quot;) * 100 * stepSeconds;
+    const push = rectPushOut(square, wall);
+    if (push) { square.x += push.x; square.y += push.y; }
+    const before = coins.length;
+    coins = coins.filter((coin) =&gt; !rectsOverlap(square, coin));
+    score += before - coins.length;
+  },
+  render(game, context) {
+    fillRect(context, wall.x, wall.y, wall.width, wall.height, &quot;#5a6070&quot;);
+    for (const coin of coins) fillRect(context, coin.x, coin.y, coin.width, coin.height, &quot;#ffd23f&quot;);
+    fillRect(context, square.x, square.y, square.width, square.height, &quot;#4fa3ff&quot;);
+    text(context, &quot;coins &quot; + score, 4, 4);
+  },
+});
+game.start(&quot;play&quot;);</code></pre>
+      
+    </details>
+
+    <h2><span class="step">5</span> You now know</h2>
+    <p>Tick each one you could explain to a friend. Your ticks are saved in this browser only.</p>
+    <ul class="checklist" data-lesson="2d-3-collision">
+      <li><label><input type="checkbox" data-key="0"><span>The four-comparison test for two boxes, and why touching edges do not count.</span></label></li>
+      <li><label><input type="checkbox" data-key="1"><span>The circle test, and why comparing squared distances is faster.</span></label></li>
+      <li><label><input type="checkbox" data-key="2"><span>What a push-out vector is, and how its direction tells you which side you hit.</span></label></li>
+      <li><label><input type="checkbox" data-key="3"><span>How Pong turns the hit position into a bounce angle.</span></label></li>
+      <li><label><input type="checkbox" data-key="4"><span>What tunneling is and one way to prevent it.</span></label></li>
+    </ul>
+
+    <nav class="lesson-pager" aria-label="Lessons">
+      <a href="./2d-2-drawing-input.html">← Drawing and input</a>
+      <a href="./2d-4-platformer-physics.html">Platformer physics →</a>
+    </nav>
+  </main>
+  <script>
+    // Remember the "you now know" ticks per lesson. Storage can fail (private windows), so try/catch.
+    (function () {
+      var list = document.querySelector(".checklist");
+      var key = "kindling:lesson:" + list.dataset.lesson;
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (error) { saved = {}; }
+      list.querySelectorAll("input").forEach(function (box) {
+        box.checked = saved[box.dataset.key] === true;
+        box.addEventListener("change", function () {
+          saved[box.dataset.key] = box.checked;
+          try { localStorage.setItem(key, JSON.stringify(saved)); } catch (error) { /* not saved, still works */ }
+        });
+      });
+      // Grow each embedded page to its full height, so it never needs its own scrollbar.
+      document.querySelectorAll("iframe.viz-frame").forEach(function (frame) {
+        function fit() {
+          try { frame.style.height = frame.contentDocument.documentElement.scrollHeight + "px"; } catch (error) { /* keep the CSS height */ }
+        }
+        frame.addEventListener("load", function () {
+          fit();
+          try { new ResizeObserver(fit).observe(frame.contentDocument.body); } catch (error) { /* old browser */ }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

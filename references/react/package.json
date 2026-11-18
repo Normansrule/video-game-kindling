@@ -1,0 +1,25 @@
+{
+  "name": "kindling-react-reference",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Kindling game engine ideas in React: a 2D canvas game, a react-three-fiber 3D game, and an easing playground.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/logic.test.js"
+  },
+  "dependencies": {
+    "@react-three/drei": "9.122.0",
+    "@react-three/fiber": "8.18.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.11"
+  }
+}
