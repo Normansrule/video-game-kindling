@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  make/index.html
+  WHAT: The tools for making game content: the level editor and the sprite packer,
+        plus the 13k path for size-limited jams.
+  DOC:  make/README.md, tiny/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make tools</title>
+  <meta name="description" content="Browser tools for Kindling games: a tile level editor with play-testing, a sprite packer, and a starter for 13 KB games.">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="site-nav" aria-label="Breadcrumb"><a href="../">Kindling</a></nav>
+    <h1>Make tools</h1>
+    <p class="lead">Tools that run in your browser, with nothing to install. Your files never leave the tab.</p>
+    <ul class="gallery">
+      <li>
+        <img src="../assets/thumbs/make-level-editor.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./level-editor/">Level editor</a>
+          <p>Paint tile levels, play-test them instantly, and copy them out as text for <code>createTilemap()</code>.</p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/make-sprite-packer.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="./sprite-packer/">Sprite packer</a>
+          <p>Pack PNGs of any size into one atlas image and a JSON frame list for <code>createAtlas()</code>.</p>
+        </div>
+      </li>
+      <li>
+        <img src="../assets/thumbs/tiny-spark-hop.jpg" alt="" width="480" height="300">
+        <div class="body">
+          <a href="../tiny/starter/">Spark Hop: the 13k path</a>
+          <p>A whole game in about 3.4 KB zipped, for js13kGames and other size-limited jams. <a href="https://github.com/Normansrule/video-game-kindling/tree/main/tiny">How to pack yours</a>.</p>
+        </div>
+      </li>
+    </ul>
+    <h2>More</h2>
+    <ul class="cards">
+      <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/make/README.md">Tool guide</a><span>What each tool makes and how to load it in a game</span></li>
+      <li><a href="../samples/2d/04-platformer/">Platformer sample</a><span>The game the level editor's tiles come from</span></li>
+      <li><a href="../jam/preview/">Jam starter</a><span>The full-engine starting point for normal jams</span></li>
+    </ul>
+  </main>
+</body>
+</html>

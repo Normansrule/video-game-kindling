@@ -1,6 +1,6 @@
 # Sample 3D-01: Spinning cube
 
-**Play:** <https://normansrule.github.io/kindling/samples/3d/01-spinning-cube/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/01-spinning-cube/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/3d/01-spinning-cube/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/01-spinning-cube/>
 
 ## What it teaches
 
@@ -14,7 +14,7 @@ And two one-time setups: `createMesh(gl, cube(1.4))` uploads the shape to the gr
 
 Engine modules used: `3d/gl.js`, `3d/renderer.js` (which uses `3d/shader.js` and `3d/lighting.js`), `3d/mesh.js`, `3d/primitives.js`, `3d/camera3d.js`, `3d/texture.js`, `core/loop.js`, `math/mat4.js`.
 
-See it explained: [viz 9, 3D transforms](https://normansrule.github.io/kindling/viz/09-transforms/).
+See it explained: [viz 9, 3D transforms](https://normansrule.github.io/video-game-kindling/viz/09-transforms/).
 
 ## Try changing
 

@@ -1,0 +1,59 @@
+/* make/make.css
+   WHAT: Extra layout for the browser tools in make/ (loaded after site.css and viz/viz.css).
+   WHY:  Tools need a drop zone, a checkerboard behind transparent images and a
+         toolbar that wraps on a phone. Everything else comes from the shared styles. */
+
+.make-drop {
+  display: grid;
+  place-items: center;
+  gap: 0.4rem;
+  min-height: 7rem;
+  padding: 1rem;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: center;
+  color: var(--muted);
+  cursor: pointer;
+}
+.make-drop.over, .make-drop:focus-within { border-color: var(--accent); color: var(--text); }
+.make-drop input { max-width: 100%; }
+
+/* Transparent pixels show as a soft checkerboard, in both themes. */
+.checker {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(45deg, var(--border) 25%, transparent 25%, transparent 75%, var(--border) 75%),
+    linear-gradient(45deg, var(--border) 25%, transparent 25%, transparent 75%, var(--border) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+.make-preview { overflow: auto; max-height: 70vh; border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+.make-preview canvas { image-rendering: pixelated; border-radius: 0; max-width: none; }
+
+.make-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.75rem 0; }
+.make-toolbar button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.make-toolbar .sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 0.25rem; }
+
+.make-palette { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0.5rem 0; }
+.make-palette button {
+  font: inherit; font-size: 0.9rem;
+  display: flex; gap: 0.4rem; align-items: center;
+  min-height: 44px; padding: 0.3rem 0.7rem;
+  border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); cursor: pointer;
+}
+.make-palette button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.make-palette .swatch { width: 1.1rem; height: 1.1rem; border-radius: 4px; display: inline-grid; place-items: center; font: 700 0.75rem ui-monospace, monospace; color: #fff; text-shadow: 0 0 2px #000; }
+.make-palette button:focus-visible, .make-toolbar button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.make-grid-wrap { overflow: auto; max-height: 70vh; border: 1px solid var(--border); border-radius: 12px; background: #15161b; }
+.make-grid-wrap canvas { image-rendering: pixelated; border-radius: 0; max-width: none; cursor: crosshair; touch-action: none; }
+.make-grid-wrap canvas.scrolling { touch-action: pan-x pan-y; cursor: grab; }
+.make-warnings { list-style: none; padding: 0; margin: 0.5rem 0; font-size: 0.92rem; }
+.make-warnings li::before { content: "⚠ "; color: var(--accent); }
+.make-warnings li.ok::before { content: "✓ "; color: var(--pass); }
+textarea.make-text { width: 100%; min-height: 10rem; font: 0.85rem/1.3 ui-monospace, Consolas, monospace; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#play-canvas { image-rendering: pixelated; }
+.viz-controls input[type="number"] { font: inherit; padding: 0.35rem 0.5rem; min-height: 44px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); width: 100%; }

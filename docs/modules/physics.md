@@ -1,6 +1,6 @@
 # Module: physics (arcade)
 
-**File:** [`engine/2d/physics.js`](../../engine/2d/physics.js) · **Visualization:** [06 physics](https://normansrule.github.io/kindling/viz/06-physics/) · **Lesson:** [2D-4 Platformer physics](../../lessons/2d-4-platformer-physics.html) · **Sample:** [2D-04 platformer](../../samples/2d/04-platformer/)
+**File:** [`engine/2d/physics.js`](../../engine/2d/physics.js) · **Visualization:** [06 physics](https://normansrule.github.io/video-game-kindling/viz/06-physics/) · **Lesson:** [2D-4 Platformer physics](../../lessons/2d-4-platformer-physics.html) · **Sample:** [2D-04 platformer](../../samples/2d/04-platformer/)
 
 "Arcade" physics means: things have a velocity and maybe gravity, and they **stop at walls**. No spinning, no stacking, no friction simulation. That is what platformers, top-down games and shooters need, and it fits in about 150 lines.
 

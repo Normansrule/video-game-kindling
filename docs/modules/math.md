@@ -1,6 +1,6 @@
 # Module: math
 
-**Files:** [`engine/math/`](../../engine/math/) · **Visualizations:** [02 easing](https://normansrule.github.io/kindling/viz/02-easing/), [09 transforms](https://normansrule.github.io/kindling/viz/09-transforms/) · **Cheat sheet:** [CHEATSHEET.md](../CHEATSHEET.md#math)
+**Files:** [`engine/math/`](../../engine/math/) · **Visualizations:** [02 easing](https://normansrule.github.io/video-game-kindling/viz/02-easing/), [09 transforms](https://normansrule.github.io/video-game-kindling/viz/09-transforms/) · **Cheat sheet:** [CHEATSHEET.md](../CHEATSHEET.md#math)
 
 Small, pure functions. "Pure" means they never change their inputs; they return new values. That makes them easy to test (see [`tests/checks/math.checks.js`](../../tests/checks/math.checks.js)).
 
@@ -82,7 +82,7 @@ It uses mulberry32, a small fast generator. Seeds make bugs reproducible and let
 
 ## easing.js
 
-Functions from 0..1 to (roughly) 0..1 that shape motion: `easeOutCubic` starts fast and settles, `easeOutBack` overshoots a little, `easeOutBounce` bounces. All are in the `easings` object by name. See them move in the [easing visualization](https://normansrule.github.io/kindling/viz/02-easing/).
+Functions from 0..1 to (roughly) 0..1 that shape motion: `easeOutCubic` starts fast and settles, `easeOutBack` overshoots a little, `easeOutBounce` bounces. All are in the `easings` object by name. See them move in the [easing visualization](https://normansrule.github.io/video-game-kindling/viz/02-easing/).
 
 ## Go further
 

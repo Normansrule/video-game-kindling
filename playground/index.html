@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  playground/index.html
+  WHAT: A live code editor for Kindling, like CodePen: code on the left, the running
+        game on the right, console output underneath. Loads any Game Code Example.
+  WHY:  The fastest way to learn is to change one number and see what happens.
+        Nothing to install; your edits are kept in this browser until you reset.
+  DOC:  playground/playground.js (how it works), game-code-examples/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playground | Kindling</title>
+  <meta name="description" content="Edit and run Kindling game code live in your browser: 2D, 2.5D and 3D examples, no install.">
+  <link rel="stylesheet" href="../assets/kindling.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .pg-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+    .pg-bar select { font: inherit; font-size: 0.9rem; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); max-width: 100%; }
+    .pg-bar .spacer { flex: 1; }
+    .pg-bar label.check { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+    .pg-status { font: 0.8rem var(--mono); color: var(--muted); }
+    .pg-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); min-height: 0; }
+    @media (min-width: 900px) {
+      .pg-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); height: calc(100vh - 110px); min-height: 520px; }
+    }
+    /* Editor: a transparent textarea on top of a highlighted copy of the same text. */
+    .pg-editor { position: relative; display: flex; min-height: 55vh; background: var(--code-bg); border-right: 1px solid var(--border); overflow: hidden; }
+    .pg-gutter { flex: none; padding: 14px 8px 14px 12px; text-align: right; color: var(--muted); opacity: 0.6; font: 13px/1.6 var(--mono); user-select: none; overflow: hidden; white-space: pre; }
+    .pg-code { position: relative; flex: 1; min-width: 0; }
+    .pg-code pre, .pg-code textarea {
+      position: absolute; inset: 0; margin: 0; padding: 14px 16px 14px 6px; border: 0;
+      font: 13px/1.6 var(--mono); tab-size: 2; white-space: pre; overflow: auto; letter-spacing: 0;
+    }
+    .pg-code pre { color: var(--text); pointer-events: none; }
+    .pg-code textarea { resize: none; background: transparent; color: transparent; caret-color: var(--ember); outline: none; }
+    .pg-code textarea::selection { background: color-mix(in srgb, var(--sky) 35%, transparent); color: transparent; }
+    .pg-right { display: flex; flex-direction: column; min-height: 0; }
+    .pg-preview { flex: 1; min-height: 46vh; background: #0d1117; position: relative; }
+    @media (min-width: 900px) { .pg-preview { min-height: 0; } }
+    .pg-preview iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+    .pg-console { height: 150px; display: flex; flex-direction: column; border-top: 1px solid var(--border); background: var(--bg-2); }
+    .pg-console header { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 4px 12px; font: 600 0.75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .pg-log { flex: 1; overflow: auto; margin: 0; padding: 0 12px 8px; font: 12px/1.5 var(--mono); list-style: none; }
+    .pg-log li { border-bottom: 1px solid var(--border); padding: 2px 0; white-space: pre-wrap; word-break: break-word; }
+    .pg-log .warn { color: var(--ember); }
+    .pg-log .error { color: var(--rose); }
+    .pg-log .info { color: var(--muted); }
+    .pg-help { font-size: 0.8rem; color: var(--muted); padding: 6px 16px; border-top: 1px solid var(--border); margin: 0; }
+  </style>
+</head>
+<body>
+  <header class="k-nav">
+    <a class="k-logo" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="./" aria-current="page">Playground</a>
+      <a href="../game-code-examples/">Examples</a>
+      <a href="../samples/">Samples</a>
+      <a href="../lessons/">Lessons</a>
+      <a href="../viz/">Visualizations</a>
+      <a href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="pg-bar" role="toolbar" aria-label="Playground controls">
+    <label class="visually-hidden" for="picker">Example</label>
+    <select id="picker"></select>
+    <button class="k-button small primary" id="run" type="button" title="Ctrl + Enter">▶ Run</button>
+    <label class="check"><input type="checkbox" id="auto" checked> Auto-run</label>
+    <span class="pg-status" id="status" role="status"></span>
+    <span class="spacer"></span>
+    <button class="k-button small" id="reset" type="button">Reset</button>
+    <button class="k-button small" id="copy" type="button">Copy code</button>
+    <button class="k-button small" id="newtab" type="button">Open in new tab</button>
+  </div>
+
+  <main class="pg-main">
+    <section class="pg-editor" aria-label="Code editor">
+      <div class="pg-gutter" id="gutter" aria-hidden="true">1</div>
+      <div class="pg-code">
+        <pre aria-hidden="true"><code id="highlight"></code></pre>
+        <label class="visually-hidden" for="source">Code</label>
+        <textarea id="source" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea>
+      </div>
+    </section>
+    <section class="pg-right" aria-label="Output">
+      <div class="pg-preview"><iframe id="frame" title="Running game" allow="gamepad; fullscreen; autoplay"></iframe></div>
+      <div class="pg-console">
+        <header><span>Console</span><button class="k-button small" id="clear" type="button">Clear</button></header>
+        <ul class="pg-log" id="log" role="log" aria-live="polite"></ul>
+      </div>
+    </section>
+  </main>
+  <p class="pg-help"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> runs. <kbd>Tab</kbd> indents; press <kbd>Esc</kbd> first to move focus out of the editor. Click the game before using the keyboard. Edits are saved in this browser.</p>
+
+  <script type="module" src="./playground.js"></script>
+</body>
+</html>

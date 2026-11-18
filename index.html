@@ -1,94 +1,174 @@
 <!doctype html>
 <!--
-  index.html (landing page, served at https://normansrule.github.io/kindling/)
-  WHAT: Front door of the repo: what Kindling is, how to run it, where everything is.
+  index.html (landing page, served at https://normansrule.github.io/video-game-kindling/)
+  WHAT: The front door: a live demo of the engine in all five views, what Kindling is,
+        and a gallery of everything in the repo (playground, examples, samples,
+        visualizations, lessons, tools, docs).
   WHY:  It also checks two things a beginner trips on: opening files directly
         (file://, which blocks modules) and a broken import map.
-  DOC:  docs/RUNNING.md
+  DOC:  docs/RUNNING.md   DEMO CODE: assets/landing.js
 -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kindling: build games from scratch</title>
-  <meta name="description" content="Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.">
+  <title>Kindling: build games from scratch in 2D, 2.5D and 3D</title>
+  <meta name="description" content="A zero-dependency JavaScript game engine with its own WebGL 2 renderer. 2D, 2.5D and 3D from one world, a live code playground, 35 game code examples, samples and visual lessons.">
   <meta property="og:title" content="Kindling: build games from scratch">
-  <meta property="og:description" content="A zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.">
-  <meta property="og:image" content="https://normansrule.github.io/kindling/assets/social-preview.png">
-  <link rel="stylesheet" href="./assets/site.css">
+  <meta property="og:description" content="Your own game engine: 2D, 2.5D and 3D from one world. Live playground, 35 examples, samples and visual lessons. Zero dependencies.">
+  <meta property="og:image" content="https://normansrule.github.io/video-game-kindling/assets/social-preview.png">
+  <link rel="stylesheet" href="./assets/kindling.css">
   <script src="./assets/theme.js" defer></script>
   <script type="importmap">
     { "imports": { "kindling/": "./engine/" } }
   </script>
+  <style>
+    .hero-glow { position: absolute; inset: -30% -10% auto; height: 520px; z-index: -1; pointer-events: none;
+      background: radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--ember) 22%, transparent), transparent 70%),
+                  radial-gradient(35% 45% at 80% 20%, color-mix(in srgb, var(--violet) 20%, transparent), transparent 70%); }
+    .k-stage-view canvas { display: block; width: 100%; height: auto; }
+    .split { display: grid; gap: 24px; align-items: center; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .split { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } }
+    .links { columns: 2 220px; gap: 24px; padding: 0; list-style: none; margin: 0; }
+    .links li { break-inside: avoid; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .links span { display: block; color: var(--muted); font-size: 0.88rem; }
+    #engine-status { font: 0.8rem var(--mono); color: var(--muted); }
+  </style>
 </head>
 <body>
-  <main class="page">
-    <h1>Kindling</h1>
-    <p class="lead">Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons.</p>
+  <header class="k-nav">
+    <a class="k-logo" href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="./playground/">Playground</a>
+      <a href="./game-code-examples/">Examples</a>
+      <a href="./samples/">Samples</a>
+      <a href="./lessons/">Lessons</a>
+      <a href="./viz/">Visualizations</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/tree/main/docs">Docs</a>
+      <a href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
+    </nav>
+  </header>
 
-    <p id="file-warning" class="notice" hidden>
-      You opened this page straight from disk (file://). Browsers block JavaScript modules there,
-      so nothing will run. Start a local server instead (see below).
-    </p>
-    <p id="engine-status" role="status">Engine: checking…</p>
+  <main>
+    <section class="k-hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="k-wrap k-hero-grid">
+        <div>
+          <p class="k-eyebrow">Kindling 2 · open source game engine</p>
+          <h1>Build games from scratch. In <span class="glow">2D, 2.5D and 3D</span>.</h1>
+          <p class="k-lead">A small engine you can read in an afternoon, with its own WebGL 2 renderer: block worlds with soft shadows, ambient occlusion, fog, water and a day–night sky. Write your game once, then pick how it looks.</p>
+          <div class="k-actions">
+            <a class="k-button primary" href="./playground/">Open the playground</a>
+            <a class="k-button" href="./game-code-examples/">35 code examples</a>
+            <a class="k-button" href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
+          </div>
+          <ul class="k-stats">
+            <li><strong>0</strong> dependencies</li>
+            <li><strong>5</strong> view modes</li>
+            <li><strong>35</strong> examples</li>
+            <li><strong>13</strong> samples</li>
+            <li><strong>15</strong> visualizations</li>
+          </ul>
+          <p id="file-warning" class="k-notice" hidden>You opened this page straight from disk (file://). Browsers block JavaScript modules there, so nothing will run. Start a local server instead (see “Run it on your computer” below).</p>
+        </div>
+        <figure class="k-stage" style="margin:0">
+          <div class="k-stage-bar"><div class="k-tabs" id="hero-modes" role="group" aria-label="View mode"></div></div>
+          <div class="k-stage-view" id="hero-stage"></div>
+          <figcaption class="k-stage-foot"><span id="hero-caption">Loading the engine…</span><a href="./samples/modes/01-one-world/">Play it yourself</a></figcaption>
+        </figure>
+      </div>
+    </section>
 
-    <h2>Start here</h2>
-    <ul class="gallery">
-      <li>
-        <img src="./assets/thumbs/viz-01-game-loop.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./lessons/">Lessons</a>
-          <p>13 lessons in three tracks: 2D, 3D and game design. Each has a live demo, an exercise and a checklist.</p>
-        </div>
-      </li>
-      <li>
-        <img src="./assets/thumbs/2d-04-platformer.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./samples/">Samples</a>
-          <p>11 small complete games, 6 in 2D and 5 in 3D. Each is one <code>main.js</code> you can read top to bottom.</p>
-        </div>
-      </li>
-      <li>
-        <img src="./assets/thumbs/viz-11-raycaster.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./viz/">Visualizations</a>
-          <p>13 interactive pages that show how each engine idea works, with sliders and play/pause.</p>
-        </div>
-      </li>
-      <li>
-        <img src="./references/shots/react-islands.jpg" alt="" width="480" height="270">
-        <div class="body">
-          <a href="./references/react/dist/">React demos</a>
-          <p>A 2D canvas shooter and a 3D platformer in React and react-three-fiber. Python and Rust versions are <a href="https://github.com/Normansrule/kindling/tree/main/references">on GitHub</a>.</p>
-        </div>
-      </li>
-      <li>
-        <img src="./assets/thumbs/3d-04-coin-collector.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./jam/preview/">Jam starter</a>
-          <p>The game every new jam project starts from. Make your own with <code>jam/new-game.sh</code>.</p>
-        </div>
-      </li>
-    </ul>
+    <section class="k-section k-wrap" aria-labelledby="why">
+      <p class="k-eyebrow">What's inside</p>
+      <h2 id="why">An engine, a classroom and a toolbox</h2>
+      <p class="k-lead">Every file is plain JavaScript with a comment at the top that says what it does and why. No build step, no npm install: open a page and it runs.</p>
+      <div class="k-features">
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🧱</span><h3>Your own 3D renderer</h3><p>Raw WebGL 2: chunked block meshes, shadow maps, ambient occlusion, tone mapping, sky, water and low-poly models. No Three.js.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🔀</span><h3>One world, five views</h3><p>Top-down map, isometric diorama, raycaster, 3D third person and first person. Switch with one line: <code>view.setMode("iso")</code>.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">⚡</span><h3>Live playground</h3><p>Edit any example and see it change instantly, like CodePen. Your edits are kept in your browser.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🎮</span><h3>All the game code basics</h3><p>Loop, input, gamepad, collision, physics, cameras, AI, pathfinding, sound, saving, UI, dialogue and inventories.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🔬</span><h3>See how it works</h3><p>Interactive visualizations with sliders: the game loop, SAT collision, lighting, raycasting, voxel lighting and more.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🏁</span><h3>Ready for game jams</h3><p>A jam template, a level editor, a sprite packer and a 13 KB game to learn size-coding from.</p></div>
+      </div>
+    </section>
 
-    <h2>Run it locally</h2>
-    <pre><code>mkdir -p ~/projects &amp;&amp; cd ~/projects &amp;&amp; git clone https://github.com/Normansrule/kindling.git &amp;&amp; cd kindling &amp;&amp; python3 -m http.server 8000</code></pre>
-    <p>Then open <a href="http://localhost:8000/">http://localhost:8000/</a>. This site is the same files on GitHub Pages.</p>
+    <section class="k-section k-wrap" aria-labelledby="code">
+      <div class="split">
+        <div>
+          <p class="k-eyebrow">How it feels</p>
+          <h2 id="code" class="k-h2">A 3D island in a few lines</h2>
+          <p class="k-lead">The world is just data: a grid of block numbers. The view decides how to draw it. Change <code>"3d"</code> to <code>"iso"</code> or <code>"raycast"</code> and the same world becomes a diorama or a retro shooter.</p>
+          <div class="k-actions"><a class="k-button primary" href="./playground/?ex=28-switch-2d-25d-3d">Try it in the playground</a></div>
+        </div>
+<pre class="k-code" id="snippet"><code>import { createVoxelWorld } from "kindling/world/voxel-world.js";
+import { generateIsland } from "kindling/world/generate.js";
+import { createWorldView } from "kindling/views/world-view.js";
 
-    <h2>More</h2>
-    <ul class="cards">
-      <li><a href="https://github.com/Normansrule/kindling/tree/main/docs">Docs</a><span>Architecture, one page per module, cheatsheet, glossary</span></li>
-      <li><a href="https://github.com/Normansrule/kindling/tree/main/references">Python, Rust, React games</a><span>Complete reference games with pygame-ce, macroquad and react-three-fiber</span></li>
-      <li><a href="https://github.com/Normansrule/kindling/tree/main/docs/bridges">Bridges</a><span>The core ideas in plain Python, React and Rust</span></li>
-      <li><a href="https://github.com/Normansrule/kindling/tree/main/jam">Jam kit</a><span>Checklists, scope cutter, itch.io upload guide</span></li>
-      <li><a href="./tests/">Tests</a><span>Math and collision checks, in your browser</span></li>
-      <li><a href="./samples/00-hello/">Hello sample</a><span>The smallest page that loads the engine</span></li>
-      <li><a href="https://github.com/Normansrule/kindling">Source on GitHub</a><span>MIT license. Issues and ideas welcome</span></li>
-    </ul>
+const world = createVoxelWorld(64, 40, 64);       // width, height, depth in blocks
+const island = generateIsland(world, { seed: 3 }); // hills, beaches, trees, a village
+const view = createWorldView({ container: "#stage", world, mode: "3d" });
 
-    <h2>Status</h2>
-    <p>Version 1.0.0: all stages (S0 to S8) are done. See the <a href="https://github.com/Normansrule/kindling#roadmap">roadmap</a> for what comes after 1.0.</p>
+view.render(island.spawn, 0);   // draw one frame from the spawn point
+view.setMode("iso");            // or "2d", "raycast", "3d-fps"</code></pre>
+      </div>
+    </section>
+
+    <section class="k-section k-wrap" aria-labelledby="explore">
+      <p class="k-eyebrow">Explore</p>
+      <h2 id="explore">Play, read, change</h2>
+      <p class="k-lead">Start anywhere. Every card is a page that runs in your browser, and every page links to its source.</p>
+      <div class="k-grid">
+        <article class="k-card"><img src="./assets/thumbs/modes-01-one-world.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/modes/01-one-world/">One world, five views</a></h3><p>Collect coins on an island, and switch between 2D, 2.5D and 3D while you play.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip d25">2.5d</span><span class="k-chip d3">3d</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/3d-06-island-builder.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/3d/06-island-builder/">Island builder</a></h3><p>Break and place blocks in first person, with a day–night cycle and saving.</p><div class="k-chips"><span class="k-chip d3">3d</span><span class="k-chip">sample</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/3d-04-coin-collector.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/3d/04-coin-collector/">Coin collector</a></h3><p>A 3D platformer over floating islands with a blocky hero.</p><div class="k-chips"><span class="k-chip d3">3d</span><span class="k-chip">sample</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/2d-04-platformer.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/2d/04-platformer/">Platformer</a></h3><p>Pixel-art running and jumping with a parallax sky.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip">sample</span></div></div></article>
+        <article class="k-card"><img src="./game-code-examples/thumbs/30-3d-voxel-world.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./game-code-examples/">Game Code Examples</a></h3><p>35 tiny programs: every kind of code you need to start a game.</p><div class="k-chips"><span class="k-chip">35 examples</span></div></div></article>
+        <article class="k-card"><img src="./game-code-examples/thumbs/35-shader-playground.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./playground/">Playground</a></h3><p>Edit and run any example live. Write your own shader.</p><div class="k-chips"><span class="k-chip">live code</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/viz-11-raycaster.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./viz/">Visualizations</a></h3><p>Interactive pages that show how each engine idea works, with sliders.</p><div class="k-chips"><span class="k-chip">learn</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/viz-01-game-loop.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./lessons/">Lessons</a></h3><p>13 lessons in three tracks: 2D, 3D and game design, each with an exercise.</p><div class="k-chips"><span class="k-chip">learn</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/make-level-editor.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./make/">Make tools</a></h3><p>A level editor with instant play-testing, a sprite packer and a 13 KB game.</p><div class="k-chips"><span class="k-chip">tools</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/3d-03-raycaster-maze.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/">All samples</a></h3><p>Pong, Snake, Breakout, a shooter, a maze and more. One <code>main.js</code> each.</p><div class="k-chips"><span class="k-chip">13 samples</span></div></div></article>
+        <article class="k-card"><img src="./references/shots/react-islands.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./references/react/dist/">React demos</a></h3><p>The same ideas in React and react-three-fiber. Python and Rust versions on GitHub.</p><div class="k-chips"><span class="k-chip">other languages</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/2d-06-tilemap-room.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./jam/preview/">Jam starter</a></h3><p>The game every new jam project starts from. Make yours with <code>jam/new-game.sh</code>.</p><div class="k-chips"><span class="k-chip">template</span></div></div></article>
+      </div>
+    </section>
+
+    <section class="k-section k-wrap" aria-labelledby="run">
+      <div class="split">
+        <div>
+          <p class="k-eyebrow">Run it on your computer</p>
+          <h2 id="run" class="k-h2">One command, any computer</h2>
+          <p class="k-lead">You need Git and Python (or any static web server). This site is the same files, served by GitHub Pages.</p>
+          <p id="engine-status" role="status">Engine: checking…</p>
+        </div>
+<pre class="k-code"><code>mkdir -p ~/projects && cd ~/projects && git clone https://github.com/Normansrule/video-game-kindling.git kindling && cd kindling && python3 -m http.server 8000
+# then open http://localhost:8000/</code></pre>
+      </div>
+    </section>
+
+    <section class="k-section k-wrap" aria-labelledby="resources">
+      <p class="k-eyebrow">Resources</p>
+      <h2 id="resources">Docs and references</h2>
+      <ul class="links">
+        <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/CHEATSHEET.md">Cheatsheet</a><span>Every engine function on one page</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/ARCHITECTURE.md">Architecture</a><span>How the engine fits together</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/tree/main/docs/modules">Module guides</a><span>One page per engine folder, including the 3D renderer and views</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/GLOSSARY.md">Glossary</a><span>AABB, SAT, DDA, AO, PCF and friends in plain words</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/RESOURCES.md">Further reading</a><span>Books, talks and free CC0 assets</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/tree/main/docs/bridges">Bridges</a><span>The core ideas in Python, React and Rust</span></li>
+        <li><a href="https://github.com/Normansrule/video-game-kindling/tree/main/jam">Jam kit</a><span>Checklists, scope cutter, itch.io upload guide</span></li>
+        <li><a href="./tests/">Tests</a><span>Math, collision and world checks, in your browser</span></li>
+      </ul>
+    </section>
   </main>
+
+  <footer class="k-footer">
+    <div class="k-wrap">
+      <span>Kindling · MIT license · zero dependencies · CC0 art</span>
+      <span><a href="https://github.com/Normansrule/video-game-kindling">Source</a> · <a href="https://github.com/Normansrule/video-game-kindling/blob/main/CHANGELOG.md">Changelog</a> · <a href="https://github.com/Normansrule/video-game-kindling/issues">Issues and ideas</a></span>
+    </div>
+  </footer>
 
   <script>
     // Classic (non-module) script, so it still runs on file:// and can warn you.
@@ -99,7 +179,10 @@
   </script>
   <script type="module">
     import { describeEngine } from "kindling/core/version.js";
+    import { highlight } from "./assets/highlight.js";
     document.getElementById("engine-status").textContent = "Engine: " + describeEngine() + " loaded.";
+    for (const code of document.querySelectorAll("#snippet code")) code.innerHTML = highlight(code.textContent);
   </script>
+  <script type="module" src="./assets/landing.js"></script>
 </body>
 </html>

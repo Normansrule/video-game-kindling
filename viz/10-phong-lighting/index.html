@@ -21,7 +21,7 @@
   <main class="page viz">
     <nav class="site-nav" aria-label="Breadcrumb">
       <a href="../../">Kindling</a><a href="../">All visualizations</a>
-      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/3d.md">Doc: 3d</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/modules/3d.md">Doc: 3d</a>
     </nav>
     <h1>10. Phong lighting</h1>
     <p class="lead">Phong lighting adds three kinds of light: ambient (everywhere), diffuse (facing the light) and specular (the shiny highlight). Turn each one on and off.</p>
@@ -46,7 +46,7 @@
 float diffuse  = max(dot(normal, toLight), 0.0);
 float specular = pow(max(dot(reflect(-toLight, normal), toCamera), 0.0), shininess);
 color = base * light * (ambient + diffuse) + light * specular * specularStrength;</code></pre>
-    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/lighting.js">engine/3d/lighting.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/3d/renderer.js">engine/3d/renderer.js</a>.</p>
+    <p>Full source: <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/3d/lighting.js">engine/3d/lighting.js</a>, <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/3d/renderer.js">engine/3d/renderer.js</a>.</p>
   </main>
   <script type="module" src="./main.js"></script>
 </body>

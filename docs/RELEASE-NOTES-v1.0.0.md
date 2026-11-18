@@ -14,14 +14,14 @@
 
 ## Try it
 
-- Online: <https://normansrule.github.io/kindling/>
-- Locally: `git clone https://github.com/Normansrule/kindling.git && cd kindling && python3 -m http.server 8000`
+- Online: <https://normansrule.github.io/video-game-kindling/>
+- Locally: `git clone https://github.com/Normansrule/video-game-kindling.git kindling && cd kindling && python3 -m http.server 8000`
 
 ## Known limits
 
 - 3D collision is axis-aligned boxes only; no slopes or rotated 3D shapes.
-- No built-in text input, networking or level editor (levels are text).
-- The full engine is too large for js13kGames; a "13k path" is planned.
+- No built-in text input or networking. (A level editor arrived in v1.1.0.)
+- The full engine is too large for js13kGames; v1.1.0 adds a separate 13k path.
 
 Full list of changes: [CHANGELOG.md](../CHANGELOG.md).
 

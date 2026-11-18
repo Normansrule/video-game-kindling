@@ -23,7 +23,7 @@ const port = 8123;
 const contentTypes = {
   ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json",
   ".png": "image/png", ".svg": "image/svg+xml", ".obj": "text/plain", ".md": "text/plain",
-  ".gif": "image/gif", ".wav": "audio/wav", ".ico": "image/x-icon",
+  ".gif": "image/gif", ".wav": "audio/wav", ".ico": "image/x-icon", ".jpg": "image/jpeg", ".webp": "image/webp",
 };
 
 // A tiny static file server (like python3 -m http.server, but under /kindling/).
@@ -63,7 +63,11 @@ async function findPages(folder, found = []) {
 
 await new Promise((done) => server.listen(port, done));
 const pages = (await findPages(repoRoot)).sort();
-const browser = await chromium.launch();
+// Every Game Code Example runs through frame.html?ex=NAME, so add each one as its own page.
+const { examples } = await import("../../game-code-examples/catalog.js");
+for (const example of examples) pages.push("game-code-examples/frame.html?ex=" + example.id);
+// SwiftShader gives headless Chromium a software WebGL 2, so the 3D pages really render.
+const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
 let problems = 0;
 
 for (const page of pages) {
@@ -73,7 +77,10 @@ for (const page of pages) {
   tab.on("pageerror", (error) => errors.push(error.message));
   tab.on("response", (reply) => { if (reply.status() >= 400) errors.push(reply.status() + " " + reply.url()); });
   await tab.goto("http://localhost:" + port + sitePrefix + page.replace(/index\.html$/, ""));
-  await tab.waitForTimeout(700);
+  await tab.waitForTimeout(page.includes("frame.html") || page.includes("playground") ? 1500 : 700);
+  // frame.html and the playground show errors on the page as well as in the console.
+  const shown = await tab.evaluate(() => { const box = document.getElementById("error"); return box && box.style.display === "block" ? box.textContent : ""; });
+  if (shown) errors.push("error box: " + shown.slice(0, 200));
   const sideways = await tab.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   if (sideways) errors.push("page scrolls sideways at 390 px");
   if (page === "tests/index.html") {

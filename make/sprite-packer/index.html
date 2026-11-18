@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+  make/sprite-packer/index.html
+  WHAT: Pack many PNG pictures into one atlas image plus a JSON list of where each is.
+  WHY:  One image loads faster and draws faster than fifty. Everything runs in your
+        browser; your pictures are never uploaded anywhere.
+  USES: engine/2d/atlas.js (packRects)   DOC: make/README.md, docs/modules/2d.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sprite packer</title>
+  <meta name="description" content="Pack PNG sprites into one texture atlas and a JSON frame list, in your browser.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../../viz/viz.css">
+  <link rel="stylesheet" href="../make.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">Make tools</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/2d/atlas.js">Source: atlas.js</a>
+    </nav>
+    <h1>Sprite packer</h1>
+    <p class="lead">Drop in PNG pictures of any size. Get one atlas image and a JSON list of where each picture is, ready for <code>createAtlas()</code>.</p>
+
+    <label class="make-drop" id="drop">
+      <strong>Drop PNG, GIF or WebP files here, or choose them</strong>
+      <input type="file" id="files" accept="image/png,image/gif,image/webp" multiple>
+      <span>Your files stay in this browser tab. Nothing is uploaded.</span>
+    </label>
+    <div class="make-toolbar">
+      <button class="control" id="demo" type="button">Use demo sprites</button>
+      <button class="control" id="clear" type="button">Clear</button>
+    </div>
+
+    <div class="viz-controls">
+      <label>Space between pictures <output id="padding-out">1 px</output>
+        <input type="range" id="padding" min="0" max="8" value="1">
+      </label>
+      <label>Maximum width
+        <select id="max-width">
+          <option>256</option><option selected>512</option><option>1024</option><option>2048</option><option>4096</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="pot"> Round size up to a power of two</label>
+      <label class="check"><input type="checkbox" id="outlines" checked> Show outlines</label>
+    </div>
+
+    <p class="viz-readout" id="readout" role="status">No pictures yet. Try the demo sprites.</p>
+    <div class="make-preview checker"><canvas id="atlas" width="1" height="1" role="img" aria-label="The packed atlas image"></canvas></div>
+
+    <div class="make-toolbar">
+      <button class="control primary" id="save-png" type="button" disabled>Download atlas.png</button>
+      <button class="control" id="save-json" type="button" disabled>Download atlas.json</button>
+    </div>
+
+    <h2>Use it in a game</h2>
+    <p>Put <code>atlas.png</code> and <code>atlas.json</code> next to your <code>main.js</code>. Pictures named <code>hero-run-0.png</code>, <code>hero-run-1.png</code> … become an animation with <code>sequence()</code>.</p>
+<pre><code>import { loadImages } from "kindling/core/assets.js";
+import { createAtlas } from "kindling/2d/atlas.js";
+import { createAnimation } from "kindling/2d/animation.js";
+
+const images = await loadImages({ atlas: "./atlas.png" });
+const data = await (await fetch("./atlas.json")).json();
+const atlas = createAtlas(images.atlas, data);
+
+const run = createAnimation(atlas.sequence("hero-run"), 12);
+// in render:  atlas.draw(context, run.frame(), x, y, { flipX: facingLeft });
+// one-offs:   atlas.draw(context, "coin", 40, 20);</code></pre>
+
+    <h2>How the packing works</h2>
+    <ul>
+      <li>Pictures are sorted tallest first, then placed one at a time.</li>
+      <li>The packer keeps a <strong>skyline</strong>: the outline of the tops of everything placed so far. Each picture goes where its bottom edge would be lowest, so gaps fill from the bottom up.</li>
+      <li>The <strong>space between pictures</strong> stops neighbours bleeding into each other when a sprite is scaled or drawn at a fractional position.</li>
+      <li>Some older graphics cards want <strong>power-of-two</strong> sizes (256, 512, 1024). Canvas games don't need it.</li>
+    </ul>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

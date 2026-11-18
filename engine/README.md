@@ -13,10 +13,13 @@ Rules for every file in here:
 |---|---|---|
 | `game.js` | `createGame`: canvas, loop, input and scenes wired together | [game.md](../docs/modules/game.md) |
 | `core/` | version, loop, time, scene, events, canvas, debug, assets, storage, tween | [core.md](../docs/modules/core.md) |
-| `math/` | scalar, vec2, vec3, mat4, quat, random, easing | [math.md](../docs/modules/math.md) |
+| `math/` | scalar, vec2, vec3, mat4, quat, random, easing, noise (value noise and fractal noise) | [math.md](../docs/modules/math.md) |
 | `input/` | keyboard, mouse, touch, gamepad, actions | [input.md](../docs/modules/input.md) |
-| `2d/` | draw, sprite, animation, collision, sat, physics, tilemap, camera, particles | [2d.md](../docs/modules/2d.md) and its linked pages |
+| `2d/` | draw, sprite, atlas, animation, collision, sat, physics, tilemap, camera, particles, backdrop (parallax sky and hills) | [2d.md](../docs/modules/2d.md) and its linked pages |
 | `audio/` | audio (context, volume, music), sfx (sounds made from code) | [audio.md](../docs/modules/audio.md) |
 | `3d/` | gl, shader, mesh, primitives, obj, texture, camera3d, lighting, renderer, collision3d, raycaster | [3d.md](../docs/modules/3d.md) |
+| `3d/` (stylized engine) | world-renderer, voxel-mesh, stylized-shader, shadow-map, sky, lowpoly, character | [3d-stylized.md](../docs/modules/3d-stylized.md) |
+| `world/` | blocks, textures (painted in code), voxel-world, generate (islands, trees, houses), walker | [world.md](../docs/modules/world.md) |
+| `views/` | world-view (switch modes), map-view, iso-view, raycast-view, sprites | [views.md](../docs/modules/views.md) |
 
 Every function is listed on one page in [docs/CHEATSHEET.md](../docs/CHEATSHEET.md).

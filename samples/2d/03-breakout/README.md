@@ -1,6 +1,6 @@
 # Sample 2D-03: Breakout
 
-**Play:** <https://normansrule.github.io/kindling/samples/2d/03-breakout/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/03-breakout/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/2d/03-breakout/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/03-breakout/>
 
 | Controls | |
 |---|---|

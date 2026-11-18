@@ -1,0 +1,54 @@
+<!doctype html>
+<!--
+  samples/modes/01-one-world/index.html
+  WHAT: One island, five ways to draw it: 2D map, 2.5D isometric, 2.5D raycaster,
+        3D third person and 3D first person. Switch while you play.
+  RUN:  from the repo root: python3 -m http.server 8000, then open
+        http://localhost:8000/samples/modes/01-one-world/
+  DOC:  samples/modes/01-one-world/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One world, five views | Kindling sample</title>
+  <meta name="description" content="The same block island drawn as 2D, isometric 2.5D, a raycaster and full 3D with shadows. Switch views while you play.">
+  <link rel="stylesheet" href="../../../assets/kindling.css">
+  <script src="../../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../../engine/" } }
+  </script>
+</head>
+<body>
+  <header class="k-nav">
+    <a class="k-logo" href="../../../">Kindling</a>
+    <nav aria-label="Site">
+      <a href="../../">Samples</a>
+      <a href="../../../game-code-examples/">Game Code Examples</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/tree/main/samples/modes/01-one-world">Source</a>
+    </nav>
+  </header>
+  <main class="k-wrap" style="padding-top:20px">
+    <p class="k-eyebrow">Sample · 2D · 2.5D · 3D</p>
+    <h1 class="k-h2">One world, five views</h1>
+    <p class="k-lead">The island is one array of blocks. The game rules never change. Only the view does. Collect the <span style="color:var(--ember)">8 coins</span> in any mode.</p>
+    <section class="k-stage" aria-label="Game">
+      <div class="k-stage-bar">
+        <div class="k-tabs" id="modes" role="group" aria-label="View mode"></div>
+      </div>
+      <div class="k-stage-view" id="stage">
+        <p class="k-hud" id="hud" aria-live="polite">Coins 0 / 8</p>
+      </div>
+      <div class="k-pad" id="pad" aria-hidden="true">
+        <button data-key="KeyA">◀</button><button data-key="KeyW">▲</button><button data-key="KeyS">▼</button><button data-key="KeyD">▶</button><button data-key="Space">⤒</button>
+      </div>
+      <div class="k-stage-foot">
+        <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>Q</kbd><kbd>E</kbd> turn · <kbd>Space</kbd> jump · <kbd>1</kbd>–<kbd>5</kbd> switch view</span>
+        <label class="k-range">Time of day <input id="time" type="range" min="0" max="1" step="0.01" value="0.38"></label>
+      </div>
+    </section>
+    <p style="color:var(--muted);margin-top:14px">Read <a href="./main.js">main.js</a> (about 150 lines). The views live in <code>engine/views/</code>; the world in <code>engine/world/</code>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

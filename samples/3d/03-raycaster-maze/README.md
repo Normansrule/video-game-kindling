@@ -1,6 +1,6 @@
 # Sample 3D-03: Raycaster maze
 
-**Play:** <https://normansrule.github.io/kindling/samples/3d/03-raycaster-maze/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/03-raycaster-maze/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/3d/03-raycaster-maze/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/03-raycaster-maze/>
 
 | Controls | |
 |---|---|
@@ -16,7 +16,7 @@
 - **First-person movement on a grid:** forward is `(cos angle, sin angle)`, sideways is that turned 90 degrees, and `moveInGrid` slides you along walls.
 - **Pointer lock** for mouse look: `game.input.mouse.lock()` on a click, `mouse.movement()` each step.
 
-See it explained: [viz 11, the raycaster](https://normansrule.github.io/kindling/viz/11-raycaster/).
+See it explained: [viz 11, the raycaster](https://normansrule.github.io/video-game-kindling/viz/11-raycaster/).
 
 ## Try changing
 

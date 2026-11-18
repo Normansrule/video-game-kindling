@@ -1,6 +1,6 @@
 # Sample 3D-02: Lit scene
 
-**Play:** <https://normansrule.github.io/kindling/samples/3d/02-lit-scene/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/02-lit-scene/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/3d/02-lit-scene/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/02-lit-scene/>
 
 | Controls | |
 |---|---|

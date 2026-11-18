@@ -41,6 +41,7 @@ fillRect(context, x, y, w, h, color)    fillCircle(context, x, y, r, color)    l
 text(context, "HI", x, y, { size: 8, color: "#fff", align: "center", shadow: "#000" })
 sheet = createSpriteSheet(image, 16, 16);   sheet.draw(context, frame, x, y, { flipX, scale, rotation, alpha })
 animator = createAnimator({ run: createAnimation([2, 3, 4, 5], 12) });   animator.play("run");  animator.update(dt);  animator.frame()
+atlas = createAtlas(image, json);   atlas.draw(context, "coin", x, y, options);   atlas.sequence("hero-run")   // from make/sprite-packer
 ```
 
 ## Collision and physics
@@ -76,6 +77,32 @@ renderer.drawMesh(mesh, mat4.translation(0, 0.5, 0), { color: [1, 0.5, 0.2], tex
 moveAndCollide3D(body3d, dt, boxes)     rayBox(origin, direction, box)
 ```
 
+## Block worlds and the five views (Kindling 2)
+
+```js
+const world = createVoxelWorld(64, 40, 64);               world.get(x, y, z)   world.set(x, y, z, BLOCK.BRICK)
+const island = generateIsland(world, { seed: 3 });       // island.spawn, island.seaLevel, island.houses
+world.fill(x1, y1, z1, x2, y2, z2, BLOCK.STONE)          world.topY(x, z)   world.groundHeight(x, z)
+const hit = raycastVoxels(world, eye, direction, 6);      // { x, y, z, id, distance, normal } or null
+const player = createWalker(island.spawn);               wishFromYaw(player, forward, right)
+updateWalker(world, player, stepSeconds);                // gravity, jumping, sliding, stepping up ledges
+const view = createWorldView({ container: "#stage", world, mode: "iso" });   // "2d" "iso" "raycast" "3d" "3d-fps"
+view.render(player, time);   view.setMode("3d");   view.renderer.settings.timeOfDay = 0.75
+```
+
+## Stylized 3D renderer
+
+```js
+const renderer = createWorldRenderer(game.screen, { timeOfDay: 0.38 });
+renderer.setWorld(world);   renderer.setOcean(island.seaLevel);
+renderer.queueModel(renderer.createModel(pineTree()), mat4.translation(x, y, z));   // roundTree() rockModel() coinModel() crystalModel()
+createCharacter(renderer).queue(position, yaw, walkCycle);
+renderer.render(camera, time);
+renderer.settings: timeOfDay (0..1)  shadows  ambientOcclusion (0..1)  fogDensity  exposure
+const noise = createNoise(seed);   noise.noise2(x, y)   noise.fbm2(x, y, octaves)    // -1..1, smooth
+const backdrop = createBackdrop({ width, height, theme: "dusk" });   backdrop.render(context, camera.x, camera.y, time)
+```
+
 ## Math
 
 ```js
@@ -90,6 +117,10 @@ const random = createRandom(seed);   random.range(a, b)   random.int(1, 6)   ran
 cd ~/projects/kindling && python3 -m http.server 8000      # then http://localhost:8000/
 cd ~/projects/kindling && node --test tests/node.test.js   # unit checks
 cd ~/projects/kindling && ./jam/new-game.sh my-jam-game     # a jam game folder with its own engine copy
+cd ~/projects/kindling && bash tiny/new-tiny-game.sh my-tiny-game   # a 13 KB-jam game (tiny engine)
+cd ~/projects/kindling && node tiny/pack.mjs ~/projects/my-tiny-game   # bundle, zip, and count bytes
 ```
+
+Tools in the browser: `make/level-editor/` (paint and play-test levels) and `make/sprite-packer/` (atlas.png + atlas.json).
 
 Keyboard: `` ` `` toggles the debug overlay in any game made with `createGame`.

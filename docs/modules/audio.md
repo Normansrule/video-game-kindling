@@ -1,6 +1,6 @@
 # Module: audio
 
-**Files:** [`engine/audio/audio.js`](../../engine/audio/audio.js), [`engine/audio/sfx.js`](../../engine/audio/sfx.js) · **Visualization:** [13 sound effects](https://normansrule.github.io/kindling/viz/13-sound/) · **Lesson:** [2D-6 Juice](../../lessons/2d-6-juice.html)
+**Files:** [`engine/audio/audio.js`](../../engine/audio/audio.js), [`engine/audio/sfx.js`](../../engine/audio/sfx.js) · **Visualization:** [13 sound effects](https://normansrule.github.io/video-game-kindling/viz/13-sound/) · **Lesson:** [2D-6 Juice](../../lessons/2d-6-juice.html)
 
 Sound through the **Web Audio API**: play sound files, loop music, and make retro sound effects from code with no files at all.
 
@@ -19,7 +19,7 @@ playSfx(audio, "coin");                 // a preset, with a little random pitch 
 playTone(audio, { type: "square", frequency: 220, frequencyEnd: 660, duration: 0.15, volume: 0.2 });
 ```
 
-A **tone** is a wave (`square`, `sawtooth`, `triangle`, `sine`, or `noise`) whose pitch slides from `frequency` to `frequencyEnd` in hertz, with a quick volume rise (`attack`) and a fade over `duration` seconds. Presets: `jump`, `coin`, `hit`, `explosion`, `laser`, `powerup`, `select`, `bounce`, `lose`. Design your own in the [sound visualization](https://normansrule.github.io/kindling/viz/13-sound/), which prints the line of code for you.
+A **tone** is a wave (`square`, `sawtooth`, `triangle`, `sine`, or `noise`) whose pitch slides from `frequency` to `frequencyEnd` in hertz, with a quick volume rise (`attack`) and a fade over `duration` seconds. Presets: `jump`, `coin`, `hit`, `explosion`, `laser`, `powerup`, `select`, `bounce`, `lose`. Design your own in the [sound visualization](https://normansrule.github.io/video-game-kindling/viz/13-sound/), which prints the line of code for you.
 
 `playSfx(audio, name, pitchVariation)` varies the pitch by ±5% by default so repeated sounds do not feel robotic.
 

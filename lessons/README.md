@@ -1,6 +1,6 @@
 # lessons/
 
-Open them in a browser: <https://normansrule.github.io/kindling/lessons/> or locally at <http://localhost:8000/lessons/>.
+Open them in a browser: <https://normansrule.github.io/video-game-kindling/lessons/> or locally at <http://localhost:8000/lessons/>.
 
 Every lesson has the same shape: **1** the idea, **2** an embedded visualization, **3** a code walkthrough, **4** an exercise with hints and a hidden solution, **5** a "you now know" checklist (ticks are saved in your browser).
 

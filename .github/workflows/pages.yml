@@ -1,7 +1,7 @@
 # .github/workflows/pages.yml
 # WHAT: On every push to main, run the tests, then publish the whole repo to GitHub Pages.
 # WHY:  No build step: the files you edit are the files that get served.
-#       Site URL: https://normansrule.github.io/kindling/
+#       Site URL: https://normansrule.github.io/video-game-kindling/
 name: Deploy to GitHub Pages
 
 on:

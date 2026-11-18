@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  viz/14-world-modes/index.html
+  WHAT: Visualization 14: one block world, four views at once (2D map, isometric,
+        raycaster, 3D). Change the world and watch every view follow.
+  DOC:  docs/modules/views.md, docs/modules/world.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One world, four views visualized</title>
+  <meta name="description" content="The same block world drawn as a 2D map, an isometric diorama, a raycaster and 3D, side by side and live.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+  <style>
+    .quad { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+    .quad figure { margin: 0; }
+    .quad figcaption { font-size: 0.85rem; color: var(--muted); padding: 4px 2px 0; }
+    .quad canvas { border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/modules/views.md">Doc: views</a>
+    </nav>
+    <h1>14. One world, four views</h1>
+    <p class="lead">The world is one array of numbers. Each picture below is a different function that reads the same array. Build or dig, and all four change, because there is only one world.</p>
+
+    <div class="viz-stage quad">
+      <figure><div id="view-2d"></div><figcaption>2D map: the top block of each column</figcaption></figure>
+      <figure><div id="view-iso"></div><figcaption>2.5D isometric: block faces, painted back to front</figcaption></figure>
+      <figure><div id="view-raycast"></div><figcaption>2.5D raycaster: one ray per column of pixels</figcaption></figure>
+      <figure><div id="view-3d"></div><figcaption>3D: triangles on the graphics card (WebGL 2)</figcaption></figure>
+    </div>
+    <p class="viz-readout" id="readout" aria-live="polite"></p>
+    <div class="viz-controls" id="controls"></div>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li>Build a tower: the map shows a lighter square, the diorama a column, the raycaster a wall, and the 3D view casts its shadow.</li>
+      <li>The game code (the explorer walking around) never asks which view is on screen. That is the whole trick: keep the game in data and draw it at the end.</li>
+      <li>The world is about one byte per block. The views are where all the work is.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>import { createWorldView } from &quot;kindling/views/world-view.js&quot;;
+
+const view = createWorldView({ container: &quot;#stage&quot;, world, mode: &quot;iso&quot; });
+view.render(player, time);   // every frame
+view.setMode(&quot;3d&quot;);          // any time</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/views/world-view.js">engine/views/world-view.js</a> and <a href="./main.js">this page's main.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

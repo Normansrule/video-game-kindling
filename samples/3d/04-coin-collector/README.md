@@ -1,6 +1,6 @@
 # Sample 3D-04: Coin collector
 
-**Play:** <https://normansrule.github.io/kindling/samples/3d/04-coin-collector/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/04-coin-collector/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/3d/04-coin-collector/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/04-coin-collector/>
 
 | Controls | |
 |---|---|

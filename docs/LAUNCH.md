@@ -5,7 +5,7 @@ How to publish Kindling and let people find it. No fake stars, no vote rings: ju
 ## 1. GitHub settings (one command)
 
 ```bash
-cd ~/projects/kindling && gh repo edit Normansrule/kindling --description "Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons." --homepage "https://normansrule.github.io/kindling/" --enable-discussions && gh api -X PUT repos/Normansrule/kindling/topics -f "names[]=game-engine" -f "names[]=javascript" -f "names[]=gamedev" -f "names[]=game-development" -f "names[]=webgl2" -f "names[]=webgl" -f "names[]=canvas" -f "names[]=html5-game" -f "names[]=game-jam" -f "names[]=itch-io" -f "names[]=educational" -f "names[]=learn-to-code" -f "names[]=tutorial" -f "names[]=visualization" -f "names[]=zero-dependency" -f "names[]=es-modules" -f "names[]=2d-game-engine" -f "names[]=3d" -f "names[]=raycaster" -f "names[]=web-audio" --jq .names
+cd ~/projects/kindling && gh repo edit Normansrule/video-game-kindling --description "Build games from scratch: a zero-dependency 2D + 3D JavaScript game engine, game jam template, and interactive visual lessons." --homepage "https://normansrule.github.io/video-game-kindling/" --enable-discussions && gh api -X PUT repos/Normansrule/video-game-kindling/topics -f "names[]=game-engine" -f "names[]=javascript" -f "names[]=gamedev" -f "names[]=game-development" -f "names[]=webgl2" -f "names[]=webgl" -f "names[]=canvas" -f "names[]=html5-game" -f "names[]=game-jam" -f "names[]=itch-io" -f "names[]=educational" -f "names[]=learn-to-code" -f "names[]=tutorial" -f "names[]=visualization" -f "names[]=zero-dependency" -f "names[]=es-modules" -f "names[]=2d-game-engine" -f "names[]=3d" -f "names[]=raycaster" -f "names[]=web-audio" --jq .names
 ```
 
 The second command replaces all topics at once (adding to old ones could go over the limit). That is 20 topics, the most GitHub allows.
@@ -74,7 +74,7 @@ Edit these so they sound like you. Hacker News readers ask how a project was mad
 **Awesome-list line** (match each list's format and section; check its CONTRIBUTING file first):
 
 ```markdown
-- [Kindling](https://github.com/Normansrule/kindling) - Zero-dependency 2D + 3D JavaScript game engine with interactive visual lessons and a game jam template.
+- [Kindling](https://github.com/Normansrule/video-game-kindling) - Zero-dependency 2D + 3D JavaScript game engine with interactive visual lessons and a game jam template.
 ```
 
 For Magictools, the "JavaScript" engines section fits; for awesome-webgl, "Learning" or "Tutorials" fits better than "Libraries".

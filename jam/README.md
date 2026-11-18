@@ -9,9 +9,12 @@ Everything you need from hour 0 to submitting. **Before any jam:** read that jam
 | [SCOPE-CUTTER.md](SCOPE-CUTTER.md) | Whenever you are behind. Which features to cut, in which order. |
 | [SUBMIT-TO-ITCH.md](SUBMIT-TO-ITCH.md) | The last hours: zip, upload, test the page, submit. |
 | [POSTMORTEM.md](POSTMORTEM.md) | The day after: a template to learn from what happened. |
-| [starter/](starter/) | The game every jam starts from. [Play the preview](https://normansrule.github.io/kindling/jam/preview/). |
+| [starter/](starter/) | The game every jam starts from. [Play the preview](https://normansrule.github.io/video-game-kindling/jam/preview/). |
 | [new-game.sh](new-game.sh) | Makes a new game folder from the starter plus its own engine copy. |
 | [zip-game.sh](zip-game.sh) | Zips a game folder the way itch.io wants it. |
+| [Level editor](../make/level-editor/) | During the jam: paint levels, play-test them, copy them into `level.js`. |
+| [Sprite packer](../make/sprite-packer/) | When you have more than a few pictures: one `atlas.png` plus `atlas.json`. |
+| [../tiny/](../tiny/) | For js13kGames and other size-limited jams: a 2 KB engine and a packer that counts your zipped bytes. |
 
 ## Hour 0 in three commands
 

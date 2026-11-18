@@ -1,6 +1,6 @@
 # Module: input
 
-**Files:** [`engine/input/`](../../engine/input/) · **Visualization:** [12 input](https://normansrule.github.io/kindling/viz/12-input/) · **Lesson:** [2D-2 Drawing and input](../../lessons/2d-2-drawing-input.html)
+**Files:** [`engine/input/`](../../engine/input/) · **Visualization:** [12 input](https://normansrule.github.io/video-game-kindling/viz/12-input/) · **Lesson:** [2D-2 Drawing and input](../../lessons/2d-2-drawing-input.html)
 
 Keyboard, mouse, touch and gamepad, plus **actions**: named controls such as `jump` that any device can trigger.
 
@@ -14,7 +14,7 @@ Every device answers three questions, per game step:
 | `wasPressed(x)` | it went down since the last step | jumping, shooting, menu choices |
 | `wasReleased(x)` | it went up since the last step | variable-height jumps, releasing a charged shot |
 
-Browser key events arrive whenever they like, between steps. Each device remembers what happened and the game clears those memories after each step with `endStep()` (`createGame` does this for you). That is why a very quick tap is never lost: even if the key is already up again when the step runs, `wasPressed` is still true. The [input visualization](https://normansrule.github.io/kindling/viz/12-input/) shows this.
+Browser key events arrive whenever they like, between steps. Each device remembers what happened and the game clears those memories after each step with `endStep()` (`createGame` does this for you). That is why a very quick tap is never lost: even if the key is already up again when the step runs, `wasPressed` is still true. The [input visualization](https://normansrule.github.io/video-game-kindling/viz/12-input/) shows this.
 
 ## Actions
 

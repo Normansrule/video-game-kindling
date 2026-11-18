@@ -17,7 +17,11 @@ The itch.io links above point to the most recent edition at the time of writing;
 
 ## js13kGames
 
-[js13kGames](https://js13kgames.com/) is a month-long JavaScript jam where the zipped game must be **13 kilobytes** or less. The full Kindling engine is bigger than that, so js13k is not on the main list for v1.0.0 ([DECISIONS.md](../docs/DECISIONS.md), D4). A "13k path" (copy only the few engine functions your game uses, then minify) is planned after v1.0.0.
+[js13kGames](https://js13kgames.com/) is a month-long JavaScript jam where the zipped game must be **13 kilobytes** or less. The full Kindling engine is bigger than that, so use the **13k path** in [`tiny/`](../tiny/) instead: a 2 KB engine, a starter game that packs to about 3.4 KB, and `tiny/pack.mjs`, which zips your game and tells you how many bytes are left ([DECISIONS.md](../docs/DECISIONS.md), D10).
+
+```bash
+cd ~/projects/kindling && bash tiny/new-tiny-game.sh my-tiny-game && node tiny/pack.mjs ~/projects/my-tiny-game
+```
 
 ## Picking your first jam
 

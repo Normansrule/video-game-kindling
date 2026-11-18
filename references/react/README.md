@@ -2,7 +2,7 @@
 
 Kindling's engine ideas written the React way: a 2D canvas shooter, a 3D platformer built with [react-three-fiber](https://r3f.docs.pmnd.rs/), and an easing playground. Each one shows where game state should live in a React app, which is the part most tutorials get wrong.
 
-**Play online** (after you publish): <https://normansrule.github.io/kindling/references/react/dist/>
+**Play online** (after you publish): <https://normansrule.github.io/video-game-kindling/references/react/dist/>
 
 | | |
 |---|---|

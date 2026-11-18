@@ -32,6 +32,12 @@ export function drawImage(context, image, x, y, options = {}) {
   drawFrame(context, image, { x: 0, y: 0, width: image.width, height: image.height }, x, y, options);
 }
 
+// Draw any rectangle {x, y, width, height} of an image the same way. Texture
+// atlases (engine/2d/atlas.js) use this for frames of different sizes.
+export function drawRegion(context, image, source, x, y, options = {}) {
+  drawFrame(context, image, source, x, y, options);
+}
+
 // options:
 //   flipX, flipY   mirror the picture (a character facing left)
 //   rotation       radians, around the origin

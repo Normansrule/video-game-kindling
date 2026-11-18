@@ -14,3 +14,7 @@ target/
 .venv/
 # The React reference builds here (GitHub Actions builds it again for Pages).
 references/react/dist/
+
+# tiny/pack.mjs output when run on the in-repo starter
+tiny/*-13k/
+tiny/*-13k.zip

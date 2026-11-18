@@ -18,7 +18,7 @@
 |---|---|
 | [game](modules/game.md) | `createGame()`: everything wired together |
 | [core](modules/core.md) | Loop, time, scenes, events, tweens, timers, canvas, assets, storage, debug |
-| [math](modules/math.md) | Scalars, vectors, matrices, quaternions, random, easing |
+| [math](modules/math.md) | Scalars, vectors, matrices, quaternions, random, easing, noise |
 | [input](modules/input.md) | Keyboard, mouse, touch, gamepad, actions |
 | [2d](modules/2d.md) | Drawing, sprites, animation |
 | [collision](modules/collision.md) | AABB, circles, rays, SAT, and 3D boxes |
@@ -28,3 +28,6 @@
 | [particles](modules/particles.md) | Sparks, smoke and dust from a pool |
 | [audio](modules/audio.md) | Web Audio: files, music, and sound effects from code |
 | [3d](modules/3d.md) | WebGL 2 renderer, meshes, lighting, cameras, 3D collision, raycaster |
+| [3d-stylized](modules/3d-stylized.md) | Kindling 2's world renderer: chunk meshing, ambient occlusion, shadow maps, sky, water, low-poly models |
+| [world](modules/world.md) | Block worlds: the grid, island generation, picking blocks, the walker |
+| [views](modules/views.md) | One world in five views: 2D map, isometric, raycaster, 3D third and first person |

@@ -1,0 +1,126 @@
+<!doctype html>
+<!--
+  game-code-examples/index.html
+  WHAT: The gallery of all 35 Game Code Examples, grouped by topic, with filters
+        and search. Each card opens the example in the live playground.
+  WHY:  "What code do I need to start a game?" Here is every kind, small and runnable.
+        The list itself comes from catalog.js, so adding an example is one line there.
+  DOC:  game-code-examples/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Code Examples | Kindling</title>
+  <meta name="description" content="35 small, runnable JavaScript examples of every kind of code you need to start a game: loop, input, collision, physics, AI, sound, saving, UI, 2.5D and 3D.">
+  <link rel="stylesheet" href="../assets/kindling.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <header class="k-nav">
+    <a class="k-logo" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="../playground/">Playground</a>
+      <a href="./" aria-current="page">Examples</a>
+      <a href="../samples/">Samples</a>
+      <a href="../lessons/">Lessons</a>
+      <a href="../viz/">Visualizations</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/tree/main/docs">Docs</a>
+      <a href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="k-wrap">
+    <section class="k-hero" style="padding-bottom:0">
+      <p class="k-eyebrow">Game Code Examples</p>
+      <h1>Every kind of code a game <span class="glow">needs</span>.</h1>
+      <p class="k-lead">35 small programs, each one file, each runnable right here. Click a card to open it in the playground, change the code, and press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to see what happens.</p>
+      <ul class="k-stats" id="stats"></ul>
+    </section>
+
+    <div class="k-section" style="padding-top:28px">
+      <div class="k-filter" role="group" aria-label="Show topic" id="filters"></div>
+      <label class="visually-hidden" for="search">Search examples</label>
+      <input class="k-search" id="search" type="search" placeholder="Search: jump, sound, shader..." autocomplete="off">
+      <p id="count" class="k-lead" role="status" style="margin:12px 0 0;font-size:0.92rem"></p>
+      <div id="gallery"></div>
+    </div>
+
+    <section class="k-section">
+      <h2>Run them on your own computer</h2>
+      <p class="k-lead">Every example is a plain file in <code>game-code-examples/code/</code>. Copy one into a sample folder, or into <code>jam/</code>, and it becomes the start of your game.</p>
+<pre class="k-code"><code>cd ~/projects/kindling && python3 -m http.server 8000
+# then open http://localhost:8000/game-code-examples/frame.html?ex=11-platformer-physics</code></pre>
+    </section>
+  </main>
+
+  <footer class="k-footer">
+    <div class="k-wrap">
+      <span>Kindling · MIT licensed · zero dependencies</span>
+      <a href="./README.md">About these examples</a>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { categories, examples } from "./catalog.js";
+
+    const gallery = document.getElementById("gallery");
+    const filters = document.getElementById("filters");
+    const search = document.getElementById("search");
+    const count = document.getElementById("count");
+    let topic = new URLSearchParams(location.search).get("topic") || "all";
+
+    document.getElementById("stats").innerHTML =
+      "<li><strong>" + examples.length + "</strong> examples</li>" +
+      "<li><strong>" + categories.length + "</strong> topics</li>" +
+      "<li><strong>0</strong> dependencies</li>";
+
+    // Tag chips get the 2D / 2.5D / 3D colors.
+    const chipClass = { "2d": "d2", "2.5d": "d25", "3d": "d3" };
+    const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+    function card(example) {
+      const number = example.id.slice(0, 2);
+      return '<article class="k-card">' +
+        '<img src="./thumbs/' + example.id + '.jpg" alt="" width="480" height="300" loading="lazy">' +
+        '<div class="k-body">' +
+          '<span class="k-num">#' + number + "</span>" +
+          '<h3><a class="k-stretch" href="../playground/?ex=' + example.id + '">' + escape(example.title) + "</a></h3>" +
+          "<p>" + escape(example.summary) + "</p>" +
+          '<div class="k-chips">' + example.tags.map((tag) => '<span class="k-chip ' + (chipClass[tag] || "") + '">' + escape(tag) + "</span>").join("") + "</div>" +
+          '<div class="k-more"><a href="./frame.html?ex=' + example.id + '">Run full page</a><a href="./code/' + example.id + '.js">Source</a></div>' +
+        "</div></article>";
+    }
+
+    function render() {
+      const words = search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const matches = (example) => words.every((word) =>
+        (example.title + " " + example.summary + " " + example.tags.join(" ") + " " + example.id).toLowerCase().includes(word));
+      let shown = 0;
+      let html = "";
+      for (const category of categories) {
+        if (topic !== "all" && topic !== category.id) continue;
+        const list = examples.filter((example) => example.category === category.id && matches(example));
+        if (!list.length) continue;
+        shown += list.length;
+        html += '<section class="k-category" aria-labelledby="c-' + category.id + '"><h2 id="c-' + category.id + '">' + category.title + "</h2><p>" + category.blurb + '</p><div class="k-grid">' + list.map(card).join("") + "</div></section>";
+      }
+      gallery.innerHTML = html || '<p class="k-lead">Nothing matches. Try another word.</p>';
+      count.textContent = "Showing " + shown + " of " + examples.length;
+      for (const button of filters.querySelectorAll("button")) button.setAttribute("aria-pressed", String(button.dataset.topic === topic));
+    }
+
+    filters.innerHTML = [{ id: "all", title: "All" }, ...categories]
+      .map((category) => '<button class="k-tab" type="button" data-topic="' + category.id + '">' + category.title + "</button>").join("");
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      topic = button.dataset.topic;
+      history.replaceState(null, "", topic === "all" ? location.pathname : "?topic=" + topic);
+      render();
+    });
+    search.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>

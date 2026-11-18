@@ -1,6 +1,6 @@
 # Sample 2D-05: Top-down shooter ("Arena")
 
-**Play:** <https://normansrule.github.io/kindling/samples/2d/05-top-down-shooter/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/05-top-down-shooter/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/2d/05-top-down-shooter/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/05-top-down-shooter/>
 
 | Controls | |
 |---|---|

@@ -1,6 +1,6 @@
 # Sample 2D-04: Platformer
 
-**Play:** <https://normansrule.github.io/kindling/samples/2d/04-platformer/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/04-platformer/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/2d/04-platformer/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/04-platformer/>
 
 | Controls | |
 |---|---|

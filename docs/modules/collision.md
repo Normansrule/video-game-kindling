@@ -1,6 +1,6 @@
 # Module: collision (boxes, circles, rays, SAT)
 
-**Files:** [`engine/2d/collision.js`](../../engine/2d/collision.js), [`engine/2d/sat.js`](../../engine/2d/sat.js), and for 3D [`engine/3d/collision3d.js`](../../engine/3d/collision3d.js) · **Visualizations:** [04 collision](https://normansrule.github.io/kindling/viz/04-collision/), [05 SAT](https://normansrule.github.io/kindling/viz/05-sat/) · **Lesson:** [2D-3 Collision](../../lessons/2d-3-collision.html)
+**Files:** [`engine/2d/collision.js`](../../engine/2d/collision.js), [`engine/2d/sat.js`](../../engine/2d/sat.js), and for 3D [`engine/3d/collision3d.js`](../../engine/3d/collision3d.js) · **Visualizations:** [04 collision](https://normansrule.github.io/video-game-kindling/viz/04-collision/), [05 SAT](https://normansrule.github.io/video-game-kindling/viz/05-sat/) · **Lesson:** [2D-3 Collision](../../lessons/2d-3-collision.html)
 
 Collision has two questions: **are these two shapes touching?** (detection) and **how do I push them apart?** (resolution).
 

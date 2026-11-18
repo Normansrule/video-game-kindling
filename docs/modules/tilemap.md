@@ -1,6 +1,6 @@
 # Module: tilemap
 
-**File:** [`engine/2d/tilemap.js`](../../engine/2d/tilemap.js) · **Visualization:** [07 tilemap and camera](https://normansrule.github.io/kindling/viz/07-tilemap-camera/) · **Lesson:** [2D-5 Tilemaps and the camera](../../lessons/2d-5-tilemaps-camera.html) · **Samples:** [2D-04 platformer](../../samples/2d/04-platformer/), [2D-06 tilemap rooms](../../samples/2d/06-tilemap-room/)
+**File:** [`engine/2d/tilemap.js`](../../engine/2d/tilemap.js) · **Visualization:** [07 tilemap and camera](https://normansrule.github.io/video-game-kindling/viz/07-tilemap-camera/) · **Lesson:** [2D-5 Tilemaps and the camera](../../lessons/2d-5-tilemaps-camera.html) · **Samples:** [2D-04 platformer](../../samples/2d/04-platformer/), [2D-06 tilemap rooms](../../samples/2d/06-tilemap-room/)
 
 A level as a grid of characters. You draw it in your code editor, see it at a glance, and change it in seconds, which is exactly what you want during a game jam.
 

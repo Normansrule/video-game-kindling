@@ -1,6 +1,6 @@
 # Module: core
 
-**Files:** [`engine/core/`](../../engine/core/) · **Visualizations:** [01 game loop](https://normansrule.github.io/kindling/viz/01-game-loop/), [02 easing](https://normansrule.github.io/kindling/viz/02-easing/) · **Lessons:** [2D-1 The game loop](../../lessons/2d-1-game-loop.html)
+**Files:** [`engine/core/`](../../engine/core/) · **Visualizations:** [01 game loop](https://normansrule.github.io/video-game-kindling/viz/01-game-loop/), [02 easing](https://normansrule.github.io/video-game-kindling/viz/02-easing/) · **Lessons:** [2D-1 The game loop](../../lessons/2d-1-game-loop.html)
 
 The core is the part of the engine that is not about drawing at all: the loop that keeps the game ticking, the clock, scenes, events, tweens, timers, asset loading and saving. Every game uses it, usually through [`createGame`](game.md).
 

@@ -3,7 +3,8 @@
 // WHY:  The "feel" of a platformer comes from small tricks that players never notice:
 //       coyote time, jump buffering and variable jump height. They're all here,
 //       each a few lines, each with a number you can tune.
-// TEACHES: tilemap + physics, camera follow, sprite animation, game feel.
+// TEACHES: tilemap + physics, camera follow, sprite animation, game feel,
+//          parallax backdrop and procedural tile textures (Kindling 2 look).
 // README: samples/2d/04-platformer/README.md
 
 import { createGame } from "kindling/game.js";
@@ -15,10 +16,13 @@ import { createSpriteSheet } from "kindling/2d/sprite.js";
 import { createAnimation, createAnimator } from "kindling/2d/animation.js";
 import { rectsOverlap } from "kindling/2d/collision.js";
 import { createParticles, presets } from "kindling/2d/particles.js";
-import { fillRect, text, dim } from "kindling/2d/draw.js";
+import { text, dim } from "kindling/2d/draw.js";
 import { createAudio } from "kindling/audio/audio.js";
 import { playSfx } from "kindling/audio/sfx.js";
 import { approach } from "kindling/math/scalar.js";
+import { createBackdrop } from "kindling/2d/backdrop.js";
+import { textureCanvases } from "kindling/world/textures.js";
+import { paintPixels } from "kindling/views/sprites.js";
 import { LEVELS } from "./level.js";
 
 // ---- Feel: tune these ----------------------------------------------------------
@@ -56,6 +60,29 @@ const TILE_FRAMES = { "#": 0, B: 2, "=": 3, "^": 5, F: 6 };
 
 const audio = createAudio();
 const particles = createParticles(300);
+
+// ---- Look: painted from code (see engine/2d/backdrop.js and engine/world/textures.js) ----
+const backdrop = createBackdrop({ width: 320, height: 180, theme: "day" });
+const blockTextures = textureCanvases();     // 16 x 16 grass, dirt, brick, planks...
+// Which texture each level character uses. Spikes and the flag still come from tiles.png.
+const TILE_TEXTURES = { "#": "dirt", B: "brick", "=": "planks" };
+const slimeFrames = [
+  paintPixels(["...gggg...", "..gGGGGg..", ".gGwkGwkg.", "gGGwkGwkGg", "gGGGGGGGGg", "gggggggggg"], { g: "#c2455a", G: "#ef6a7d", w: "#ffffff", k: "#1b1b25" }),
+  paintPixels(["..........", "...gggg...", ".ggGGGGgg.", "gGGwkGwkGg", "gGGGGGGGGg", "gggggggggg"], { g: "#c2455a", G: "#ef6a7d", w: "#ffffff", k: "#1b1b25" }),
+];
+
+// A soft dark frame around the screen pulls the eye to the middle (a "vignette").
+const vignette = document.createElement("canvas");
+vignette.width = 320;
+vignette.height = 180;
+{
+  const vignetteContext = vignette.getContext("2d");
+  const shade = vignetteContext.createRadialGradient(160, 90, 60, 160, 90, 200);
+  shade.addColorStop(0, "rgba(0,0,0,0)");
+  shade.addColorStop(1, "rgba(10,10,30,0.45)");
+  vignetteContext.fillStyle = shade;
+  vignetteContext.fillRect(0, 0, 320, 180);
+}
 
 // ---- Level state (rebuilt by loadLevel) ---------------------------------------
 let levelIndex = 0;
@@ -192,25 +219,43 @@ game.scenes.add("play", {
     game.debug.watch("coyote", coyoteTimer);
   },
   render(game, context) {
+    backdrop.render(context, camera.x, camera.y, game.time.elapsed);
     camera.begin(context);
     map.draw(context, (tileContext, character, x, y, column, row) => {
-      let frame = TILE_FRAMES[character];
-      if (frame === undefined) return;
-      // Ground with nothing solid above it gets the grass-topped tile.
-      if (character === "#" && !"#B".includes(map.get(column, row - 1) || "#")) frame = 1;
-      tileSheet.draw(tileContext, frame, x, y);
+      let textureName = TILE_TEXTURES[character];
+      if (textureName) {
+        // Ground with nothing solid above it gets the grass-topped texture.
+        if (character === "#" && !"#B".includes(map.get(column, row - 1) || "#")) textureName = "grass_side";
+        if (character === "=") {
+          tileContext.drawImage(blockTextures.planks, 0, 0, 16, 6, x, y, 16, 6);   // a thin plank
+          return;
+        }
+        tileContext.drawImage(blockTextures[textureName], x, y);
+        // Darken tiles deeper underground, so the surface pops.
+        const depth = character === "#" && "#B".includes(map.get(column, row - 1) || ".") ? 0.18 : 0;
+        if (depth) { tileContext.fillStyle = "rgba(20,10,30," + depth + ")"; tileContext.fillRect(x, y, 16, 16); }
+        return;
+      }
+      const frame = TILE_FRAMES[character];
+      if (frame !== undefined) tileSheet.draw(tileContext, frame, x, y);
     }, camera.view());
     for (const coin of coins) {
       if (!coin.taken) tileSheet.draw(context, 4, coin.x - 4, coin.y - 4 + Math.round(Math.sin(game.time.elapsed * 4 + coin.x) * 1.5));
     }
     for (const enemy of enemies) {
       if (enemy.dead) continue;
-      fillRect(context, Math.round(enemy.x), Math.round(enemy.y), enemy.width, enemy.height, "#c44d58");
-      fillRect(context, Math.round(enemy.x) + (enemy.velocityX < 0 ? 2 : 7), Math.round(enemy.y) + 3, 3, 3, "#ffffff");
+      // A two-frame squishy slime, sitting on the enemy's collision box.
+      const slime = slimeFrames[Math.floor(game.time.elapsed * 4 + enemy.x * 0.1) % 2];
+      context.save();
+      context.translate(Math.round(enemy.x + enemy.width / 2), Math.round(enemy.y + enemy.height));
+      if (enemy.velocityX > 0) context.scale(-1, 1);
+      context.drawImage(slime, -7, -10, 14, 10);
+      context.restore();
     }
     heroSheet.draw(context, animator.frame(), player.x + 5, player.y + 14, { originX: 0.5, originY: 14 / 16, flipX: facingLeft });
     particles.render(context);
     camera.end(context);
+    context.drawImage(vignette, 0, 0);
     text(context, "COINS " + score + "   LEVEL " + (levelIndex + 1), 6, 6, { shadow: "#000000" });
     game.debug.box(player.x - camera.x, player.y - camera.y, player.width, player.height);
   },

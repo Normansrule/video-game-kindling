@@ -1,6 +1,6 @@
 {
   "name": "kindling",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "private": true,
   "description": "No dependencies. This file only tells Node.js that .js files are ES modules, so `node --test` can run the same checks as tests/index.html.",
   "type": "module",

@@ -13,7 +13,7 @@ Made for **JAM NAME** (link to the jam page) in **48 / 72 hours**, theme: **"THE
 
 ## Made with
 
-- [Kindling](https://github.com/Normansrule/kindling), a zero-dependency JavaScript game engine (the copy in `engine/`, MIT license).
+- [Kindling](https://github.com/Normansrule/video-game-kindling), a zero-dependency JavaScript game engine (the copy in `engine/`, MIT license).
 - Sound effects generated in code with Kindling's `sfx.js`.
 - Write here every asset you used and its license, and any tools, including AI tools if you used them and the jam asks.
 

@@ -39,7 +39,7 @@ Every HTML page maps the prefix `kindling/` to the engine folder, relative to th
 <script type="module" src="./main.js"></script>
 ```
 
-Game code then writes `import { createGame } from "kindling/game.js"` no matter where it lives. Engine files import each other with relative paths (`../math/vec2.js`), so the engine works under any folder, including GitHub Pages at `/kindling/` and a game jam zip. See [DECISIONS.md](DECISIONS.md) D1.
+Game code then writes `import { createGame } from "kindling/game.js"` no matter where it lives. Engine files import each other with relative paths (`../math/vec2.js`), so the engine works under any folder, including GitHub Pages at `/video-game-kindling/` and a game jam zip. See [DECISIONS.md](DECISIONS.md) D1.
 
 ## One frame
 

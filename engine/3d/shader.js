@@ -11,7 +11,8 @@
 //   layout(location = 0) in vec3 a_position;
 //   layout(location = 1) in vec3 a_normal;
 //   layout(location = 2) in vec2 a_uv;
-export const ATTRIBUTE = { position: 0, normal: 1, uv: 2 };
+//   layout(location = 3) in vec4 a_extra;   (per-corner extras: vertex colors, block layer, AO...)
+export const ATTRIBUTE = { position: 0, normal: 1, uv: 2, extra: 3 };
 
 function compile(gl, type, source) {
   const shader = gl.createShader(type);
@@ -65,7 +66,10 @@ export function createShaderProgram(gl, vertexSource, fragmentSource) {
       case gl.FLOAT_MAT4: gl.uniformMatrix4fv(location, false, value); break;
       case gl.INT:
       case gl.BOOL:
-      case gl.SAMPLER_2D: gl.uniform1i(location, value); break;
+      case gl.SAMPLER_2D:
+      case gl.SAMPLER_2D_ARRAY:
+      case gl.SAMPLER_2D_SHADOW: gl.uniform1i(location, value); break;
+      case gl.INT_VEC2: gl.uniform2iv(location, value); break;
       default: throw new Error("shader.set: no rule for the type of '" + name + "'");
     }
   }

@@ -45,7 +45,7 @@ Always check each asset's license and credit the author when asked. CC0 means pu
 | [OpenGameArt](https://opengameart.org/) | Community art and audio; licenses vary per asset. |
 | [itch.io free game assets](https://itch.io/game-assets/free) | Huge, mixed licenses. |
 | [Lospec palette list](https://lospec.com/palette-list) | Ready-made pixel-art color palettes. |
-| [jsfxr](https://sfxr.me/) | Retro sound effects in the browser (or use Kindling's [sound visualization](https://normansrule.github.io/kindling/viz/13-sound/)). |
+| [jsfxr](https://sfxr.me/) | Retro sound effects in the browser (or use Kindling's [sound visualization](https://normansrule.github.io/video-game-kindling/viz/13-sound/)). |
 | [Freesound](https://freesound.org/) | Recorded sounds; check each license. |
 
 ## Tools
@@ -63,6 +63,6 @@ Always check each asset's license and credit the author when asked. CC0 means pu
 | Where | |
 |---|---|
 | [itch.io jams](https://itch.io/jams) | Find a jam; see [jam/JAMS.md](../jam/JAMS.md). |
-| [Kindling Discussions](https://github.com/Normansrule/kindling/discussions) | Questions, show and tell, ideas for lessons. |
+| [Kindling Discussions](https://github.com/Normansrule/video-game-kindling/discussions) | Questions, show and tell, ideas for lessons. |
 
 _Links last checked: 2026-11-12._

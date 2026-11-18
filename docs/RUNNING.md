@@ -8,7 +8,7 @@ Browsers refuse to load JavaScript modules (and `fetch()`) from pages opened str
 cd ~/projects/kindling && python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000/>. Stop the server with `Ctrl+C`. The same files are online at <https://normansrule.github.io/kindling/>.
+Then open <http://localhost:8000/>. Stop the server with `Ctrl+C`. The same files are online at <https://normansrule.github.io/video-game-kindling/>.
 
 On WSL (Windows Subsystem for Linux), open the address in your normal Windows browser; WSL forwards `localhost` for you.
 
@@ -27,7 +27,7 @@ Every page that uses the engine has an import map. It gives the engine folder a 
 </script>
 ```
 
-Why not write `/engine/core/version.js`? A path starting with `/` means "from the top of the website". On your machine the top is the repo, but on GitHub Pages the site lives at `/kindling/` and on itch.io it lives in a random folder, so `/engine/` would point at nothing. A relative path in the import map works in all three places.
+Why not write `/engine/core/version.js`? A path starting with `/` means "from the top of the website". On your machine the top is the repo, but on GitHub Pages the site lives at `/video-game-kindling/` and on itch.io it lives in a random folder, so `/engine/` would point at nothing. A relative path in the import map works in all three places.
 
 Rules:
 

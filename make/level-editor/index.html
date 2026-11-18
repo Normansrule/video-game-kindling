@@ -1,0 +1,118 @@
+<!doctype html>
+<!--
+  make/level-editor/index.html
+  WHAT: Draw tile levels with the mouse or a finger, play-test them at once, and copy
+        them out as the text rows that engine/2d/tilemap.js reads.
+  WHY:  Typing levels is great for small changes; painting is faster for big ones.
+        The output is still plain text, so levels stay easy to read and diff.
+  USES: make/level-editor/grid.js, engine/2d/tilemap.js, engine/2d/physics.js
+  DOC:  make/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Level editor</title>
+  <meta name="description" content="Paint tilemap levels in the browser, play-test them, and export them as text for Kindling games.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../../viz/viz.css">
+  <link rel="stylesheet" href="../make.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">Make tools</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/make/level-editor/grid.js">Source: grid.js</a>
+    </nav>
+    <h1>Level editor</h1>
+    <p class="lead">Paint a level, press <strong>Play</strong> to try it, then copy it into your game. It saves itself in this browser as you work.</p>
+
+    <div class="make-toolbar" role="toolbar" aria-label="Tools">
+      <button class="control" type="button" data-tool="paint" aria-pressed="true" title="Paint (B)">Paint</button>
+      <button class="control" type="button" data-tool="rect" aria-pressed="false" title="Rectangle (R)">Rectangle</button>
+      <button class="control" type="button" data-tool="fill" aria-pressed="false" title="Fill (G)">Fill</button>
+      <button class="control" type="button" data-tool="pick" aria-pressed="false" title="Pick a tile from the level (I)">Pick</button>
+      <button class="control" type="button" data-tool="scroll" aria-pressed="false" title="Scroll the level with a finger (S)">Scroll</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="control" type="button" id="undo" title="Undo (Ctrl+Z)">Undo</button>
+      <button class="control" type="button" id="redo" title="Redo (Ctrl+Y)">Redo</button>
+      <button class="control" type="button" id="zoom-out" aria-label="Zoom out">−</button>
+      <button class="control" type="button" id="zoom-in" aria-label="Zoom in">+</button>
+      <button class="control primary" type="button" id="play">Play</button>
+    </div>
+
+    <ul class="make-palette" id="palette" aria-label="Tiles"></ul>
+
+    <div id="edit-view">
+      <div class="make-grid-wrap" id="grid-wrap">
+        <canvas id="grid" width="1" height="1" role="img" aria-label="The level grid. Use the mouse or touch to paint tiles."></canvas>
+      </div>
+      <p class="viz-readout" id="status" role="status"></p>
+      <ul class="make-warnings" id="warnings" aria-live="polite"></ul>
+    </div>
+
+    <div id="play-view" hidden>
+      <div class="viz-stage">
+        <canvas id="play-canvas" width="320" height="180" role="img" aria-label="Play-test of the level"></canvas>
+      </div>
+      <p class="viz-readout" id="play-status" role="status">Arrows or A/D to move, Space or W to jump, Esc to stop.</p>
+      <div class="make-toolbar">
+        <button class="control" type="button" data-touch="left" aria-label="Move left">◀</button>
+        <button class="control" type="button" data-touch="right" aria-label="Move right">▶</button>
+        <button class="control" type="button" data-touch="jump" aria-label="Jump">▲ Jump</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button class="control" type="button" id="restart">Restart</button>
+        <button class="control primary" type="button" id="stop">Back to editing</button>
+      </div>
+    </div>
+
+    <h2>Size</h2>
+    <div class="viz-controls">
+      <label>Columns <input type="number" id="columns" min="4" max="400" value="40"></label>
+      <label>Rows <input type="number" id="rows" min="4" max="200" value="12"></label>
+      <label>When resizing, keep
+        <select id="anchor"><option value="bottom-left">the bottom rows (floors)</option><option value="top-left">the top rows</option></select>
+      </label>
+      <div class="row">
+        <button class="control" type="button" id="resize">Resize</button>
+        <button class="control" type="button" id="new">New empty level</button>
+      </div>
+    </div>
+
+    <h2>Open a level</h2>
+    <div class="make-toolbar">
+      <button class="control" type="button" data-sample="0">Platformer level 1</button>
+      <button class="control" type="button" data-sample="1">Platformer level 2</button>
+    </div>
+    <details>
+      <summary>Paste a level</summary>
+      <p>Paste rows of text, a JavaScript array like <code>["####", "#..#"]</code>, or a whole <code>level.js</code>.</p>
+      <label for="paste" class="visually-hidden">Level to open</label>
+      <textarea class="make-text" id="paste" spellcheck="false"></textarea>
+      <div class="make-toolbar"><button class="control" type="button" id="open-paste">Open pasted level</button></div>
+    </details>
+
+    <h2>Use it in your game</h2>
+    <p>Copy this into <code>level.js</code> (or download it), then load it with <code>createTilemap({ rows: LEVEL, solid: "#B", oneWay: "=" })</code>. In the platformer sample it replaces one entry of <code>LEVELS</code> in <code>samples/2d/04-platformer/level.js</code>.</p>
+    <label for="export" class="visually-hidden">Level as JavaScript</label>
+    <textarea class="make-text" id="export" readonly spellcheck="false"></textarea>
+    <div class="make-toolbar">
+      <button class="control primary" type="button" id="copy">Copy</button>
+      <button class="control" type="button" id="download">Download level.js</button>
+    </div>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Keys: <kbd>B</kbd> paint, <kbd>R</kbd> rectangle, <kbd>G</kbd> fill, <kbd>I</kbd> pick, <kbd>S</kbd> scroll, <kbd>1</kbd>–<kbd>9</kbd> choose a tile, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo, <kbd>Ctrl</kbd>+<kbd>Y</kbd> redo.</li>
+      <li>Right-click (or the Empty tile) erases. On a phone, switch to <strong>Scroll</strong> to move around a big level with your finger.</li>
+      <li>Rectangle with <kbd>Shift</kbd> held draws only the outline: quick walls and rooms.</li>
+      <li>Play-test often. A jump that looks fine on the grid can be one tile too far.</li>
+    </ul>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

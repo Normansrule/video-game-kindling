@@ -1,6 +1,6 @@
 # viz/
 
-Interactive visualizations, one per engine idea. Each is a single page with play/pause, labelled sliders, dark and light themes, reduced-motion support, and a layout that works at 390 px wide. Browse them with screenshots at [`viz/index.html`](https://normansrule.github.io/kindling/viz/).
+Interactive visualizations, one per engine idea. Each is a single page with play/pause, labelled sliders, dark and light themes, reduced-motion support, and a layout that works at 390 px wide. Browse them with screenshots at [`viz/index.html`](https://normansrule.github.io/video-game-kindling/viz/).
 
 | Folder | Shows | Engine module |
 |---|---|---|

@@ -1,6 +1,6 @@
 # Sample 3D-05: First-person walk
 
-**Play:** <https://normansrule.github.io/kindling/samples/3d/05-first-person-walk/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/05-first-person-walk/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/3d/05-first-person-walk/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/3d/05-first-person-walk/>
 
 | Controls | |
 |---|---|

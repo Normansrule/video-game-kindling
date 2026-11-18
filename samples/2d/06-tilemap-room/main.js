@@ -10,7 +10,9 @@ import { createGame } from "kindling/game.js";
 import { createTilemap } from "kindling/2d/tilemap.js";
 import { createBody, moveAndCollide } from "kindling/2d/physics.js";
 import { createCamera } from "kindling/2d/camera.js";
-import { fillRect, fillCircle, strokeRect, text, dim } from "kindling/2d/draw.js";
+import { fillRect, strokeRect, text, dim } from "kindling/2d/draw.js";
+import { textureCanvases } from "kindling/world/textures.js";
+import { paintPixels, drawCharacterIcon } from "kindling/views/sprites.js";
 import { createParticles, presets } from "kindling/2d/particles.js";
 import { createAudio } from "kindling/audio/audio.js";
 import { playSfx } from "kindling/audio/sfx.js";
@@ -148,27 +150,66 @@ function update(game, stepSeconds) {
   }
 }
 
-const TILE_COLORS = { "#": "#5d5a52", T: "#1f5e2e", "~": "#2f6fb0", D: "#8a5a2b", X: "#d9a521" };
+// ---- Look: textures painted from code (engine/world/textures.js), no image files ----
+const textures = textureCanvases();
+const chest = paintPixels([
+  "..oooooooooo..",
+  ".oYYYYYYYYYYo.",
+  "oYyyyyyyyyyyYo",
+  "oooooooooooooo",
+  "oBBBBBkkBBBBBo",
+  "oBbbbbkkbbbbBo",
+  "oBbbbbbbbbbbBo",
+  "oooooooooooooo",
+], { o: "#4a2f14", Y: "#d9a521", y: "#ffd166", B: "#8a5a2b", b: "#a8743c", k: "#2b2b2b" });
+const key = paintPixels([".yy.....", "y..yyyyy", "y..y.y.y", ".yy....."], { y: "#ffd166" });
+const sign = paintPixels(["oooooooooo", "obbbbbbbbo", "ob-----bbo", "obb----bbo", "oooooooooo", "....oo....", "....oo...."], { o: "#5a3b1e", b: "#c79a5a", "-": "#7a5530" });
+
+function isBlocking(character) {
+  return character === "#" || character === "~" || character === "D";
+}
+
 function render(game, context) {
   camera.begin(context);
-  map.draw(context, (tileContext, character, x, y) => {
-    if (character === ".") return;
+  map.draw(context, (tileContext, character, x, y, column, row) => {
+    // Everything stands on grass (flowers here and there), except walls and water.
+    if (character === "#") {
+      tileContext.drawImage(textures.stone, x, y);
+      // Light the top edge of a wall that has open ground above it.
+      if (!isBlocking(map.get(column, row - 1) || "#")) { tileContext.fillStyle = "rgba(255,255,255,0.18)"; tileContext.fillRect(x, y, 16, 3); }
+      return;
+    }
+    if (character === "~") {
+      // Water: slide the texture with time so it ripples.
+      const offset = Math.floor(game.time.elapsed * 6) % 16;
+      tileContext.drawImage(textures.water, offset, 0, 16 - offset, 16, x, y, 16 - offset, 16);
+      if (offset > 0) tileContext.drawImage(textures.water, 0, 0, offset, 16, x + 16 - offset, y, offset, 16);
+      return;
+    }
+    tileContext.drawImage((column * 7 + row * 3) % 11 === 0 ? textures.flowers : textures.grass_top, x, y);
+    // Soft shadow on the ground just below a wall, so walls look tall.
+    if (isBlocking(map.get(column, row - 1) || ".")) { tileContext.fillStyle = "rgba(10,20,10,0.28)"; tileContext.fillRect(x, y, 16, 5); }
     if (character === "T") {
-      fillCircle(tileContext, x + 8, y + 7, 7, TILE_COLORS.T);
-      fillRect(tileContext, x + 7, y + 12, 2, 4, "#5a3b1e");
+      tileContext.fillStyle = "rgba(0,0,0,0.25)";
+      tileContext.beginPath(); tileContext.ellipse(x + 9, y + 13, 7, 3, 0, 0, Math.PI * 2); tileContext.fill();
+      tileContext.drawImage(textures.log_side, 6, 0, 4, 6, x + 6, y + 9, 4, 6);
+      tileContext.fillStyle = "#2f7a3e";
+      tileContext.beginPath(); tileContext.arc(x + 8, y + 6, 7, 0, Math.PI * 2); tileContext.fill();
+      tileContext.fillStyle = "#4fa356";
+      tileContext.beginPath(); tileContext.arc(x + 6, y + 4, 4, 0, Math.PI * 2); tileContext.fill();
     } else if (character === "S") {
-      fillRect(tileContext, x + 3, y + 3, 10, 7, "#b88a4a");
-      fillRect(tileContext, x + 7, y + 10, 2, 5, "#6b4a24");
+      tileContext.drawImage(sign, x + 3, y + 4);
     } else if (character === "K") {
-      fillCircle(tileContext, x + 6, y + 8, 3, "#ffd166");
-      fillRect(tileContext, x + 8, y + 7, 6, 2, "#ffd166");
-    } else {
-      fillRect(tileContext, x, y, TILE, TILE, TILE_COLORS[character]);
-      if (character === "X") strokeRect(tileContext, x + 1.5, y + 1.5, 13, 13, "#7a5a10");
+      tileContext.drawImage(key, x + 4, y + 6);
+    } else if (character === "D") {
+      tileContext.drawImage(textures.planks, x, y);
+      tileContext.fillStyle = "#ffd166";
+      tileContext.fillRect(x + 11, y + 7, 2, 2);
+    } else if (character === "X") {
+      tileContext.drawImage(chest, x + 1, y + 5);
     }
   }, camera.view());
-  fillRect(context, Math.round(player.x), Math.round(player.y), player.width, player.height, "#f2f2f2");
-  fillRect(context, Math.round(player.x) + 3 + facing.x * 3, Math.round(player.y) + 3 + facing.y * 3, 4, 4, "#2b2b2b");
+  drawCharacterIcon(context, Math.round(player.x + player.width / 2), Math.round(player.y + player.height / 2), 12, Math.atan2(-facing.x, -facing.y));
   camera.end(context);
   particles.render(context);
 

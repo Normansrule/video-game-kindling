@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  game-code-examples/frame.html
+  WHAT: Runs one example full-window: frame.html?ex=01-hello-canvas
+  WHY:  The gallery thumbnails, the "open in new tab" button and the smoke test use it.
+        The playground uses the same page template with your edited code instead.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Code Example | Kindling</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #0d1117; color: #e9edf4; font: 14px/1.4 system-ui, sans-serif; }
+    /* The canvas sits at the very top: createGame() sizes it to the space below its top edge. */
+    canvas { display: block; margin: 0 auto; outline: none; max-width: 100%; }
+    #error { display: none; white-space: pre-wrap; color: #ff8a80; background: #1b1416; border: 1px solid #5a2a2a; border-radius: 8px; padding: 12px; margin: 12px; max-width: 900px; font: 13px/1.5 ui-monospace, Consolas, monospace; }
+  </style>
+  <script type="importmap">
+    { "imports": { "kindling/": "../engine/" } }
+  </script>
+</head>
+<body>
+  <canvas id="game" aria-label="Example output"></canvas>
+  <pre id="error" role="alert"></pre>
+  <script>
+    // Show errors on the page, not only in the console: beginners don't keep it open.
+    function showError(message) {
+      const box = document.getElementById("error");
+      box.style.display = "block";
+      box.textContent = message;
+    }
+    window.addEventListener("error", (event) => showError(event.message));
+    window.addEventListener("unhandledrejection", (event) => showError(String(event.reason && event.reason.stack || event.reason)));
+  </script>
+  <script type="module">
+    const id = new URLSearchParams(location.search).get("ex") || "01-hello-canvas";
+    if (!/^[0-9a-z-]+$/.test(id)) throw new Error("Bad example name");
+    document.title = id + " | Kindling Game Code Example";
+    import("./code/" + id + ".js").catch((error) => showError(error.stack || String(error)));
+  </script>
+</body>
+</html>

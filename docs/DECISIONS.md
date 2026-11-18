@@ -4,7 +4,7 @@ Short records of choices that shape the whole repo. Each one says what we chose 
 
 ## D1. Pages find the engine through an import map (S0)
 
-Each HTML page maps `"kindling/"` to a relative engine path. No absolute `/engine/...` paths, because they break on GitHub Pages (site at `/kindling/`) and on itch.io. See [RUNNING.md](RUNNING.md).
+Each HTML page maps `"kindling/"` to a relative engine path. No absolute `/engine/...` paths, because they break on GitHub Pages (site at `/video-game-kindling/`) and on itch.io. See [RUNNING.md](RUNNING.md).
 
 ## D2. One way to run: a local server (S0)
 
@@ -16,7 +16,7 @@ itch.io needs `index.html` at the root of the zip, so a game cannot reach `../..
 
 ## D4. js13kGames (S0)
 
-Approved (2026-11-12, when the full build was requested with the recommended defaults). Drop js13kGames from the main jam list (its 13 kB zip cap cannot fit the full engine) and revisit a "13k path" after v1.0.0.
+Approved (2026-11-12, when the full build was requested with the recommended defaults). Drop js13kGames from the main jam list (its 13 kB zip cap cannot fit the full engine) and revisit a "13k path" after v1.0.0. **Done in v1.1.0:** see D10.
 
 ## D5. Dev-only Playwright smoke check (S0)
 
@@ -42,3 +42,16 @@ The docs include [bridges](bridges/) that show Kindling's core ideas (fixed time
 
 **Rules kept:** The engine, samples, visualizations and lessons stay zero-dependency with no build step. Nothing outside `references/` imports from it. GitHub Pages builds the React demo in a separate step that can fail without blocking the rest of the site.
 
+## D10. The 13k path is a separate tiny engine (v1.1.0)
+
+**Decision:** `tiny/kindling-tiny.js` is its own small file (loop, input, tile collision, random, beeps, saving), not a build of the main engine. `tiny/pack.mjs` bundles a game into one `index.html`, zips it with Node's built-in deflate and reports the zipped size.
+
+**Why:** Even a tree-shaken subset of the main engine carries its readable names and comments; a hand-written tiny file starts at about 2 KB packed and is easy to read whole. Each tiny function names its bigger twin in `engine/`, so learning still leads back to the main engine. The packer measures the zip because the limit is on the zip.
+
+**Rules kept:** No npm packages. The packer only strips comments and indentation; a real minifier is optional advice, not a dependency.
+
+## D11. Make tools are pages, with logic in tested modules (v1.1.0)
+
+**Decision:** The level editor and sprite packer are static pages under `make/`, published on GitHub Pages like the samples. Their logic lives in DOM-free modules (`engine/2d/atlas.js`, `make/level-editor/grid.js`) that `tests/checks/tools.checks.js` checks in Node and in the browser.
+
+**Why:** Nothing to install, works on a phone, and the same code a game uses (the atlas reader) is the code the tool uses (the packer). Files are never uploaded; downloads are made in the page.

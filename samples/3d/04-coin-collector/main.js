@@ -4,16 +4,19 @@
 // WHY:  The 2D platformer, one dimension up. Same ideas: a body with velocity and gravity,
 //       move one axis at a time, stop at boxes. New ideas: a camera that follows the
 //       player, and moving relative to where the CAMERA faces, not the world.
-// TEACHES: collision3d (AABB in 3D), follow camera, camera-relative movement, blob shadows.
+// TEACHES: collision3d (AABB in 3D), follow camera, camera-relative movement, and the
+//          Kindling 2 stylized renderer: the SAME boxes are collided as boxes and
+//          drawn as textured blocks with real sun shadows, fog and a sky.
 // README: samples/3d/04-coin-collector/README.md
 
 import { createGame } from "kindling/game.js";
-import { createRenderer } from "kindling/3d/renderer.js";
-import { createMesh } from "kindling/3d/mesh.js";
-import { box, sphere } from "kindling/3d/primitives.js";
+import { createWorldRenderer } from "kindling/3d/world-renderer.js";
+import { createCharacter } from "kindling/3d/character.js";
+import { coinModel, pineTree, rockModel, createModelBuilder } from "kindling/3d/lowpoly.js";
 import { createOrbitCamera } from "kindling/3d/camera3d.js";
-import { createCheckerTexture } from "kindling/3d/texture.js";
-import { boxFromCenter, boxCenter, createBody3D, moveAndCollide3D, boxesOverlap, rayBox } from "kindling/3d/collision3d.js";
+import { boxFromCenter, boxCenter, createBody3D, moveAndCollide3D, boxesOverlap } from "kindling/3d/collision3d.js";
+import { createVoxelWorld } from "kindling/world/voxel-world.js";
+import { BLOCK } from "kindling/world/blocks.js";
 import { createAudio } from "kindling/audio/audio.js";
 import { playSfx } from "kindling/audio/sfx.js";
 import { clamp, damp } from "kindling/math/scalar.js";
@@ -40,32 +43,62 @@ const game = createGame({
     restart: ["KeyR", "Enter", "pad:Start"],
   },
 });
-const renderer = createRenderer(game.screen);
-renderer.setFog(45);
+const renderer = createWorldRenderer(game.screen, { timeOfDay: 0.36, fogDensity: 0.014, shadowRadius: 22 });
 const audio = createAudio();
 const hud = document.getElementById("hud");
 
 // Level: platforms are boxes given by center and size. The same boxes are drawn AND collided.
 const platforms = [
   boxFromCenter(0, -0.5, 0, 8, 1, 8),        // start island
-  boxFromCenter(0, 0.5, -8, 3, 1, 3),
-  boxFromCenter(5, 1.5, -11, 3, 1, 3),
-  boxFromCenter(10, 2.5, -8, 3, 1, 3),
-  boxFromCenter(10, 1, -1, 4, 1, 6),
-  boxFromCenter(-7, 0, -3, 4, 1, 4),
-  boxFromCenter(-11, 1.5, -8, 3, 1, 3),
-  boxFromCenter(-6, 3, -12, 3, 1, 3),
+  boxFromCenter(0.5, 0.5, -7.5, 3, 1, 3),
+  boxFromCenter(5.5, 1.5, -10.5, 3, 1, 3),
+  boxFromCenter(10.5, 2.5, -7.5, 3, 1, 3),
+  boxFromCenter(10, 1.5, -1, 4, 1, 6),
+  boxFromCenter(-7, 0.5, -3, 4, 1, 4),
+  boxFromCenter(-10.5, 1.5, -7.5, 3, 1, 3),
+  boxFromCenter(-5.5, 3.5, -11.5, 3, 1, 3),
   boxFromCenter(0, 4.5, -16, 4, 1, 4),       // the high goal platform
   boxFromCenter(-2, 0.75, 3, 1.2, 1.5, 1.2),   // a crate to hop on
 ];
 const coinSpots = [
-  [0, 2, -8], [5, 3, -11], [10, 4, -8], [10, 2.5, 1], [-7, 1.5, -3],
-  [-11, 3, -8], [-6, 4.5, -12], [0, 6, -16], [-2, 2.3, 3], [3, 1, 3],
+  [0.5, 2, -7.5], [5.5, 3, -10.5], [10.5, 4, -7.5], [10, 3, 1], [-7, 2, -3],
+  [-10.5, 3, -7.5], [-5.5, 5, -11.5], [0, 6, -16], [-2, 2.3, 3], [3, 1, 3],
 ];
 
-const cubeMesh = createMesh(game.gl, box(1, 1, 1));
-const coinMesh = createMesh(game.gl, sphere(0.5, 16, 8));
-const grass = createCheckerTexture(game.gl, 2, "#86c06c", "#7ab461");
+// ---- Look: turn the platform boxes into blocks for the stylized renderer ----------
+// Block worlds start at (0, 0, 0), so shift the level by OFFSET when drawing.
+const OFFSET = { x: 16, y: 6, z: 24 };
+const world = createVoxelWorld(32, 16, 32);
+const propBoxes = [];        // boxes that aren't whole blocks (the crate) become models
+for (const platform of platforms) {
+  const x0 = platform.x + OFFSET.x, y0 = platform.y + OFFSET.y, z0 = platform.z + OFFSET.z;
+  const whole = [x0, y0, z0, platform.width, platform.height, platform.depth].every(Number.isInteger);
+  if (!whole) { propBoxes.push(platform); continue; }
+  for (let y = y0; y < y0 + platform.height; y++) {
+    world.fill(x0, y, z0, x0 + platform.width - 1, y, z0 + platform.depth - 1, y === y0 + platform.height - 1 ? BLOCK.GRASS : BLOCK.DIRT);
+  }
+  // A rocky "floating island" underside, narrower each layer down. Only for looks.
+  for (let layer = 1; layer <= 3; layer++) {
+    const inset = layer;
+    if (platform.width - inset * 2 < 1 || platform.depth - inset * 2 < 1) break;
+    world.fill(x0 + inset, y0 - layer, z0 + inset, x0 + platform.width - 1 - inset, y0 - layer, z0 + platform.depth - 1 - inset, layer === 1 ? BLOCK.DIRT : BLOCK.STONE);
+  }
+}
+renderer.setWorld(world);
+
+const character = createCharacter(renderer, { shirt: [0.95, 0.45, 0.2] });
+const coinMesh = renderer.createModel(coinModel());
+const treeMesh = renderer.createModel(pineTree(3.2));
+const rockMesh = renderer.createModel(rockModel(4, 0.5));
+const crate = createModelBuilder();
+crate.box(0, 0, 0, 1, 1, 1, [0.72, 0.52, 0.3]);
+crate.box(0, 0, 0, 1.02, 0.18, 1.02, [0.5, 0.34, 0.18]);
+const crateMesh = renderer.createModel(crate.data());
+const scenery = [
+  { mesh: treeMesh, x: -3.2, z: -3.2 }, { mesh: treeMesh, x: 3.3, z: -2.6 }, { mesh: rockMesh, x: 2.8, z: 2.5 },
+  { mesh: treeMesh, x: 11.4, z: 1.6, y: 2 }, { mesh: rockMesh, x: -8, z: -4, y: 1 },
+];
+let walkCycle = 0;
 
 const player = createBody3D({ width: 0.7, height: 1, depth: 0.7 });
 const camera = createOrbitCamera({ distance: 9, pitch: 0.5, far: 120 });
@@ -159,37 +192,31 @@ game.scenes.add("play", {
   },
 
   render(game) {
-    renderer.begin(camera, { position: [20, 40, 15], color: [1, 0.97, 0.9], ambient: 0.4 });
-    for (const platform of platforms) {
-      const c = boxCenter(platform);
-      const model = mat4.scale(mat4.translation(c.x, c.y, c.z), { x: platform.width, y: platform.height, z: platform.depth });
-      renderer.drawMesh(cubeMesh, model, { texture: grass, color: [1, 1, 1], specularStrength: 0.05 });
+    const time = game.time.elapsed;
+    // The camera works in level coordinates; the renderer draws the world shifted by
+    // OFFSET, so give it a camera that is shifted the same way.
+    const shifted = { ...camera, target: { x: camera.target.x + OFFSET.x, y: camera.target.y + OFFSET.y, z: camera.target.z + OFFSET.z } };
+    shifted.position = () => { const p = camera.position(); return { x: p.x + OFFSET.x, y: p.y + OFFSET.y, z: p.z + OFFSET.z }; };
+    shifted.view = () => mat4.multiply(camera.view(), mat4.translation(-OFFSET.x, -OFFSET.y, -OFFSET.z));
+    function at(x, y, z) {
+      return mat4.translation(x + OFFSET.x, y + OFFSET.y, z + OFFSET.z);
     }
-    const spin = game.time.elapsed * 3;
+    for (const item of scenery) renderer.queueModel(item.mesh, at(item.x, item.y || 0, item.z));
+    for (const box of propBoxes) {
+      const c = boxCenter(box);
+      renderer.queueModel(crateMesh, mat4.scale(at(c.x, c.y, c.z), { x: box.width, y: box.height, z: box.depth }));
+    }
     for (const coin of coins) {
       if (coin.taken) continue;
-      // A coin is a sphere squashed flat into a disc, spinning around y.
-      let model = mat4.translation(coin.x, coin.y + Math.sin(spin + coin.x) * 0.1, coin.z);
-      model = mat4.rotateY(model, spin);
-      model = mat4.scale(model, { x: 0.7, y: 0.7, z: 0.15 });
-      renderer.drawMesh(coinMesh, model, { color: [1, 0.8, 0.15], specularStrength: 0.9, shininess: 48 });
+      const bob = Math.sin(time * 3 + coin.x) * 0.1;
+      renderer.queueModel(coinMesh, mat4.rotateY(at(coin.x, coin.y + bob, coin.z), time * 3));
     }
-    // Blob shadow: a dark flat disc on whatever is below the player. It tells you where you will land.
-    const center = boxCenter(player);
-    let below = Infinity;
-    for (const platform of platforms) {
-      const distance = rayBox(center, { x: 0, y: -1, z: 0 }, platform);
-      if (distance !== null && distance < below) below = distance;
-    }
-    if (below < Infinity) {
-      const model = mat4.scale(mat4.translation(center.x, center.y - below + 0.02, center.z), { x: 0.8, y: 0.02, z: 0.8 });
-      renderer.drawMesh(coinMesh, model, { color: [0.1, 0.15, 0.1], specularStrength: 0 });
-    }
-    // The player: a body, and a "nose" so you can see which way it faces.
-    let model = mat4.translation(center.x, center.y, center.z);
-    model = mat4.rotateY(model, facing);
-    renderer.drawMesh(cubeMesh, mat4.scale(model, { x: player.width, y: player.height, z: player.depth }), { color: [0.95, 0.45, 0.2] });
-    renderer.drawMesh(cubeMesh, mat4.scale(mat4.translate(model, { x: 0, y: 0.2, z: 0.4 }), { x: 0.3, y: 0.2, z: 0.2 }), { color: [0.2, 0.2, 0.25] });
+    const moving = Math.hypot(player.velocityX, player.velocityZ) > 0.5 && player.onGround;
+    walkCycle = moving ? walkCycle + 0.25 : 0;
+    const feet = { x: player.x + player.width / 2 + OFFSET.x, y: player.y + OFFSET.y, z: player.z + player.depth / 2 + OFFSET.z };
+    // facing is atan2(x, z); the character's yaw 0 faces -z, so turn it half a circle.
+    character.queue(feet, facing + Math.PI, walkCycle, [1, 1, 1], 0.62);
+    renderer.render(shifted, time);
 
     const taken = coins.filter((coin) => coin.taken).length;
     if (state === "won") hud.textContent = "All " + coins.length + " coins with " + Math.ceil(timeLeft) + " s to spare! Press R or Enter to play again.";

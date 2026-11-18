@@ -21,7 +21,7 @@
   <main class="page viz">
     <nav class="site-nav" aria-label="Breadcrumb">
       <a href="../../">Kindling</a><a href="../">All visualizations</a>
-      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/input.md">Doc: input</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/modules/input.md">Doc: input</a>
     </nav>
     <h1>12. Input: held, pressed, released</h1>
     <p class="lead">Hold or tap Space (or click the timeline). Each column is one game step. Slow the steps down and tap fast: <code>isDown()</code> can miss a tap entirely, <code>wasPressed()</code> never does.</p>
@@ -52,7 +52,7 @@ const actions = createActions({ jump: [&quot;Space&quot;, &quot;mouse:0&quot;, &
 if (actions.wasPressed(&quot;jump&quot;) &amp;&amp; player.onGround) player.velocityY = -JUMP_SPEED;
 // after update():
 actions.endStep();</code></pre>
-    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/input/keyboard.js">engine/input/keyboard.js</a>, <a href="https://github.com/Normansrule/kindling/blob/main/engine/input/actions.js">engine/input/actions.js</a>.</p>
+    <p>Full source: <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/input/keyboard.js">engine/input/keyboard.js</a>, <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/input/actions.js">engine/input/actions.js</a>.</p>
   </main>
   <script type="module" src="./main.js"></script>
 </body>

@@ -1,6 +1,6 @@
 # samples/
 
-Each sample is one folder with an `index.html`, a `main.js` and a `README.md`. A sample imports only from the engine, through the import map (`kindling/...`). Browse them all with screenshots at [`samples/index.html`](https://normansrule.github.io/kindling/samples/).
+Each sample is one folder with an `index.html`, a `main.js` and a `README.md`. A sample imports only from the engine, through the import map (`kindling/...`). Browse them all with screenshots at [`samples/index.html`](https://normansrule.github.io/video-game-kindling/samples/).
 
 | Folder | Sample | What it teaches |
 |---|---|---|

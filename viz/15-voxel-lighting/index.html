@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  viz/15-voxel-lighting/index.html
+  WHAT: Visualization 15: what each lighting trick adds to a block world. Toggle
+        shadows and ambient occlusion, move the sun, thicken the fog.
+  DOC:  docs/modules/3d-stylized.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Block world lighting visualized</title>
+  <meta name="description" content="Turn shadows, ambient occlusion, fog and the sun on and off in a live 3D block world, and see what each one adds.">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../viz.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main class="page viz">
+    <nav class="site-nav" aria-label="Breadcrumb">
+      <a href="../../">Kindling</a><a href="../">All visualizations</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/modules/3d-stylized.md">Doc: 3D stylized</a>
+    </nav>
+    <h1>15. Lighting a block world</h1>
+    <p class="lead">Block games use plain cubes and tiny textures. What makes them look good is light. Switch each effect off and on and see what it does. Drag to turn the island; scroll or pinch to zoom.</p>
+
+    <div class="viz-stage">
+      <canvas id="stage" tabindex="0" role="img" aria-label="A blocky island with a village, lit by a sun that can be moved, with toggles for shadows, ambient occlusion and fog."></canvas>
+    </div>
+    <p class="viz-readout" id="readout" aria-live="polite"></p>
+    <div class="viz-controls" id="controls"></div>
+
+    <h2>What to notice</h2>
+    <ul>
+      <li><strong>Ambient occlusion</strong> darkens creases where blocks meet. Turn it off and the hills go flat, like cardboard.</li>
+      <li><strong>Shadows</strong> tell you where things are: a tree floating above the grass and a tree standing on it look the same without one.</li>
+      <li><strong>Fog</strong> hides where the world ends and gives distance a color, which your eye reads as depth.</li>
+      <li>Drag the sun to 0.75 for a sunset: the sun light turns orange and the fog glows toward it. At night the lanterns take over.</li>
+    </ul>
+    <h2>The code</h2>
+<pre><code>const renderer = createWorldRenderer(screen);
+renderer.setWorld(world);
+renderer.settings.shadows = true;
+renderer.settings.ambientOcclusion = 1;   // 0 to 1
+renderer.settings.fogDensity = 0.011;
+renderer.settings.timeOfDay = 0.38;        // 0.25 sunrise, 0.5 noon, 0.75 sunset
+renderer.render(camera, time);</code></pre>
+    <p>Full source: <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/3d/world-renderer.js">engine/3d/world-renderer.js</a> and <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/3d/stylized-shader.js">stylized-shader.js</a>.</p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

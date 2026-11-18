@@ -4,15 +4,15 @@ Thank you! Kindling is a teaching engine, so **clear beats clever** everywhere.
 
 ## Ways to help
 
-- **Play and report:** open a [bug report](https://github.com/Normansrule/kindling/issues/new/choose) with the page, the browser and any console errors.
+- **Play and report:** open a [bug report](https://github.com/Normansrule/video-game-kindling/issues/new/choose) with the page, the browser and any console errors.
 - **Ask for a lesson or a sample** with the issue templates. If something confused you, it will confuse others.
 - **Pick a `good first issue`:** each one names the files to touch.
-- **Share a jam game** made with Kindling in [Discussions](https://github.com/Normansrule/kindling/discussions).
+- **Share a jam game** made with Kindling in [Discussions](https://github.com/Normansrule/video-game-kindling/discussions).
 
 ## Set up
 
 ```bash
-cd ~/projects && git clone https://github.com/Normansrule/kindling.git && cd kindling && python3 -m http.server 8000
+cd ~/projects && git clone https://github.com/Normansrule/video-game-kindling.git kindling && cd kindling && python3 -m http.server 8000
 ```
 
 There is nothing to install for the engine. Optional, for the page check:

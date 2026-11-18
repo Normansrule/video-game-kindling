@@ -3,8 +3,8 @@
 //       sound effects, particles, screen shake, keyboard, gamepad and touch.
 // WHY:  At hour 0 of a jam you want a game that already runs and already has the
 //       boring parts done. Replace the "CHANGE ME" parts with your idea.
-// DOC:  Kindling docs: https://github.com/Normansrule/kindling/tree/main/docs
-//       Cheat sheet:   https://github.com/Normansrule/kindling/blob/main/docs/CHEATSHEET.md
+// DOC:  Kindling docs: https://github.com/Normansrule/video-game-kindling/tree/main/docs
+//       Cheat sheet:   https://github.com/Normansrule/video-game-kindling/blob/main/docs/CHEATSHEET.md
 
 import { createGame } from "kindling/game.js";
 import { fillRect, fillCircle, text, dim } from "kindling/2d/draw.js";

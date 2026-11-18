@@ -60,7 +60,10 @@
       });
     });
     label();
-    document.body.appendChild(button);
+    // Kindling 2 pages have a top bar (.k-nav): put the toggle there. Older pages: corner of the page.
+    const bar = document.querySelector(".k-nav");
+    if (bar) bar.appendChild(button);
+    else document.body.appendChild(button);
   }
 
   if (document.body) addButton();

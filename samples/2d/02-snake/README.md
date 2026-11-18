@@ -1,6 +1,6 @@
 # Sample 2D-02: Snake
 
-**Play:** <https://normansrule.github.io/kindling/samples/2d/02-snake/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/02-snake/>
+**Play:** <https://normansrule.github.io/video-game-kindling/samples/2d/02-snake/> · **Run locally:** `cd ~/projects/kindling && python3 -m http.server 8000`, then open <http://localhost:8000/samples/2d/02-snake/>
 
 | Controls | |
 |---|---|

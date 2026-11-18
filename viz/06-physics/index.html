@@ -21,7 +21,7 @@
   <main class="page viz">
     <nav class="site-nav" aria-label="Breadcrumb">
       <a href="../../">Kindling</a><a href="../">All visualizations</a>
-      <a href="https://github.com/Normansrule/kindling/blob/main/docs/modules/physics.md">Doc: physics</a>
+      <a href="https://github.com/Normansrule/video-game-kindling/blob/main/docs/modules/physics.md">Doc: physics</a>
     </nav>
     <h1>6. Arcade physics</h1>
     <p class="lead">Gravity changes velocity, velocity changes position, and solids stop you. Move with the arrow keys or A and D, jump with Space or W, or use the buttons.</p>
@@ -53,7 +53,7 @@ const player = createBody({ x: 40, y: 0, width: 12, height: 14, gravity: 900 });
 player.velocityX = actions.axis(&quot;left&quot;, &quot;right&quot;) * 120;
 if (actions.wasPressed(&quot;jump&quot;) &amp;&amp; player.onGround) player.velocityY = -320;
 moveAndCollide(player, stepSeconds, level);   // level = tilemap or createSolids([...])</code></pre>
-    <p>Full source: <a href="https://github.com/Normansrule/kindling/blob/main/engine/2d/physics.js">engine/2d/physics.js</a>.</p>
+    <p>Full source: <a href="https://github.com/Normansrule/video-game-kindling/blob/main/engine/2d/physics.js">engine/2d/physics.js</a>.</p>
   </main>
   <script type="module" src="./main.js"></script>
 </body>

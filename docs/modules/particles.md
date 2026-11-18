@@ -1,6 +1,6 @@
 # Module: particles
 
-**File:** [`engine/2d/particles.js`](../../engine/2d/particles.js) · **Visualization:** [08 particles](https://normansrule.github.io/kindling/viz/08-particles/) · **Lesson:** [2D-6 Juice](../../lessons/2d-6-juice.html)
+**File:** [`engine/2d/particles.js`](../../engine/2d/particles.js) · **Visualization:** [08 particles](https://normansrule.github.io/video-game-kindling/viz/08-particles/) · **Lesson:** [2D-6 Juice](../../lessons/2d-6-juice.html)
 
 Lots of tiny, short-lived dots: sparks, smoke, dust, blood, magic. Particles are the cheapest "juice" there is. One burst when an enemy dies makes a game feel far more alive.
 

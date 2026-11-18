@@ -1,6 +1,6 @@
 # Module: camera (2D)
 
-**File:** [`engine/2d/camera.js`](../../engine/2d/camera.js) · **Visualization:** [07 tilemap and camera](https://normansrule.github.io/kindling/viz/07-tilemap-camera/) · **For 3D cameras** see [3d](3d.md).
+**File:** [`engine/2d/camera.js`](../../engine/2d/camera.js) · **Visualization:** [07 tilemap and camera](https://normansrule.github.io/video-game-kindling/viz/07-tilemap-camera/) · **For 3D cameras** see [3d](3d.md).
 
 The camera is which part of a big world is on screen. Instead of moving the whole world, we move the camera and draw everything shifted by its position.
 
