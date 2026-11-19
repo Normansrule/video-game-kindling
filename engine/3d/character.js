@@ -10,11 +10,15 @@
 // DOC:  docs/modules/3d-stylized.md (section "An animated character")
 
 import { blockyCharacter } from "./lowpoly.js";
+import { characterParts } from "../characters/character-model.js";
 import * as mat4 from "../math/mat4.js";
 
-// colors: { skin, shirt, pants, shoes } as [r, g, b] 0..1 (see lowpoly.js).
-export function createCharacter(renderer, colors) {
-  const parts = blockyCharacter(colors);
+// look: EITHER a character spec from the character designer ({ skin: "#f2c48d", hat: "cap", ... },
+// see characters/character-spec.js) OR plain colors { skin, shirt, pants, shoes } as [r, g, b] 0..1.
+export function createCharacter(renderer, look) {
+  const isSpec = look && typeof look.skin === "string";
+  const parts = isSpec ? characterParts(look) : blockyCharacter(look);
+  const specScale = isSpec && look.height ? look.height : 1;
   const meshes = {};
   for (const name in parts) meshes[name] = { mesh: renderer.createModel(parts[name].data), pivot: parts[name].pivot };
 
@@ -26,7 +30,7 @@ export function createCharacter(renderer, colors) {
     // The model is built facing +z, so turn it half a circle to face north at yaw 0.
     const body = mat4.multiply(
       mat4.translation(position.x, position.y + bob, position.z),
-      mat4.multiply(mat4.rotationY(yaw + Math.PI), mat4.scaling(scale, scale, scale)),
+      mat4.multiply(mat4.rotationY(yaw + Math.PI), mat4.scaling(scale * specScale, scale * specScale, scale * specScale)),
     );
     const swings = { leftArm: swing, rightArm: -swing, leftLeg: -swing, rightLeg: swing, torso: 0, head: 0 };
     for (const name in meshes) {
@@ -36,5 +40,10 @@ export function createCharacter(renderer, colors) {
     }
   }
 
-  return { queue };
+  // Free the GPU meshes, e.g. before building a new look in a character designer.
+  function destroy() {
+    for (const name in meshes) meshes[name].mesh.destroy();
+  }
+
+  return { queue, destroy };
 }

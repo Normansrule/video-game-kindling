@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  templates/platformer/index.html
+  WHAT: Game template: Platformer. The level is scene.json (open it in the scene editor
+        to change it); main.js loads and plays it with runScene.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/templates/platformer/
+  DOC:  templates/README.md, docs/modules/scene.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Platformer | Kindling template</title>
+  <link rel="stylesheet" href="../template.css">
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../">Kindling</a> · <a href="../">Templates</a> · <strong>Platformer</strong> · <a href="../../make/scene-editor/?template=platformer">Edit this level</a></p>
+    <canvas id="game" aria-label="Platformer game. A side-view level with ledges, enemies you can stomp, a key and a locked door, made in the scene editor."></canvas>
+    <p class="keys">A/D or arrows to run · Space or W to jump (hold for higher) · W/S on ladders · E to talk · R to restart</p>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

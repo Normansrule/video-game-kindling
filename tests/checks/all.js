@@ -11,6 +11,8 @@ import { threeDChecks } from "./3d.checks.js";
 import { tinyChecks } from "./tiny.checks.js";
 import { toolsChecks } from "./tools.checks.js";
 import { worldChecks } from "./world.checks.js";
+import { libraryChecks } from "./library.checks.js";
+import { sceneChecks } from "./scene.checks.js";
 
 export const checkGroups = [
   { name: "version", checks: versionChecks },
@@ -21,4 +23,6 @@ export const checkGroups = [
   { name: "tiny", checks: tinyChecks },
   { name: "tools", checks: toolsChecks },
   { name: "world", checks: worldChecks },
+  { name: "library", checks: libraryChecks },
+  { name: "scene", checks: sceneChecks },
 ];

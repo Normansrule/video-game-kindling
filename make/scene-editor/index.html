@@ -1,0 +1,128 @@
+<!doctype html>
+<!--
+  make/scene-editor/index.html
+  WHAT: A Unity-style scene editor for 2D games: paint tiles from a palette of 95,
+        place prefabs (player, enemies, pickups, doors, villagers), edit each
+        entity's components in the inspector, and press Play to test it at once.
+  DOC:  docs/modules/scene.md, make/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scene editor | Kindling</title>
+  <meta name="description" content="Paint levels with 95 tiles, place enemies and pickups, edit components, and play-test instantly. Exports a JSON scene that runScene() plays.">
+  <link rel="stylesheet" href="../../assets/kindling.css">
+  <link rel="stylesheet" href="../editor.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+  <style>
+    .se-stage { position: relative; flex: 1; height: 62vh; min-height: 320px; }
+    @media (min-width: 960px) { .se-stage { height: auto; } }
+    #view { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; outline: none; }
+    #view:focus-visible { box-shadow: inset 0 0 0 2px var(--sky); }
+    .se-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 6px 16px; border-top: 1px solid var(--border); background: var(--bg-2); font: 0.78rem var(--mono); color: var(--muted); }
+    .se-play { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; gap: 10px; align-content: center; background: rgba(5, 6, 10, 0.88); padding: 16px; }
+    .se-play[hidden] { display: none; }
+    .se-play canvas { max-width: 100%; }
+    .se-play p { color: #e9edf4; margin: 0; text-align: center; font-size: 0.9rem; }
+    .se-brush { font-size: 0.82rem; color: var(--text); margin: 6px 0 0; min-height: 1.3em; }
+    .ed-panel .k-tabs { margin-bottom: 8px; }
+  </style>
+</head>
+<body class="editor">
+  <header class="k-nav">
+    <a class="k-logo" href="../../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="../">Make</a>
+      <a href="../character-designer/">Character designer</a>
+      <a href="./" aria-current="page">Scene editor</a>
+      <a href="../../library/">Library</a>
+      <a href="../../templates/">Templates</a>
+    </nav>
+  </header>
+
+  <div class="ed-bar" role="toolbar" aria-label="Scene tools">
+    <button class="k-button small primary" id="play" type="button" title="P">▶ Play</button>
+    <span class="group" role="group" aria-label="Tool">
+      <button class="ed-tool" data-tool="paint" type="button" title="Brush (B)">Brush</button>
+      <button class="ed-tool" data-tool="erase" type="button" title="Eraser (E)">Erase</button>
+      <button class="ed-tool" data-tool="fill" type="button" title="Fill (G)">Fill</button>
+      <button class="ed-tool" data-tool="select" type="button" title="Select and move (V)">Select</button>
+      <button class="ed-tool" data-tool="pan" type="button" title="Pan (H, or hold Space)">Pan</button>
+    </span>
+    <span class="group" role="group" aria-label="Layer">
+      <button class="ed-tool" data-layer="back" type="button" title="Back layer: decoration you walk in front of (1)">Back</button>
+      <button class="ed-tool" data-layer="main" type="button" title="Main layer: ground, walls, ladders, hazards (2)">Main</button>
+    </span>
+    <span class="group" role="group" aria-label="History">
+      <button class="ed-tool" id="undo" type="button" title="Undo (Ctrl+Z)">Undo</button>
+      <button class="ed-tool" id="redo" type="button" title="Redo (Ctrl+Shift+Z)">Redo</button>
+    </span>
+    <span class="group" role="group" aria-label="View">
+      <button class="ed-tool" id="zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button class="ed-tool" id="fit" type="button" title="Fit the scene in view">Fit</button>
+      <button class="ed-tool" id="zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button class="ed-tool" id="grid" type="button" title="Show the grid">Grid</button>
+    </span>
+    <span class="spacer"></span>
+    <label class="visually-hidden" for="new">New scene</label>
+    <select id="new" class="ed-search">
+      <option value="">New / open…</option>
+      <option value="template:platformer">Starter platformer</option>
+      <option value="template:topdown">Starter top-down adventure</option>
+      <option value="blank:platformer">Blank platformer</option>
+      <option value="blank:topdown">Blank top-down</option>
+      <option value="file">Open a .json file…</option>
+    </select>
+    <button class="k-button small" id="export" type="button">Export</button>
+    <span class="ed-status" id="status" role="status"></span>
+  </div>
+
+  <main class="ed-main">
+    <section class="ed-panel left" aria-label="Palette">
+      <div class="k-tabs" role="group" aria-label="Palette">
+        <button class="ed-tool" data-tab="tiles" type="button" aria-pressed="true">Tiles</button>
+        <button class="ed-tool" data-tab="things" type="button" aria-pressed="false">Things</button>
+      </div>
+      <label class="visually-hidden" for="search">Search the palette</label>
+      <input class="ed-search" id="search" type="search" placeholder="Search: lava, door, slime…" style="width: 100%">
+      <p class="se-brush" id="brush" aria-live="polite"></p>
+      <div id="palette"></div>
+    </section>
+
+    <section class="ed-center" aria-label="Scene">
+      <div class="se-stage"><canvas id="view" tabindex="0" aria-label="The scene. Click or drag to paint with the chosen tool. Right click picks up a tile."></canvas></div>
+      <div class="se-foot"><span id="cell">–</span><span id="layer-note"></span><span>Right click: pick a tile · Space + drag: pan · Ctrl + wheel: zoom</span></div>
+    </section>
+
+    <section class="ed-panel right" aria-label="Hierarchy and inspector">
+      <h2>Hierarchy</h2>
+      <ul class="ed-list" id="hierarchy"></ul>
+      <div id="inspector"></div>
+    </section>
+  </main>
+
+  <div class="se-play" id="play-box" hidden role="dialog" aria-modal="true" aria-label="Play-testing the scene">
+    <p id="play-help"></p>
+    <p><button class="k-button small primary" id="stop" type="button">■ Stop (Esc)</button></p>
+  </div>
+
+  <dialog id="export-box" aria-label="Export the scene" style="max-width: min(720px, 94vw); width: 100%; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 14px;">
+    <div class="k-tabs" role="group" aria-label="Format">
+      <button class="ed-tool" data-format="json" type="button" aria-pressed="true">scene.json</button>
+      <button class="ed-tool" data-format="js" type="button" aria-pressed="false">JavaScript</button>
+    </div>
+    <pre class="ed-code" id="export-code" tabindex="0" style="max-height: 50vh; margin: 10px 0"></pre>
+    <div class="ed-row">
+      <button class="k-button small primary" id="export-copy" type="button">Copy</button>
+      <button class="k-button small" id="export-download" type="button">Download scene.json</button>
+      <span class="spacer" style="flex: 1"></span>
+      <button class="k-button small" id="export-close" type="button">Close</button>
+    </div>
+  </dialog>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

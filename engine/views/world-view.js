@@ -43,7 +43,7 @@ export const VIEW_LABELS = {
 
 // options: container (element or selector), world, mode, width/height (internal
 // resolution for the 2D modes, default 640 x 360), seaLevel (for the 3D ocean),
-// timeOfDay (3D, 0..1).
+// timeOfDay (3D, 0..1), character (3D: a character spec from the character designer).
 export function createWorldView(options) {
   let container = options.container;
   if (typeof container === "string") container = document.querySelector(container);
@@ -82,7 +82,7 @@ export function createWorldView(options) {
     three = {
       screen,
       renderer,
-      character: createCharacter(renderer),
+      character: createCharacter(renderer, options.character),
       models: { coin: renderer.createModel(coinModel()), crystal: renderer.createModel(crystalModel()) },
       orbit: createOrbitCamera({ distance: FOLLOW_DISTANCE, pitch: 0.42, far: 400 }),
       firstPerson: createFirstPersonCamera({ far: 400, fieldOfView: 1.2 }),

@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  templates/battle/index.html
+  WHAT: Game template: Turn-based battle. All the code is in main.js; copy this folder to start
+        your own game from it.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/templates/battle/
+  DOC:  templates/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Turn-based battle | Kindling template</title>
+  <link rel="stylesheet" href="../template.css">
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../">Kindling</a> · <a href="../">Templates</a> · <strong>Turn-based battle</strong> · <a href="https://github.com/Normansrule/video-game-kindling/tree/main/templates/battle">source</a></p>
+    <canvas id="game" aria-label="Turn-based battle. A turn-based battle: your hero against a series of monsters, with attack, magic, potions and defend."></canvas>
+    <p class="keys">Arrows or W/S to choose · Enter, Space or click to act</p>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

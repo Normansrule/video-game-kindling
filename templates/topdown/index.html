@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  templates/topdown/index.html
+  WHAT: Game template: Top-down adventure. The level is scene.json (open it in the scene editor
+        to change it); main.js loads and plays it with runScene.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/templates/topdown/
+  DOC:  templates/README.md, docs/modules/scene.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top-down adventure | Kindling template</title>
+  <link rel="stylesheet" href="../template.css">
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../">Kindling</a> · <a href="../">Templates</a> · <strong>Top-down adventure</strong> · <a href="../../make/scene-editor/?template=topdown">Edit this level</a></p>
+    <canvas id="game" aria-label="Top-down adventure game. A village, a pond and a dungeon behind a locked door, seen from above, made in the scene editor."></canvas>
+    <p class="keys">WASD or arrows to walk · E to talk to villagers · R to restart</p>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

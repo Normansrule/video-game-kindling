@@ -12,6 +12,7 @@
 
 import { hash2, createNoise } from "../math/noise.js";
 import { textureNames } from "./blocks.js";
+import { extraPainters } from "./textures-extra.js";
 
 export const TEXTURE_SIZE = 16;
 const noise = createNoise(7);
@@ -145,6 +146,8 @@ const painters = {
     return painters.grass_top({ x, y, rand });
   },
 };
+
+Object.assign(painters, extraPainters({ shade, noise, hash2, painters }));
 
 // Paint one texture. Returns { width, height, data } like an ImageData.
 export function paintTexture(name, size = TEXTURE_SIZE) {

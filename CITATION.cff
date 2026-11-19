@@ -4,7 +4,7 @@ title: "Kindling: a zero-dependency 2D and 3D JavaScript game engine with visual
 type: software
 authors:
   - alias: Normansrule
-version: 2.0.0
+version: 2.1.0
 date-released: 2026-11-18
 license: MIT
 repository-code: "https://github.com/Normansrule/video-game-kindling"

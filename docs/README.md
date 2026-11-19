@@ -31,3 +31,6 @@
 | [3d-stylized](modules/3d-stylized.md) | Kindling 2's world renderer: chunk meshing, ambient occlusion, shadow maps, sky, water, low-poly models |
 | [world](modules/world.md) | Block worlds: the grid, island generation, picking blocks, the walker |
 | [views](modules/views.md) | One world in five views: 2D map, isometric, raycaster, 3D third and first person |
+| [library](modules/library.md) | 95 tiles and 31 sprites painted by code, and the pixel helpers behind them |
+| [characters](modules/characters.md) | One JSON spec becomes a 3D model and a 2D sprite sheet; the character designer |
+| [scene](modules/scene.md) | Entities, components and prefabs; scene files; `runScene`; the scene editor |

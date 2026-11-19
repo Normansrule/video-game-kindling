@@ -1,0 +1,71 @@
+/* make/editor.css
+   WHAT: The shared "editor window" look for the character designer and the scene
+         editor: a toolbar, side panels with titled sections, swatches, chips, a
+         hierarchy list and an inspector. Built on the color tokens in kindling.css.
+   WHY:  Engines like Unity and Unreal all share one layout idea: tools on top, the
+         thing you are making in the middle, lists on one side, settings on the other.
+         Learning it once here makes those editors feel familiar later. */
+
+body.editor { display: flex; flex-direction: column; min-height: 100vh; }
+.ed-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 16px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+.ed-bar .spacer { flex: 1; }
+.ed-bar .group { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.ed-bar select, .ed-field input[type="text"], .ed-field input[type="number"], .ed-field select, .ed-field textarea, .ed-search {
+  font: inherit; font-size: 0.88rem; padding: 6px 9px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); min-width: 0;
+}
+.ed-tool { font: inherit; font-size: 0.85rem; padding: 6px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+.ed-tool:hover { color: var(--text); }
+.ed-tool:disabled { opacity: 0.4; cursor: default; }
+.ed-tool[aria-pressed="true"] { background: var(--ember); color: #1a0f04; }
+:root[data-theme="light"] .ed-tool[aria-pressed="true"] { color: #fff; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .ed-tool[aria-pressed="true"] { color: #fff; } }
+.ed-status { font: 0.8rem var(--mono); color: var(--muted); }
+
+.ed-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; min-height: 0; }
+.ed-panel { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 10px 16px 16px; min-width: 0; }
+.ed-panel h2 { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; }
+.ed-panel h2:first-child { margin-top: 4px; }
+.ed-center { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--bg); }
+
+.ed-field { display: grid; gap: 4px; margin: 0 0 10px; font-size: 0.85rem; }
+.ed-field > span, .ed-field legend { color: var(--muted); font-size: 0.8rem; }
+.ed-field fieldset, fieldset.ed-field { border: 0; padding: 0; margin: 0 0 10px; min-width: 0; }
+.ed-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+.ed-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.ed-chips label { position: relative; }
+.ed-chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.ed-chips span { display: inline-block; font-size: 0.8rem; padding: 4px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); }
+.ed-chips input:checked + span { border-color: var(--ember); color: var(--text); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--ember); }
+.ed-chips input:focus-visible + span { outline: 2px solid var(--sky); outline-offset: 2px; }
+
+.ed-swatches { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.ed-swatch { width: 24px; height: 24px; border-radius: 7px; border: 1px solid rgba(0, 0, 0, 0.35); cursor: pointer; padding: 0; }
+.ed-swatch[aria-pressed="true"] { outline: 2px solid var(--text); outline-offset: 2px; }
+.ed-swatches input[type="color"] { width: 32px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); cursor: pointer; }
+
+.ed-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 260px; overflow: auto; }
+.ed-list button { width: 100%; display: flex; align-items: center; gap: 8px; text-align: left; font: inherit; font-size: 0.85rem; padding: 5px 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text); cursor: pointer; }
+.ed-list button:hover { background: var(--surface); }
+.ed-list button[aria-current="true"] { background: var(--surface-2); border-color: var(--ember); }
+.ed-list img, .ed-list canvas { width: 24px; height: 24px; image-rendering: pixelated; flex: none; }
+.ed-list small { color: var(--muted); margin-left: auto; }
+
+.ed-palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 4px; max-height: 42vh; overflow: auto; padding: 2px; }
+.ed-palette button { aspect-ratio: 1; padding: 3px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; display: grid; place-items: center; }
+.ed-palette button[aria-pressed="true"] { border-color: var(--ember); box-shadow: 0 0 0 2px var(--ember); }
+.ed-palette img, .ed-palette canvas { width: 100%; height: 100%; image-rendering: pixelated; object-fit: contain; }
+
+.ed-code { font: 12px/1.5 var(--mono); background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin: 0; max-height: 260px; overflow: auto; white-space: pre; }
+.ed-hint { font-size: 0.8rem; color: var(--muted); margin: 6px 0; }
+.ed-canvas { display: block; image-rendering: pixelated; max-width: 100%; touch-action: none; }
+
+@media (min-width: 960px) {
+  .ed-main { grid-template-columns: 290px minmax(0, 1fr) 300px; grid-template-rows: minmax(0, 1fr); flex: 0 0 auto; height: calc(100vh - 106px); min-height: 560px; }
+  .ed-panel { overflow: auto; border-bottom: 0; }
+  .ed-panel.left { border-right: 1px solid var(--border); }
+  .ed-panel.right { border-left: 1px solid var(--border); }
+}
+@media (prefers-reduced-motion: reduce) { .ed-tool, .ed-swatch { transition: none; } }
+/* On phones the thing you are making comes first, the panels follow underneath. */
+@media (max-width: 959px) { .ed-center { order: -1; } }

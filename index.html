@@ -41,9 +41,11 @@
     <nav aria-label="Site">
       <a href="./playground/">Playground</a>
       <a href="./game-code-examples/">Examples</a>
+      <a href="./templates/">Templates</a>
+      <a href="./make/">Make</a>
+      <a href="./library/">Library</a>
       <a href="./samples/">Samples</a>
       <a href="./lessons/">Lessons</a>
-      <a href="./viz/">Visualizations</a>
       <a href="https://github.com/Normansrule/video-game-kindling/tree/main/docs">Docs</a>
       <a href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
     </nav>
@@ -59,6 +61,7 @@
           <p class="k-lead">A small engine you can read in an afternoon, with its own WebGL 2 renderer: block worlds with soft shadows, ambient occlusion, fog, water and a day–night sky. Write your game once, then pick how it looks.</p>
           <div class="k-actions">
             <a class="k-button primary" href="./playground/">Open the playground</a>
+            <a class="k-button" href="./make/scene-editor/">Scene editor</a>
             <a class="k-button" href="./game-code-examples/">35 code examples</a>
             <a class="k-button" href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
           </div>
@@ -66,8 +69,8 @@
             <li><strong>0</strong> dependencies</li>
             <li><strong>5</strong> view modes</li>
             <li><strong>35</strong> examples</li>
-            <li><strong>13</strong> samples</li>
-            <li><strong>15</strong> visualizations</li>
+            <li><strong>8</strong> game templates</li>
+            <li><strong>95</strong> tiles</li>
           </ul>
           <p id="file-warning" class="k-notice" hidden>You opened this page straight from disk (file://). Browsers block JavaScript modules there, so nothing will run. Start a local server instead (see “Run it on your computer” below).</p>
         </div>
@@ -89,7 +92,10 @@
         <div class="k-feature"><span class="k-icon" aria-hidden="true">⚡</span><h3>Live playground</h3><p>Edit any example and see it change instantly, like CodePen. Your edits are kept in your browser.</p></div>
         <div class="k-feature"><span class="k-icon" aria-hidden="true">🎮</span><h3>All the game code basics</h3><p>Loop, input, gamepad, collision, physics, cameras, AI, pathfinding, sound, saving, UI, dialogue and inventories.</p></div>
         <div class="k-feature"><span class="k-icon" aria-hidden="true">🔬</span><h3>See how it works</h3><p>Interactive visualizations with sliders: the game loop, SAT collision, lighting, raycasting, voxel lighting and more.</p></div>
-        <div class="k-feature"><span class="k-icon" aria-hidden="true">🏁</span><h3>Ready for game jams</h3><p>A jam template, a level editor, a sprite packer and a 13 KB game to learn size-coding from.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🛠️</span><h3>Editors, like a real engine</h3><p>A scene editor with a tile palette, prefabs, a hierarchy and an inspector, plus a character designer that builds 3D models and 2D sprites from one spec.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🎨</span><h3>A big art library</h3><p>95 tiles, 40 blocks, 31 sprites and endless characters, all painted by code (CC0), so you can build a whole game by hand with no image files.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🕹️</span><h3>Eight genre templates</h3><p>Platformer, top-down adventure, runner, push puzzle, tower defense, match three, turn-based battle and 3D adventure. Copy one and make it yours.</p></div>
+        <div class="k-feature"><span class="k-icon" aria-hidden="true">🏁</span><h3>Ready for game jams</h3><p>A jam starter, a level editor, a sprite packer and a 13 KB game to learn size-coding from.</p></div>
       </div>
     </section>
 
@@ -119,6 +125,9 @@ view.setMode("iso");            // or "2d", "raycast", "3d-fps"</code></pre>
       <h2 id="explore">Play, read, change</h2>
       <p class="k-lead">Start anywhere. Every card is a page that runs in your browser, and every page links to its source.</p>
       <div class="k-grid">
+        <article class="k-card"><img src="./assets/thumbs/make-scene-editor.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./make/scene-editor/">Scene editor</a></h3><p>Paint levels, place enemies and pickups, edit components, press Play.</p><div class="k-chips"><span class="k-chip">editor</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/make-character-designer.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./make/character-designer/">Character designer</a></h3><p>Hair, clothes, hats and gear in any color, as a 3D model and 2D sprites.</p><div class="k-chips"><span class="k-chip">editor</span><span class="k-chip d3">3d</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/template-tower-defense.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./templates/">Game templates</a></h3><p>Eight finished little games in different genres, ready to copy and change.</p><div class="k-chips"><span class="k-chip">8 genres</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/modes-01-one-world.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/modes/01-one-world/">One world, five views</a></h3><p>Collect coins on an island, and switch between 2D, 2.5D and 3D while you play.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip d25">2.5d</span><span class="k-chip d3">3d</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/3d-06-island-builder.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/3d/06-island-builder/">Island builder</a></h3><p>Break and place blocks in first person, with a day–night cycle and saving.</p><div class="k-chips"><span class="k-chip d3">3d</span><span class="k-chip">sample</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/3d-04-coin-collector.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/3d/04-coin-collector/">Coin collector</a></h3><p>A 3D platformer over floating islands with a blocky hero.</p><div class="k-chips"><span class="k-chip d3">3d</span><span class="k-chip">sample</span></div></div></article>
@@ -127,10 +136,9 @@ view.setMode("iso");            // or "2d", "raycast", "3d-fps"</code></pre>
         <article class="k-card"><img src="./game-code-examples/thumbs/35-shader-playground.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./playground/">Playground</a></h3><p>Edit and run any example live. Write your own shader.</p><div class="k-chips"><span class="k-chip">live code</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/viz-11-raycaster.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./viz/">Visualizations</a></h3><p>Interactive pages that show how each engine idea works, with sliders.</p><div class="k-chips"><span class="k-chip">learn</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/viz-01-game-loop.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./lessons/">Lessons</a></h3><p>13 lessons in three tracks: 2D, 3D and game design, each with an exercise.</p><div class="k-chips"><span class="k-chip">learn</span></div></div></article>
-        <article class="k-card"><img src="./assets/thumbs/make-level-editor.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./make/">Make tools</a></h3><p>A level editor with instant play-testing, a sprite packer and a 13 KB game.</p><div class="k-chips"><span class="k-chip">tools</span></div></div></article>
         <article class="k-card"><img src="./assets/thumbs/3d-03-raycaster-maze.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./samples/">All samples</a></h3><p>Pong, Snake, Breakout, a shooter, a maze and more. One <code>main.js</code> each.</p><div class="k-chips"><span class="k-chip">13 samples</span></div></div></article>
         <article class="k-card"><img src="./references/shots/react-islands.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./references/react/dist/">React demos</a></h3><p>The same ideas in React and react-three-fiber. Python and Rust versions on GitHub.</p><div class="k-chips"><span class="k-chip">other languages</span></div></div></article>
-        <article class="k-card"><img src="./assets/thumbs/2d-06-tilemap-room.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./jam/preview/">Jam starter</a></h3><p>The game every new jam project starts from. Make yours with <code>jam/new-game.sh</code>.</p><div class="k-chips"><span class="k-chip">template</span></div></div></article>
+        <article class="k-card"><img src="./assets/thumbs/template-match-3.jpg" alt="" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./library/">Art library</a></h3><p>Every tile, block, sprite and character, with the code to use it.</p><div class="k-chips"><span class="k-chip">CC0</span></div></div></article>
       </div>
     </section>
 

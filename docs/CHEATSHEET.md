@@ -103,6 +103,19 @@ const noise = createNoise(seed);   noise.noise2(x, y)   noise.fbm2(x, y, octaves
 const backdrop = createBackdrop({ width, height, theme: "dusk" });   backdrop.render(context, camera.x, camera.y, time)
 ```
 
+## Library, characters and scenes (Kindling 2.1)
+
+```js
+context.drawImage(tileCanvas("brick_wall", 2), x, y);   tileInfo("lava").hurts   tilesIn("platform")   // library/tiles.js
+context.drawImage(spriteCanvas("slime", 2, frame), x, y);   spriteFrames("bat")   spritePixels("slime", 0, { G: "#5ac8fa" })
+const look = randomCharacter(12);   normalizeCharacter(spec)   defaultCharacter()        // characters/character-spec.js
+const sheet = characterSheet(look);   sheet.frames.walkLeft[i] -> { x, y, width, height } on sheet.canvas
+createCharacter(renderer, look).queue(position, yaw, walkCycle);   createWorldView({ ..., character: look })
+const play = runScene(sceneJson, { canvas: "#game", onWin, onLose });   play.restart()   play.world.coins
+const scene = createScene({ width: 40, height: 15, template: "platformer" });   setTile(scene, "main", x, y, "grass_block")
+addEntity(scene, "slime", x, y);   fillTiles(scene, "back", x, y, "water");   stringifyScene(scene)   parseScene(text)
+```
+
 ## Math
 
 ```js
@@ -121,6 +134,6 @@ cd ~/projects/kindling && bash tiny/new-tiny-game.sh my-tiny-game   # a 13 KB-ja
 cd ~/projects/kindling && node tiny/pack.mjs ~/projects/my-tiny-game   # bundle, zip, and count bytes
 ```
 
-Tools in the browser: `make/level-editor/` (paint and play-test levels) and `make/sprite-packer/` (atlas.png + atlas.json).
+Tools in the browser: `make/scene-editor/` (tiles, prefabs, components, Play), `make/character-designer/` (3D + 2D characters), `library/` (every tile, block and sprite with code), `make/level-editor/` (text levels) and `make/sprite-packer/` (atlas.png + atlas.json). Starter games: `templates/`.
 
 Keyboard: `` ` `` toggles the debug overlay in any game made with `createGame`.

@@ -1,53 +1,53 @@
 <!doctype html>
 <!--
   make/index.html
-  WHAT: The tools for making game content: the level editor and the sprite packer,
-        plus the 13k path for size-limited jams.
-  DOC:  make/README.md, tiny/README.md
+  WHAT: The tools for making game content in the browser: the scene editor, the
+        character designer, the text level editor, the sprite packer and the 13k path.
+  DOC:  make/README.md
 -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Make tools</title>
-  <meta name="description" content="Browser tools for Kindling games: a tile level editor with play-testing, a sprite packer, and a starter for 13 KB games.">
-  <link rel="stylesheet" href="../assets/site.css">
+  <title>Make | Kindling</title>
+  <meta name="description" content="Browser tools for Kindling games: a Unity-style scene editor, a character designer, a level editor and a sprite packer. Nothing to install.">
+  <link rel="stylesheet" href="../assets/kindling.css">
   <script src="../assets/theme.js" defer></script>
 </head>
 <body>
-  <main class="page">
-    <nav class="site-nav" aria-label="Breadcrumb"><a href="../">Kindling</a></nav>
-    <h1>Make tools</h1>
-    <p class="lead">Tools that run in your browser, with nothing to install. Your files never leave the tab.</p>
-    <ul class="gallery">
-      <li>
-        <img src="../assets/thumbs/make-level-editor.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./level-editor/">Level editor</a>
-          <p>Paint tile levels, play-test them instantly, and copy them out as text for <code>createTilemap()</code>.</p>
-        </div>
-      </li>
-      <li>
-        <img src="../assets/thumbs/make-sprite-packer.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="./sprite-packer/">Sprite packer</a>
-          <p>Pack PNGs of any size into one atlas image and a JSON frame list for <code>createAtlas()</code>.</p>
-        </div>
-      </li>
-      <li>
-        <img src="../assets/thumbs/tiny-spark-hop.jpg" alt="" width="480" height="300">
-        <div class="body">
-          <a href="../tiny/starter/">Spark Hop: the 13k path</a>
-          <p>A whole game in about 3.4 KB zipped, for js13kGames and other size-limited jams. <a href="https://github.com/Normansrule/video-game-kindling/tree/main/tiny">How to pack yours</a>.</p>
-        </div>
-      </li>
-    </ul>
-    <h2>More</h2>
-    <ul class="cards">
-      <li><a href="https://github.com/Normansrule/video-game-kindling/blob/main/make/README.md">Tool guide</a><span>What each tool makes and how to load it in a game</span></li>
-      <li><a href="../samples/2d/04-platformer/">Platformer sample</a><span>The game the level editor's tiles come from</span></li>
-      <li><a href="../jam/preview/">Jam starter</a><span>The full-engine starting point for normal jams</span></li>
-    </ul>
+  <header class="k-nav">
+    <a class="k-logo" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="../playground/">Playground</a>
+      <a href="../game-code-examples/">Examples</a>
+      <a href="../templates/">Templates</a>
+      <a href="./" aria-current="page">Make</a>
+      <a href="../library/">Library</a>
+      <a href="../samples/">Samples</a>
+      <a href="https://github.com/Normansrule/video-game-kindling">GitHub</a>
+    </nav>
+  </header>
+  <main class="k-wrap">
+    <section class="k-hero" style="padding-bottom:0">
+      <p class="k-eyebrow">Make</p>
+      <h1>Design it, <span class="glow">then play it</span>.</h1>
+      <p class="k-lead">Editors that run in your browser, with nothing to install. They save in this browser as you work, and everything they make is a small JSON file the engine loads, so you can also write it by hand.</p>
+      <div class="k-actions"><a class="k-button primary" href="./scene-editor/">Open the scene editor</a><a class="k-button" href="./character-designer/">Design a character</a><a class="k-button" href="../library/">Browse the library</a></div>
+    </section>
+    <section class="k-category"><h2>Editors</h2><p>Design a character, save it, and it appears as a look in the scene editor and in the templates.</p>
+      <div class="k-grid">
+        <article class="k-card"><img src="../assets/thumbs/make-scene-editor.jpg" alt="" loading="lazy" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./scene-editor/">Scene editor</a></h3><p>Paint levels from 95 tiles in two layers, drop in players, enemies, pickups, doors and villagers, change their components in the inspector, and press Play.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip ">editor</span></div><div class="k-more"><a href="../docs/modules/scene.md">Guide</a></div></div></article>
+        <article class="k-card"><img src="../assets/thumbs/make-character-designer.jpg" alt="" loading="lazy" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./character-designer/">Character designer</a></h3><p>Hair, clothes, hats, faces, capes, wings and held items in any color. See it in 3D and as 2D sprites at once; export JSON or code.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip d3">3d</span><span class="k-chip ">editor</span></div><div class="k-more"><a href="../docs/modules/characters.md">Guide</a></div></div></article>
+      </div>
+    </section>
+    <section class="k-category"><h2>More tools</h2><p>Smaller tools from Kindling 1, still handy.</p>
+      <div class="k-grid">
+        <article class="k-card"><img src="../assets/thumbs/make-level-editor.jpg" alt="" loading="lazy" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./level-editor/">Text level editor</a></h3><p>The classic one: paint text tilemaps for createTilemap() and play-test them.</p><div class="k-chips"><span class="k-chip d2">2d</span></div></div></article>
+        <article class="k-card"><img src="../assets/thumbs/make-sprite-packer.jpg" alt="" loading="lazy" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="./sprite-packer/">Sprite packer</a></h3><p>Pack your own PNGs into one atlas image and a JSON frame list for createAtlas().</p><div class="k-chips"><span class="k-chip d2">2d</span></div></div></article>
+        <article class="k-card"><img src="../assets/thumbs/tiny-spark-hop.jpg" alt="" loading="lazy" width="480" height="300"><div class="k-body"><h3><a class="k-stretch" href="../tiny/starter/">Spark Hop: the 13k path</a></h3><p>A whole game in about 3.4 KB zipped, for size-limited jams.</p><div class="k-chips"><span class="k-chip d2">2d</span><span class="k-chip ">jam</span></div><div class="k-more"><a href="https://github.com/Normansrule/video-game-kindling/tree/main/tiny">How to pack yours</a></div></div></article>
+      </div>
+    </section>
   </main>
+  <footer class="k-footer"><div class="k-wrap"><span>Kindling · MIT license</span><a href="https://github.com/Normansrule/video-game-kindling/blob/main/make/README.md">Tool guide</a></div></footer>
 </body>
 </html>

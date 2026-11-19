@@ -15,7 +15,7 @@ import { createWorldRenderer } from "kindling/3d/world-renderer.js";
 import { createFirstPersonCamera } from "kindling/3d/camera3d.js";
 import { createVoxelWorld, raycastVoxels } from "kindling/world/voxel-world.js";
 import { generateIsland } from "kindling/world/generate.js";
-import { BLOCK, blockType } from "kindling/world/blocks.js";
+import { BLOCK, blockType, blockTypes } from "kindling/world/blocks.js";
 import { textureCanvases } from "kindling/world/textures.js";
 import { createWalker, updateWalker, wishFromYaw, collides } from "kindling/world/walker.js";
 import { createKeyboard } from "kindling/input/keyboard.js";
@@ -111,12 +111,27 @@ HOTBAR.forEach((id, index) => {
   const icon = document.createElement("canvas");
   icon.width = 16;
   icon.height = 16;
-  icon.getContext("2d").drawImage(textures[blockType(id).side], 0, 0);
   button.append(icon, String(index + 1));
-  button.title = blockType(id).name;
   button.addEventListener("click", () => select(index));
   hotbar.appendChild(button);
+  paintSlot(index);
 });
+function paintSlot(index) {
+  const button = hotbar.children[index];
+  const icon = button.querySelector("canvas").getContext("2d");
+  icon.clearRect(0, 0, 16, 16);
+  icon.drawImage(textures[blockType(HOTBAR[index]).side], 0, 0);
+  button.title = blockType(HOTBAR[index]).name;
+}
+// [ and ] (or the mouse wheel) swap the selected slot through every block in the library.
+const ALL_BLOCKS = blockTypes.filter((type) => type.id !== BLOCK.AIR && type.id !== BLOCK.WATER).map((type) => type.id);
+function cycle(direction) {
+  const at = ALL_BLOCKS.indexOf(HOTBAR[selected]);
+  HOTBAR[selected] = ALL_BLOCKS[(at + direction + ALL_BLOCKS.length) % ALL_BLOCKS.length];
+  paintSlot(selected);
+  hud.textContent = "Slot " + (selected + 1) + ": " + blockType(HOTBAR[selected]).name.replace(/_/g, " ");
+}
+window.addEventListener("wheel", (event) => cycle(Math.sign(event.deltaY)), { passive: true });
 function select(index) {
   selected = index;
   [...hotbar.children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
@@ -126,6 +141,8 @@ window.addEventListener("keydown", (event) => {
   const number = Number(event.key);
   if (number >= 1 && number <= HOTBAR.length) select(number - 1);
   if (event.code === "KeyF") placeBlock();
+  if (event.code === "BracketRight") cycle(1);
+  if (event.code === "BracketLeft") cycle(-1);
 });
 
 // ---------- Save and load (press K to save, L to load) ----------

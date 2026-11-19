@@ -5,7 +5,7 @@
 //       the import map works on that page. It is also the version shown on the landing page.
 // DOC:  docs/RUNNING.md (how pages find the engine) and docs/DECISIONS.md (D1).
 
-export const KINDLING_VERSION = "2.0.0";
+export const KINDLING_VERSION = "2.1.0";
 
 // Returns a short sentence for status lines, the landing page and tests.
 export function describeEngine() {

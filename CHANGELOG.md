@@ -2,6 +2,24 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [2.1.0] - 2026-11-18
+
+Editors like a real engine, a big art library, and eight genre templates. Release notes: [docs/RELEASE-NOTES-v2.1.0.md](docs/RELEASE-NOTES-v2.1.0.md).
+
+### Added
+- **Scene editor** (`make/scene-editor/`): a Unity-style editor with a searchable palette of 95 tiles and 20 prefabs, two layers, brush, eraser, flood fill, eyedropper, select and move, a hierarchy, an inspector generated from the component list, undo and redo, autosave, export to `scene.json`, and Play with the real runtime.
+- **Character designer** (`make/character-designer/`): hair, clothes, hats, faces, back items and held items in any color, height and head size; a live 3D turntable and four animated 2D walk cycles; export as JavaScript, JSON or a PNG sprite sheet; saved characters appear in the scene editor and the templates.
+- **Scene engine** (`engine/scene/`): a scene file format (two tile layers as text rows with a legend, plus entities), 12 components (sprite, body, player, patrol, chase, fly, collectible, hurt, dialog, door, spring, goal), 20 prefabs, behaviors, and `runScene()` for platformer and top-down games.
+- **Characters** (`engine/characters/`): a character spec with `normalizeCharacter` and seeded `randomCharacter`; `characterParts()` builds the 3D model; `characterFrame()` and `characterSheet()` paint outlined 16 × 20 sprites in four directions. `createCharacter()` and `createWorldView({ character })` accept a spec.
+- **Art library** (`engine/library/`): 95 tiles in 9 categories with flags (solid, one-way, hurts, climb, goal), 31 sprites with animation frames, and pixel helpers that also work in Node. A **library page** (`library/`) shows everything with copyable code.
+- **25 new blocks** (40 in all): cobblestone, mossy cobblestone, gravel, clay, ice, lava, gold ore, crystal, stone bricks, marble, obsidian, cactus, pumpkin, bookshelf, hay, dark planks, birch log, five wools, metal, red sand, autumn leaves and glow stone. The island builder can swap any hotbar slot through all of them (mouse wheel or `[` and `]`).
+- **Templates** (`templates/`): platformer and top-down adventure (made in the scene editor), endless runner, block-push puzzle, tower defense, match three, turn-based battle and 3D adventure, with a gallery page and README.
+- Docs: `docs/modules/library.md`, `characters.md`, `scene.md`; a cheatsheet section; 13 new checks (102 in all).
+
+### Changed
+- The landing page, `make/` page and navigation feature the editors, templates and library.
+- One-way platform tiles are marked `solid` as well as `oneWay`.
+
 ## [2.0.0] - 2026-11-18
 
 Kindling 2: our own stylized graphics engine, one world in 2D, 2.5D and 3D, a live playground and 35 Game Code Examples. Release notes: [docs/RELEASE-NOTES-v2.0.0.md](docs/RELEASE-NOTES-v2.0.0.md).

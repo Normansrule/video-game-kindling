@@ -29,7 +29,7 @@ function stepWalker(world, walker, steps) {
 
 // Every triangle's corner order (winding) must agree with its stored normal,
 // or the back-face culling hides it and the model looks inside-out.
-function windingMismatches(data) {
+export function windingMismatches(data) {
   const p = data.positions;
   const n = data.normals;
   let bad = 0;

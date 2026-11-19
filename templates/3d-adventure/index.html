@@ -1,0 +1,30 @@
+<!doctype html>
+<!--
+  templates/3d-adventure/index.html
+  WHAT: Game template: 3D adventure. All the code is in main.js; copy this folder to start
+        your own game from it.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/templates/3d-adventure/
+  DOC:  templates/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D adventure | Kindling template</title>
+  <link rel="stylesheet" href="../template.css">
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../">Kindling</a> · <a href="../">Templates</a> · <strong>3D adventure</strong> · <a href="https://github.com/Normansrule/video-game-kindling/tree/main/templates/3d-adventure">source</a></p>
+    <div id="stage" class="stage" aria-label="A third-person 3D adventure on a block island: find all the crystals."></div>
+    <p class="keys">WASD to walk, A/D or Q/E to turn · Space to jump · 1 to 3 to change the camera</p>
+    <p class="keys" id="hud" aria-live="polite"></p>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

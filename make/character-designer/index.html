@@ -1,0 +1,90 @@
+<!doctype html>
+<!--
+  make/character-designer/index.html
+  WHAT: Design a character by picking hair, clothes, hats, accessories and colors,
+        and see it as a 3D model and as 2D pixel sprites at the same time. Export it
+        as JSON or JavaScript, or save it for the scene editor.
+  DOC:  docs/modules/characters.md, make/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character designer | Kindling</title>
+  <meta name="description" content="Design blocky characters for Kindling games: one small JSON spec becomes a 3D model and a 2D sprite sheet.">
+  <link rel="stylesheet" href="../../assets/kindling.css">
+  <link rel="stylesheet" href="../editor.css">
+  <script src="../../assets/theme.js" defer></script>
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+  <style>
+    .cd-stage { position: relative; flex: 1; height: min(62vh, 560px); min-height: 300px; }
+    @media (min-width: 960px) { .cd-stage { height: auto; } }
+    .cd-stage canvas { position: absolute; inset: 0; }
+    .cd-sprites { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--bg-2); }
+    .cd-sprites figure { margin: 0; display: grid; justify-items: center; gap: 4px; font-size: 0.75rem; color: var(--muted); }
+    .cd-sprites canvas { background: repeating-conic-gradient(var(--surface) 0 25%, var(--surface-2) 0 50%) 0 0 / 16px 16px; border-radius: 8px; image-rendering: pixelated; }
+    .cd-sheet { background: repeating-conic-gradient(var(--surface) 0 25%, var(--surface-2) 0 50%) 0 0 / 16px 16px; border-radius: 8px; image-rendering: pixelated; max-width: 100%; }
+    #error { color: var(--rose); margin: 8px 16px; }
+  </style>
+</head>
+<body class="editor">
+  <header class="k-nav">
+    <a class="k-logo" href="../../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.2-5 0 2 .9 3.2 2.1 3.2C10.8 8 10.2 5.4 12 2z" fill="#ff9f43"/></svg>Kindling</a>
+    <nav aria-label="Site">
+      <a href="../">Make</a>
+      <a href="./" aria-current="page">Character designer</a>
+      <a href="../scene-editor/">Scene editor</a>
+      <a href="../../library/">Library</a>
+      <a href="../../templates/">Templates</a>
+    </nav>
+  </header>
+
+  <div class="ed-bar" role="toolbar" aria-label="Character">
+    <label class="visually-hidden" for="name">Name</label>
+    <input class="ed-search" id="name" type="text" maxlength="40" value="Hero" style="width: 9em">
+    <button class="k-button small" id="random" type="button">🎲 Randomize</button>
+    <button class="k-button small" id="reset" type="button">Reset</button>
+    <span class="spacer"></span>
+    <span class="group" role="group" aria-label="Preview">
+      <button class="ed-tool" id="walk" type="button" aria-pressed="true">Walk</button>
+      <button class="ed-tool" id="spin" type="button" aria-pressed="true">Turn</button>
+    </span>
+    <button class="k-button small primary" id="save" type="button">Save character</button>
+    <span class="ed-status" id="status" role="status"></span>
+  </div>
+
+  <main class="ed-main">
+    <section class="ed-panel left" aria-label="Look" id="controls"></section>
+
+    <section class="ed-center" aria-label="Preview">
+      <div class="cd-stage"><canvas id="stage" aria-label="3D preview of your character. Drag to turn it."></canvas></div>
+      <p id="error" role="alert" hidden></p>
+      <div class="cd-sprites" id="sprites" aria-label="2D sprites, walking in four directions"></div>
+    </section>
+
+    <section class="ed-panel right" aria-label="Export and saved characters">
+      <h2>Saved characters</h2>
+      <ul class="ed-list" id="saved"></ul>
+      <p class="ed-hint">Saved characters show up as looks in the <a href="../scene-editor/">scene editor</a>. They stay in this browser.</p>
+      <h2>Use it in code</h2>
+      <div class="k-tabs" role="group" aria-label="Export format">
+        <button class="ed-tool" id="show-js" type="button" aria-pressed="true">JavaScript</button>
+        <button class="ed-tool" id="show-json" type="button" aria-pressed="false">JSON</button>
+      </div>
+      <pre class="ed-code" id="code" tabindex="0" aria-label="Export code"></pre>
+      <div class="ed-row" style="margin-top: 8px">
+        <button class="k-button small" id="copy" type="button">Copy</button>
+        <button class="k-button small" id="download" type="button">Download .json</button>
+        <button class="k-button small" id="load" type="button">Open .json</button>
+      </div>
+      <h2>Sprite sheet</h2>
+      <canvas class="cd-sheet" id="sheet" aria-label="Sprite sheet: rows are down, up, right, left; columns are standing and two steps"></canvas>
+      <div class="ed-row" style="margin-top: 8px"><button class="k-button small" id="download-png" type="button">Download .png</button></div>
+      <p class="ed-hint">Rows: down, up, right, left. Columns: standing, step 1, step 2. Each frame is 16 × 20 pixels.</p>
+    </section>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

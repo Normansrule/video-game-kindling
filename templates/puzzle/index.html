@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  templates/puzzle/index.html
+  WHAT: Game template: Block-push puzzle. All the code is in main.js; copy this folder to start
+        your own game from it.
+  RUN:  from the repo root, python3 -m http.server 8000, then open
+        http://localhost:8000/templates/puzzle/
+  DOC:  templates/README.md
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Block-push puzzle | Kindling template</title>
+  <link rel="stylesheet" href="../template.css">
+  <script type="importmap">
+    { "imports": { "kindling/": "../../engine/" } }
+  </script>
+</head>
+<body>
+  <main>
+    <p><a href="../../">Kindling</a> · <a href="../">Templates</a> · <strong>Block-push puzzle</strong> · <a href="https://github.com/Normansrule/video-game-kindling/tree/main/templates/puzzle">source</a></p>
+    <canvas id="game" aria-label="Block-push puzzle. A block-pushing puzzle: push every crate onto a button."></canvas>
+    <p class="keys">Arrows or WASD to push · Z to undo · R to restart the level · N or Enter for the next level</p>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

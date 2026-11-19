@@ -5,12 +5,15 @@
 <h1 align="center">Kindling</h1>
 
 <p align="center"><strong>Build games from scratch in 2D, 2.5D and 3D.</strong><br>
-A zero-dependency JavaScript game engine with its own WebGL 2 renderer, a live code playground,<br>35 game code examples, complete sample games and interactive lessons.</p>
+A zero-dependency JavaScript game engine with its own WebGL 2 renderer, a scene editor and<br>character designer, eight genre templates, a live code playground, 35 game code examples and lessons.</p>
 
 <p align="center">
   <a href="https://normansrule.github.io/video-game-kindling/"><strong>Website</strong></a> ·
   <a href="https://normansrule.github.io/video-game-kindling/playground/"><strong>Playground</strong></a> ·
   <a href="game-code-examples/"><strong>Game Code Examples</strong></a> ·
+  <a href="https://normansrule.github.io/video-game-kindling/templates/"><strong>Templates</strong></a> ·
+  <a href="https://normansrule.github.io/video-game-kindling/make/"><strong>Editors</strong></a> ·
+  <a href="https://normansrule.github.io/video-game-kindling/library/"><strong>Library</strong></a> ·
   <a href="samples/"><strong>Samples</strong></a> ·
   <a href="https://normansrule.github.io/video-game-kindling/viz/"><strong>Visualizations</strong></a> ·
   <a href="docs/"><strong>Docs</strong></a>
@@ -57,6 +60,27 @@ The stylized 3D renderer is written from scratch in about 1,100 lines on top of 
   <img src="assets/thumbs/3d-04-coin-collector.jpg" width="32%" alt="A blocky hero on floating grass islands with pine trees and gold coins.">
 </p>
 
+## Editors, a library and templates
+
+Design with tools when that is faster, write code when you want control. Everything the tools make is a small JSON file the engine reads, so the two always mix.
+
+- **[Scene editor](https://normansrule.github.io/video-game-kindling/make/scene-editor/)**: laid out like Unity. Paint levels from a palette of 95 tiles, drop in prefabs (player, slimes, bats, skeletons, keys, doors, springs, villagers), select anything to edit its components in the inspector, undo anything, and press **Play**.
+- **[Character designer](https://normansrule.github.io/video-game-kindling/make/character-designer/)**: hair, clothes, hats, faces, capes, wings and gear in any color. One spec becomes a 3D model and a 2D sprite sheet with walk cycles in four directions.
+- **[Templates](templates/)**: platformer, top-down adventure, endless runner, block-push puzzle, tower defense, match three, turn-based battle and 3D adventure. Copy a folder and make it yours.
+- **[Library](https://normansrule.github.io/video-game-kindling/library/)**: 95 tiles, 40 blocks, 31 sprites and endless characters, all painted by code and free to use (CC0), each with the line of code that uses it.
+
+```js
+import { runScene } from "kindling/scene/runtime.js";
+const scene = await (await fetch("./scene.json")).json();   // made in the scene editor
+runScene(scene, { canvas: "#game" });                         // that's the whole game
+```
+
+<p align="center">
+  <img src="assets/thumbs/make-scene-editor.jpg" width="32%" alt="The scene editor: a tile palette on the left, a top-down village level in the middle, the entity list and inspector on the right.">
+  <img src="assets/thumbs/make-character-designer.jpg" width="32%" alt="The character designer: color swatches and options on the left, a blocky 3D character on grass, and four pixel-art sprites below.">
+  <img src="assets/thumbs/template-tower-defense.jpg" width="32%" alt="The tower defense template: slimes walking along a dirt path past stone towers.">
+</p>
+
 ## Quick start (WSL Ubuntu, macOS or Linux)
 
 ```bash
@@ -90,14 +114,16 @@ Run the tests: `cd ~/projects/kindling && node --test tests/node.test.js` (Node 
 
 | | |
 |---|---|
-| **Engine** ([`engine/`](engine/)) | 65 small modules: loop, scenes, input (keyboard, mouse, touch, gamepad, actions), math and noise, sprites, collision (AABB and SAT), platformer physics, tilemaps, cameras, particles, tweens, Web Audio, block worlds, five views and a WebGL 2 renderer |
+| **Engine** ([`engine/`](engine/)) | 82 small modules: loop, scenes, input (keyboard, mouse, touch, gamepad, actions), math and noise, sprites, collision (AABB and SAT), platformer physics, tilemaps, cameras, particles, tweens, Web Audio, block worlds, five views, a WebGL 2 renderer, characters, scenes with components and prefabs, and an art library |
 | **Playground** ([`playground/`](playground/)) | A CodePen-style editor: code on the left, the game on the right, console underneath |
 | **Game Code Examples** ([`game-code-examples/`](game-code-examples/)) | 35 runnable snippets, with a gallery and thumbnails |
+| **Templates** ([`templates/`](templates/)) | 8 genre starters: platformer, top-down adventure, runner, push puzzle, tower defense, match three, turn-based battle, 3D adventure |
+| **Library** ([`library/`](library/)) | 95 tiles, 40 blocks, 31 sprites and random characters, all painted by code (CC0), with copyable code |
 | **Samples** ([`samples/`](samples/)) | 13 complete small games: 6 in 2D, 6 in 3D, and one in all five views |
 | **Visualizations** ([`viz/`](viz/)) | 15 interactive pages, one per engine idea, with sliders and play/pause |
 | **Lessons** ([`lessons/`](lessons/)) | 13 lessons in three tracks (2D, 3D, game design), each with an exercise and a solution |
 | **Jam kit** ([`jam/`](jam/)) | A starter game, a one-command `new-game.sh`, a scope cutter, checklists, and an itch.io upload guide |
-| **Make tools** ([`make/`](make/)) | A [level editor](https://normansrule.github.io/video-game-kindling/make/level-editor/) with play-testing and a [sprite packer](https://normansrule.github.io/video-game-kindling/make/sprite-packer/) |
+| **Editors** ([`make/`](make/)) | A [scene editor](https://normansrule.github.io/video-game-kindling/make/scene-editor/) with a palette, hierarchy, inspector and Play, a [character designer](https://normansrule.github.io/video-game-kindling/make/character-designer/), a text [level editor](https://normansrule.github.io/video-game-kindling/make/level-editor/) with play-testing and a [sprite packer](https://normansrule.github.io/video-game-kindling/make/sprite-packer/) |
 | **13k path** ([`tiny/`](tiny/)) | A 2 KB engine and a complete starter game ([Spark Hop](https://normansrule.github.io/video-game-kindling/tiny/starter/)) for js13kGames |
 | **Reference games** ([`references/`](references/)) | 11 complete games and demos in Python (pygame-ce), Rust (macroquad) and React (react-three-fiber) |
 | **Language bridges** ([`docs/bridges/`](docs/bridges/)) | The core ideas in plain Python, React and Rust |
@@ -188,6 +214,7 @@ Jams have different rules about pre-made engines and AI-assisted tools. Read you
 | + | Reference games in Python, Rust and React | done |
 | 1.1 | 13k path, sprite packer and texture atlases, level editor with play-testing | done |
 | 2.0 | Own stylized 3D engine, block worlds, five view modes, playground, 35 Game Code Examples, new site | done |
+| 2.1 | Scene editor, character designer, components and prefabs, art library (95 tiles, 40 blocks, 31 sprites), 8 genre templates | done |
 
 Next: lessons for the block-world engine, greedy meshing for bigger worlds, more lessons (one per make tool), sprite trimming in the packer, and custom tile legends saved with a level. Ideas welcome in [Discussions](https://github.com/Normansrule/video-game-kindling/discussions).
 
